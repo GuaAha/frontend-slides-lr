@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import sys
 from pathlib import Path
@@ -40,6 +41,7 @@ MIRROR_FILES = (
     "agents/openai.yaml",
     "brand/source.json",
     "brand/impact-map.json",
+    "brand/assets/MAKESENSE-70S.ttf",
     "brand/generated/brand-rules.md",
     "brand/generated/brand-tokens.css",
     "brand/generated/brand-runtime.js",
@@ -96,6 +98,19 @@ def load_source() -> dict:
         raise ValueError("approval_status must be 'draft' or 'approved'")
     if data["canvas"] != {"width": 750, "height": 1320}:
         raise ValueError("the internal edition supports only a literal 750 × 1320 canvas")
+    if data["shape"].get("corner_radius_px") != 0:
+        raise ValueError("the fixed brand requires corner_radius_px = 0")
+    locale_rules = data["typography"].get("locale_rules", {})
+    if set(locale_rules) != {"zh", "en", "vi", "th"}:
+        raise ValueError("typography.locale_rules must contain exactly zh/en/vi/th")
+    required_levels = {"headline", "subheadline", "label", "description", "disclaimer"}
+    for locale, rule in locale_rules.items():
+        if set(rule.get("styles", {})) != required_levels or set(rule.get("sizes_px", {})) != required_levels:
+            raise ValueError(f"typography.locale_rules.{locale} must define all five levels")
+    for role_name in ("display", "body"):
+        asset = data["typography"][role_name].get("asset")
+        if not asset or not (ROOT / asset).is_file():
+            raise ValueError(f"typography.{role_name}.asset must point to an existing local font")
     return data
 
 
@@ -104,13 +119,40 @@ def css_font(role: dict) -> str:
     return ", ".join(f'"{name}"' if " " in name else name for name in names)
 
 
+def render_embedded_font_faces(typography: dict) -> str:
+    faces: list[str] = []
+    seen_assets: set[str] = set()
+    for role_name in ("display", "body"):
+        role = typography[role_name]
+        asset = role["asset"]
+        if asset in seen_assets:
+            continue
+        seen_assets.add(asset)
+        payload = base64.b64encode((ROOT / asset).read_bytes()).decode("ascii")
+        family = role["family"].replace('"', '\\"')
+        faces.append(
+            "@font-face {\n"
+            f'  font-family: "{family}";\n'
+            "  font-style: normal;\n"
+            "  font-weight: 100 900;\n"
+            "  font-display: block;\n"
+            f"  src: url(data:font/ttf;base64,{payload}) format('truetype');\n"
+            "}"
+        )
+    return "\n\n".join(faces)
+
+
 def render_brand_tokens(data: dict) -> str:
     colors = data["colors"]
     typography = data["typography"]
     shape = data["shape"]
     spacing = data["spacing"]
     motion = data["motion"]
+    locale_rules = typography["locale_rules"]
+    zh = locale_rules["zh"]
     return f"""/* GENERATED from brand/source.json. Do not edit. */
+{render_embedded_font_faces(typography)}
+
 :root {{
   --brand-canvas-width: 750px;
   --brand-canvas-height: 1320px;
@@ -125,9 +167,18 @@ def render_brand_tokens(data: dict) -> str:
   --brand-danger: {colors['danger']};
   --brand-font-display: {css_font(typography['display'])};
   --brand-font-body: {css_font(typography['body'])};
+  --brand-type-headline: {zh['sizes_px']['headline']}px;
+  --brand-type-subheadline: {zh['sizes_px']['subheadline']}px;
+  --brand-type-label: {zh['sizes_px']['label']}px;
+  --brand-type-description: {zh['sizes_px']['description']}px;
+  --brand-type-disclaimer: {zh['sizes_px']['disclaimer']}px;
+  --brand-letter-spacing: {zh['letter_spacing_percent']}%;
+  --brand-line-height: {typography['line_height_percent']}%;
   --brand-min-body: {typography['minimum_body_px']}px;
   --brand-min-caption: {typography['minimum_caption_px']}px;
   --brand-slide-padding: {spacing['slide_padding_px']}px;
+  --brand-safe-top: {spacing['safe_top_px']}px;
+  --brand-safe-bottom: {spacing['safe_bottom_px']}px;
   --brand-content-gap: {spacing['content_gap_px']}px;
   --brand-corner-radius: {shape['corner_radius_px']}px;
   --brand-stroke-width: {shape['stroke_width_px']}px;
@@ -278,6 +329,8 @@ def render_rules(data: dict) -> str:
     typography = data["typography"]
     logo = data["logo"]
     density = data["density"]
+    shape = data["shape"]
+    locale_rules = typography["locale_rules"]
     lines = [
         "# Generated brand rules",
         "",
@@ -290,6 +343,8 @@ def render_rules(data: dict) -> str:
         f"- Body font: **{typography['body']['family']}**",
         f"- Minimum body text: **{typography['minimum_body_px']}px**",
         f"- Minimum caption text: **{typography['minimum_caption_px']}px**",
+        f"- Corner radius: **{shape['corner_radius_px']}px** for every authored container",
+        f"- Text safe area: **top {data['spacing']['safe_top_px']}px / right {data['spacing']['slide_padding_px']}px / bottom {data['spacing']['safe_bottom_px']}px / left {data['spacing']['slide_padding_px']}px**",
         f"- Logo minimum width: **{logo['minimum_width_px']}px**",
         f"- Logo clear space: **{logo['clear_space_px']}px**",
         "",
@@ -298,6 +353,22 @@ def render_rules(data: dict) -> str:
         f"- Speaker-led: at most {density['speaker_led']['max_bullets']} bullets or {density['speaker_led']['max_cards']} cards per slide.",
         f"- Reading-first: at most {density['reading_first']['max_bullets']} bullets or {density['reading_first']['max_cards']} cards per slide.",
         "- Split content instead of reducing type below the minimum sizes.",
+        "",
+        "## Locale typography",
+        "",
+        "| Locale | Family | Headline | Subheadline | Label | Description | Disclaimer | Letter spacing |",
+        "|---|---|---:|---:|---:|---:|---:|---:|",
+        *(
+            f"| {locale} | {rule['family']} | {rule['sizes_px']['headline']} | {rule['sizes_px']['subheadline']} | {rule['sizes_px']['label']} | {rule['sizes_px']['description']} | {rule['sizes_px']['disclaimer']} | {rule['letter_spacing_percent']}% |"
+            for locale, rule in locale_rules.items()
+        ),
+        f"- All locale levels use **{typography['line_height_percent']}%** line height.",
+        "- Chinese output embeds the approved local MAKE SENSE 70S font asset.",
+        "",
+        "## Shape",
+        "",
+        "- Cards, tags, chips, buttons, image crops, color fields, evidence panels, page markers, and runtime controls use zero radius.",
+        "- Natural curves remain allowed only inside approved raster/vector product or material assets.",
         "",
         "## Design and structure baselines",
         "",

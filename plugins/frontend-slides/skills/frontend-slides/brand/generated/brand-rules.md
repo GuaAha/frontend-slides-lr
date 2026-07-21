@@ -5,10 +5,12 @@
 - Brand: **LR Internal**
 - Approval status: **draft**
 - Canvas: **750 × 1320 CSS pixels only**
-- Display font: **Noto Sans SC**
-- Body font: **Noto Sans SC**
-- Minimum body text: **24px**
-- Minimum caption text: **18px**
+- Display font: **MAKE SENSE**
+- Body font: **MAKE SENSE**
+- Minimum body text: **30px**
+- Minimum caption text: **15px**
+- Corner radius: **0px** for every authored container
+- Text safe area: **top 120px / right 60px / bottom 120px / left 60px**
 - Logo minimum width: **72px**
 - Logo clear space: **20px**
 
@@ -18,6 +20,22 @@
 - Reading-first: at most 6 bullets or 5 cards per slide.
 - Split content instead of reducing type below the minimum sizes.
 
+## Locale typography
+
+| Locale | Family | Headline | Subheadline | Label | Description | Disclaimer | Letter spacing |
+|---|---|---:|---:|---:|---:|---:|---:|
+| zh | MAKE SENSE | 75 | 45 | 45 | 30 | 15 | -5% |
+| en | Helvetica Now Text | 60 | 30 | 30 | 20 | 15 | -3% |
+| vi | Noto Sans | 60 | 30 | 25 | 15 | 9 | -6% |
+| th | Noto Sans Thai | 60 | 30 | 25 | 15 | 10 | -3% |
+- All locale levels use **100%** line height.
+- Chinese output embeds the approved local MAKE SENSE 70S font asset.
+
+## Shape
+
+- Cards, tags, chips, buttons, image crops, color fields, evidence panels, page markers, and runtime controls use zero radius.
+- Natural curves remain allowed only inside approved raster/vector product or material assets.
+
 ## Design and structure baselines
 
 - Read `templates/index.json` when preparing the three real branded previews.
@@ -25,4 +43,4 @@
 - Use baseline composition and component grammar without overriding the brand source.
 - Keep palette, font roles, logo rules, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.
 
-> Source note: Provisional internal tokens. Replace with approved brand assets and set approval_status to approved before external delivery.
+> Source note: Confirmed multilingual typography and square-corner rules are imported from the internal rules source. Palette and logo approval remain draft; set approval_status to approved only after the remaining brand inputs are confirmed.

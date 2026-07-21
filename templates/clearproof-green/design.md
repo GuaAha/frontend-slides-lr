@@ -476,7 +476,7 @@ Do not use soft card shadows, glassmorphism, neumorphism, inner glows, floating 
 
 ### Border Radius
 
-Use square edges for almost every structural module. The source contains only a handful of rounded geometries, mostly product or bubble assets rather than interface cards. A small 8px radius may be used for a functional tag only if it already exists in the brand language. Large pill shapes are reserved for material imagery such as droplets, not UI containers.
+Use square edges for every structural module. Functional tags, cards, image crops, badges, and information panels stay at zero radius. Natural rounded geometry may appear only inside approved product, bubble, droplet, or material imagery; never recreate it as rounded UI chrome.
 
 ### Border Weights
 

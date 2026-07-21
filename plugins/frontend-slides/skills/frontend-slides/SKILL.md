@@ -21,6 +21,7 @@ Treat all seven entries in `templates/` as peer design-style and narrative-struc
 ## Non-negotiable invariants
 
 - Use exactly `750 × 1320` CSS pixels for every slide.
+- Keep all authored text inside the fixed safe area: top 120px, right 60px, bottom 120px, left 60px; place each slide headline at y=120px.
 - Write the width and height directly. Do not infer an aspect ratio and do not support alternative canvas sizes.
 - Scale the whole stage uniformly to fit the browser. Never reflow slide content for another viewport.
 - Use only tokens and assets declared in `brand/source.json` and its generated files.
@@ -28,6 +29,7 @@ Treat all seven entries in `templates/` as peer design-style and narrative-struc
 - Keep the final deck self-contained: inline CSS/JS and embed approved local assets when practical.
 - Do not fetch unapproved fonts, logos, or images from external URLs.
 - Split crowded content into more slides. Do not shrink text below the generated brand limits.
+- Keep every authored container square: cards, tags, chips, buttons, image crops, color fields, evidence panels, page markers, and runtime controls must use `border-radius: 0`. Natural curves inside approved product photography or supplied vector/raster assets remain allowed.
 - Preserve source attribution for user content internally, but never render workflow labels, template names, paths, or prompt text on slides.
 - Do not deploy or present a deck as brand-final while `approval_status` is not `approved`. Draft-brand prototypes are allowed only when clearly labeled to the user.
 
@@ -55,6 +57,8 @@ Infer a reasonable length from the material unless the user specifies one. Remem
 
 - Load the generated tokens before outlining visual treatments.
 - Use the approved logo variant, palette, type roles, spacing, corner, stroke, and motion values.
+- Apply typography from the locale rules in `brand/source.json`; for Chinese use the embedded MAKE SENSE 70S asset and the confirmed five-level size table.
+- Treat zero corner radius as a hard brand rule. A selected template may not reintroduce rounded cards, pills, image masks, badges, or controls.
 - If required brand fields or assets are missing, continue only as a clearly marked prototype and report the missing inputs.
 - Never ask the user to choose another brand, upload a theme, or select an aspect ratio.
 

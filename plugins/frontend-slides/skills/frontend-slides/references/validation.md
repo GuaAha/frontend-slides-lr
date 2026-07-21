@@ -15,6 +15,7 @@ Require:
 - no stale landscape-canvas, aspect-ratio, or alternative-stage language;
 - no external script, stylesheet, font, image, video, or audio source;
 - no visible workflow labels or internal file paths.
+- no non-zero CSS `border-radius`; natural curves must come from approved image/vector assets rather than rounded UI containers.
 
 ## Rendered gate
 

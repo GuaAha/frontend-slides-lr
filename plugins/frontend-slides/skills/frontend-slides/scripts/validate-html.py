@@ -24,6 +24,14 @@ INTERNAL_LABELS = (
 )
 
 
+def is_zero_radius(value: str) -> bool:
+    value = re.sub(r"\s*!important\s*$", "", value.strip(), flags=re.I)
+    if value == "var(--brand-corner-radius)":
+        return True
+    parts = value.split()
+    return bool(parts) and all(re.fullmatch(r"(?:0|0\.0+)(?:px|rem|em|%|pt)?", part, flags=re.I) for part in parts)
+
+
 class DeckParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -82,6 +90,14 @@ def validate(path: Path, allow_draft: bool) -> tuple[list[str], list[str]]:
     for pattern in stale_patterns:
         if re.search(pattern, raw, flags=re.I):
             errors.append(f"stale or alternative canvas reference: {pattern}")
+
+    nonzero_radii = []
+    for match in re.finditer(r"border(?:-(?:top|right|bottom|left|start|end)){0,2}-radius\s*:\s*([^;{}]+)", raw, flags=re.I):
+        value = match.group(1).strip()
+        if not is_zero_radius(value):
+            nonzero_radii.append(value)
+    if nonzero_radii:
+        errors.append("non-zero border-radius is forbidden: " + ", ".join(sorted(set(nonzero_radii))))
 
     expected_status = source["approval_status"]
     if parser.brand_status != expected_status:

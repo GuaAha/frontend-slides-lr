@@ -174,7 +174,7 @@ Use frost or an extremely pale vertical mint gradient. Place a short black claim
 
 ### MintClaimTag
 
-A compact rounded rectangle, underline, or pill with mint fill and dark text. It carries a category, one qualifier, or a verified status. Maximum recommended length is 10 Chinese characters. Use one per page at most.
+A compact zero-radius field, underline, or open rule with mint emphasis and dark text. It carries a category, one qualifier, or a verified status. Maximum recommended length is 10 Chinese characters. Use one per page at most; never turn it into a capsule or rounded badge.
 
 ### BenefitRail
 
@@ -360,7 +360,7 @@ Avoid heavy black shadows, embossed icons, neon outer glows, and multiple blur l
 
 ## Shapes and Iconography
 
-Shapes come from spray cones, droplets, horizon lines, thin circles, and rounded specimen panels. Corners range from 0–20 px; do not round every container. Icons should be monoline, 1.5–2 px at this canvas, with flat caps or subtly rounded joins. Use a single icon family.
+Shapes come from spray cones, droplets, horizon lines, and thin circles present inside approved imagery. Every authored specimen panel, card, tag, crop, and color field uses zero-radius corners. Icons should be monoline, 1.5–2 px at this canvas, with flat caps. Use a single icon family.
 
 ## Do
 

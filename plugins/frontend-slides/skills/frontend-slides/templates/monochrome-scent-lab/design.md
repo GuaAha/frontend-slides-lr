@@ -367,7 +367,7 @@ Avoid neon cyan/red glow, chromatic aberration on body text, mirrored floors on 
 
 ## Shapes and Rules
 
-Use hard rectangles, full-bleed image bands, hairline dividers, circular pump details, and occasional soft material contours. Corners remain square or under 10 px. The diptych depends on exact alignment. Avoid pill-shaped feature chips and oversized quote marks.
+Use hard rectangles, full-bleed image bands, hairline dividers, circular pump details inside approved imagery, and occasional soft material contours. Every authored container has exactly square corners. The diptych depends on exact alignment. Avoid pill-shaped feature chips and oversized quote marks.
 
 ## Do
 

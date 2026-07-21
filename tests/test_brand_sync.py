@@ -35,6 +35,13 @@ class BrandSyncTests(unittest.TestCase):
         result = self.run_command("scripts/sync-brand.py", "--check")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_brand_source_has_confirmed_type_and_square_corners(self) -> None:
+        source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
+        self.assertEqual(source["shape"]["corner_radius_px"], 0)
+        self.assertEqual(source["typography"]["display"]["family"], "MAKE SENSE")
+        self.assertEqual(set(source["typography"]["locale_rules"]), {"zh", "en", "vi", "th"})
+        self.assertTrue((ROOT / source["typography"]["display"]["asset"]).is_file())
+
     def test_templates_are_one_peer_collection(self) -> None:
         index = json.loads((ROOT / "templates/index.json").read_text(encoding="utf-8"))
         self.assertEqual(index["template_count"], len(TEMPLATE_IDS))
@@ -86,6 +93,19 @@ class BrandSyncTests(unittest.TestCase):
             result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("stale or alternative canvas", result.stderr)
+
+    def test_static_validator_rejects_nonzero_radius(self) -> None:
+        html = """<!doctype html><html><head>
+        <meta name="frontend-slides-brand-status" content="draft">
+        <style>.deck-stage{width:750px;height:1320px}.card{border-radius:8px}</style>
+        </head><body><div class="deck-viewport"><main class="deck-stage">
+        <section class="slide"><div class="card">真实标题</div></section></main></div></body></html>"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "deck.html"
+            path.write_text(html, encoding="utf-8")
+            result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("non-zero border-radius", result.stderr)
 
 
 if __name__ == "__main__":
