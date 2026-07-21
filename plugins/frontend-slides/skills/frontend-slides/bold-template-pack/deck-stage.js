@@ -7,7 +7,7 @@
  *  (b) keyboard navigation — ←/→, PgUp/PgDn, Space, Home/End, number keys.
  *  (c) press R to reset to slide 0 (with a tasteful keyboard hint).
  *  (d) bottom-center overlay showing slide count + hints, fades out on idle.
- *  (e) auto-scaling — inner canvas is a fixed design size (default 1920×1080)
+ *  (e) auto-scaling — inner canvas is the fixed internal design size (750×1320)
  *      scaled with `transform: scale()` to fit the viewport, letterboxed.
  *      Set the `noscale` attribute to render at authored size (1:1) — the
  *      PPTX exporter sets this so its DOM capture sees unscaled geometry.
@@ -38,7 +38,7 @@
  * bare load with no hash always starts at slide 1.
  *
  * Usage:
- *   <deck-stage width="1920" height="1080">
+ *   <deck-stage width="750" height="1320">
  *     <section data-label="Title">...</section>
  *     <section data-label="Agenda">...</section>
  *   </deck-stage>
@@ -50,8 +50,8 @@
  */
 
 (() => {
-  const DESIGN_W_DEFAULT = 1920;
-  const DESIGN_H_DEFAULT = 1080;
+  const DESIGN_W_DEFAULT = 750;
+  const DESIGN_H_DEFAULT = 1320;
   const OVERLAY_HIDE_MS = 1800;
   const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
 

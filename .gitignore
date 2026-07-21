@@ -1,5 +1,8 @@
 .DS_Store
 .claude-design/
+.frontend-slides/
+__pycache__/
+.pytest_cache/
 node_modules/
 .vercel/
 *.log

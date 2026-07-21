@@ -1,14 +1,14 @@
 {
-  "name": "frontend-slides",
-  "version": "2.1.0",
-  "description": "Zero-dependency HTML presentation generator with safe presets, bold template-library styles, PPT conversion, and anti-AI-slop design philosophy.",
+  "name": "frontend-slides-lr",
+  "version": "3.0.0",
+  "description": "Single-brand internal slide generator with synchronized rules, three branded previews, validation, and fixed 750×1320 export.",
   "skills": "./skills/",
   "author": {
-    "name": "zarazhangrui",
-    "url": "https://github.com/zarazhangrui"
+    "name": "GuaAha",
+    "url": "https://github.com/GuaAha"
   },
-  "homepage": "https://github.com/zarazhangrui/frontend-slides",
-  "repository": "https://github.com/zarazhangrui/frontend-slides",
+  "homepage": "https://github.com/GuaAha/frontend-slides-lr",
+  "repository": "https://github.com/GuaAha/frontend-slides-lr",
   "license": "MIT",
-  "keywords": ["presentations", "slides", "html", "design", "powerpoint", "animations", "templates"]
+  "keywords": ["presentations", "slides", "html", "internal", "brand", "powerpoint", "validation"]
 }

@@ -1,0 +1,21 @@
+{
+  "source": "brand/source.json",
+  "generated": [
+    "brand/generated/brand-rules.md",
+    "brand/generated/brand-tokens.css",
+    "brand/generated/brand-runtime.js",
+    "viewport-base.css",
+    "STYLE_PRESETS.md",
+    "animation-patterns.md"
+  ],
+  "checked_for_invariants": [
+    "SKILL.md",
+    "html-template.md",
+    "bold-template-pack/deck-stage.js",
+    "scripts/export-pdf.sh",
+    "scripts/validate-html.py",
+    "scripts/validate-rendered.mjs",
+    "references/validation.md"
+  ],
+  "packaged_mirror": "plugins/frontend-slides/skills/frontend-slides"
+}

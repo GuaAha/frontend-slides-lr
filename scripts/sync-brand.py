@@ -1,0 +1,425 @@
+#!/usr/bin/env python3
+"""Generate fixed-brand artifacts and synchronize the packaged Skill mirror."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE_PATH = ROOT / "brand" / "source.json"
+PLUGIN_ROOT = ROOT / "plugins" / "frontend-slides" / "skills" / "frontend-slides"
+
+MIRROR_FILES = (
+    "SKILL.md",
+    "STYLE_PRESETS.md",
+    "viewport-base.css",
+    "html-template.md",
+    "animation-patterns.md",
+    "agents/openai.yaml",
+    "brand/source.json",
+    "brand/impact-map.json",
+    "brand/generated/brand-rules.md",
+    "brand/generated/brand-tokens.css",
+    "brand/generated/brand-runtime.js",
+    "references/validation.md",
+    "bold-template-pack/deck-stage.js",
+    "scripts/extract-pptx.py",
+    "scripts/export-pdf.sh",
+    "scripts/validate-html.py",
+    "scripts/validate-rendered.mjs",
+    "package.json",
+    "package-lock.json",
+)
+
+INVARIANT_FILES = (
+    "SKILL.md",
+    "html-template.md",
+    "references/validation.md",
+    "bold-template-pack/deck-stage.js",
+    "scripts/export-pdf.sh",
+    "scripts/validate-html.py",
+    "scripts/validate-rendered.mjs",
+)
+
+FORBIDDEN_ACTIVE_TEXT = (
+    "1920×1080",
+    "1920x1080",
+    "1920 x 1080",
+    "16:9",
+    "1280×720",
+    "1280x720",
+)
+
+
+def load_source() -> dict:
+    data = json.loads(SOURCE_PATH.read_text(encoding="utf-8"))
+    required = (
+        "schema_version",
+        "approval_status",
+        "brand",
+        "canvas",
+        "colors",
+        "typography",
+        "logo",
+        "shape",
+        "spacing",
+        "motion",
+        "density",
+        "visual_directions",
+    )
+    missing = [key for key in required if key not in data]
+    if missing:
+        raise ValueError(f"brand/source.json is missing: {', '.join(missing)}")
+    if data["approval_status"] not in {"draft", "approved"}:
+        raise ValueError("approval_status must be 'draft' or 'approved'")
+    if data["canvas"] != {"width": 750, "height": 1320}:
+        raise ValueError("the internal edition supports only a literal 750 × 1320 canvas")
+    if len(data["visual_directions"]) != 3:
+        raise ValueError("visual_directions must contain exactly three within-brand directions")
+    ids = [item["id"] for item in data["visual_directions"]]
+    if len(ids) != len(set(ids)):
+        raise ValueError("visual direction ids must be unique")
+    return data
+
+
+def css_font(role: dict) -> str:
+    names = [role["family"], *role.get("fallbacks", [])]
+    return ", ".join(f'"{name}"' if " " in name else name for name in names)
+
+
+def render_brand_tokens(data: dict) -> str:
+    colors = data["colors"]
+    typography = data["typography"]
+    shape = data["shape"]
+    spacing = data["spacing"]
+    motion = data["motion"]
+    return f"""/* GENERATED from brand/source.json. Do not edit. */
+:root {{
+  --brand-canvas-width: 750px;
+  --brand-canvas-height: 1320px;
+  --brand-background: {colors['background']};
+  --brand-surface: {colors['surface']};
+  --brand-surface-strong: {colors['surface_strong']};
+  --brand-text: {colors['text']};
+  --brand-text-muted: {colors['text_muted']};
+  --brand-primary: {colors['primary']};
+  --brand-accent: {colors['accent']};
+  --brand-success: {colors['success']};
+  --brand-danger: {colors['danger']};
+  --brand-font-display: {css_font(typography['display'])};
+  --brand-font-body: {css_font(typography['body'])};
+  --brand-min-body: {typography['minimum_body_px']}px;
+  --brand-min-caption: {typography['minimum_caption_px']}px;
+  --brand-slide-padding: {spacing['slide_padding_px']}px;
+  --brand-content-gap: {spacing['content_gap_px']}px;
+  --brand-corner-radius: {shape['corner_radius_px']}px;
+  --brand-stroke-width: {shape['stroke_width_px']}px;
+  --brand-motion-duration: {motion['duration_ms']}ms;
+  --brand-motion-stagger: {motion['stagger_ms']}ms;
+  --brand-motion-easing: {motion['easing']};
+}}
+"""
+
+
+def render_viewport_css(_: dict) -> str:
+    return """/* GENERATED from brand/source.json. Do not edit. */
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-font-body); }
+
+.deck-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deck-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 750px;
+  height: 1320px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--brand-background);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 750px;
+  height: 1320px;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--brand-background);
+}
+
+.slide.active,
+.slide.visible {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.deck-controls {
+  position: fixed;
+  z-index: 10000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  @page { size: 750px 1320px; margin: 0; }
+  html, body { width: 750px; height: auto; overflow: visible; background: white; }
+  .deck-viewport { position: static; display: block; overflow: visible; }
+  .deck-stage { position: static; width: 750px; height: auto; transform: none !important; overflow: visible; }
+  .slide { position: relative; width: 750px; height: 1320px; visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
+  .slide:last-child { break-after: auto; }
+  .deck-controls { display: none !important; }
+}
+"""
+
+
+def render_runtime(data: dict) -> str:
+    status = json.dumps(data["approval_status"], ensure_ascii=False)
+    name = json.dumps(data["brand"]["name"], ensure_ascii=False)
+    return f"""/* GENERATED from brand/source.json. Do not edit. */
+(() => {{
+  const CANVAS_WIDTH = 750;
+  const CANVAS_HEIGHT = 1320;
+  const BRAND_STATUS = {status};
+  const BRAND_NAME = {name};
+
+  window.FRONTEND_SLIDES_BRAND = Object.freeze({{
+    name: BRAND_NAME,
+    approvalStatus: BRAND_STATUS,
+    canvas: Object.freeze({{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }})
+  }});
+
+  class BrandSlidePresentation {{
+    constructor(stage = document.getElementById('deckStage')) {{
+      this.stage = stage;
+      this.slides = Array.from(document.querySelectorAll('.slide'));
+      this.index = 0;
+      if (!this.stage || !this.slides.length) return;
+      this.fit = this.fit.bind(this);
+      this.bind();
+      this.show(0);
+      this.fit();
+    }}
+
+    bind() {{
+      window.addEventListener('resize', this.fit);
+      document.addEventListener('keydown', (event) => {{
+        const target = event.target;
+        if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+        if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') this.show(this.index + 1);
+        else if (event.key === 'ArrowLeft' || event.key === 'PageUp') this.show(this.index - 1);
+        else if (event.key === 'Home') this.show(0);
+        else if (event.key === 'End') this.show(this.slides.length - 1);
+      }});
+    }}
+
+    fit() {{
+      const scale = Math.min(window.innerWidth / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT);
+      const x = (window.innerWidth - CANVAS_WIDTH * scale) / 2;
+      const y = (window.innerHeight - CANVAS_HEIGHT * scale) / 2;
+      this.stage.style.transform = `translate(${{x}}px, ${{y}}px) scale(${{scale}})`;
+    }}
+
+    show(index) {{
+      this.index = Math.max(0, Math.min(index, this.slides.length - 1));
+      this.slides.forEach((slide, i) => {{
+        slide.classList.toggle('active', i === this.index);
+        slide.classList.toggle('visible', i === this.index);
+      }});
+      document.dispatchEvent(new CustomEvent('brand-slide-change', {{ detail: {{ index: this.index, total: this.slides.length }} }}));
+    }}
+  }}
+
+  window.BrandSlidePresentation = BrandSlidePresentation;
+  const start = () => {{ window.presentation = new BrandSlidePresentation(); }};
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {{ once: true }});
+  else start();
+}})();
+"""
+
+
+def render_rules(data: dict) -> str:
+    typography = data["typography"]
+    logo = data["logo"]
+    density = data["density"]
+    lines = [
+        "# Generated brand rules",
+        "",
+        "> Generated from `brand/source.json`. Do not edit this file directly.",
+        "",
+        f"- Brand: **{data['brand']['name']}**",
+        f"- Approval status: **{data['approval_status']}**",
+        "- Canvas: **750 × 1320 CSS pixels only**",
+        f"- Display font: **{typography['display']['family']}**",
+        f"- Body font: **{typography['body']['family']}**",
+        f"- Minimum body text: **{typography['minimum_body_px']}px**",
+        f"- Minimum caption text: **{typography['minimum_caption_px']}px**",
+        f"- Logo minimum width: **{logo['minimum_width_px']}px**",
+        f"- Logo clear space: **{logo['clear_space_px']}px**",
+        "",
+        "## Density",
+        "",
+        f"- Speaker-led: at most {density['speaker_led']['max_bullets']} bullets or {density['speaker_led']['max_cards']} cards per slide.",
+        f"- Reading-first: at most {density['reading_first']['max_bullets']} bullets or {density['reading_first']['max_cards']} cards per slide.",
+        "- Split content instead of reducing type below the minimum sizes.",
+        "",
+        "## Three within-brand directions",
+        "",
+    ]
+    for item in data["visual_directions"]:
+        lines.append(f"- **{item['name']}** (`{item['id']}`): {item['layout_thesis']} Motion: `{item['motion_emphasis']}`.")
+    lines.extend(
+        [
+            "",
+            "Keep palette, font roles, logo rules, shape tokens, and motion timings identical across all three directions.",
+            "",
+            f"> Source note: {data['source_note']}",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def render_presets(data: dict) -> str:
+    lines = [
+        "# Three fixed-brand visual directions",
+        "",
+        "> Generated from `brand/source.json`. These are layout directions, not separate themes.",
+        "",
+    ]
+    for index, item in enumerate(data["visual_directions"], 1):
+        lines.extend(
+            [
+                f"## {index}. {item['name']}",
+                "",
+                f"- Direction ID: `{item['id']}`",
+                f"- Layout thesis: {item['layout_thesis']}",
+                f"- Motion emphasis: `{item['motion_emphasis']}`",
+                "- Keep all colors, fonts, logos, corners, strokes, and motion timing from the generated brand tokens.",
+                "- Use real presentation content; never render this direction name on the slide.",
+                "",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def render_animation(data: dict) -> str:
+    motion = data["motion"]
+    return f"""# Brand motion patterns
+
+> Generated from `brand/source.json`. Do not edit this file directly.
+
+- Standard duration: `{motion['duration_ms']}ms`
+- Stagger: `{motion['stagger_ms']}ms`
+- Easing: `{motion['easing']}`
+- Animate opacity and transform by default.
+- Use one dominant entrance sequence per slide.
+- Keep navigation immediate and preserve `prefers-reduced-motion` behavior.
+- Do not add decorative motion that changes layout, delays reading, or departs from the fixed brand timing.
+
+## Direction emphasis
+
+- `staggered-type`: reveal headline lines and supporting text in reading order.
+- `panel-sequence`: reveal evidence panels in a deliberate scan path.
+- `slow-reveal`: reveal one dominant image or statement, then its annotation.
+"""
+
+
+def generated_files(data: dict) -> dict[Path, str]:
+    return {
+        ROOT / "brand" / "generated" / "brand-rules.md": render_rules(data),
+        ROOT / "brand" / "generated" / "brand-tokens.css": render_brand_tokens(data),
+        ROOT / "brand" / "generated" / "brand-runtime.js": render_runtime(data),
+        ROOT / "viewport-base.css": render_viewport_css(data),
+        ROOT / "STYLE_PRESETS.md": render_presets(data),
+        ROOT / "animation-patterns.md": render_animation(data),
+    }
+
+
+def compare_or_write(path: Path, expected: str, check: bool, errors: list[str]) -> None:
+    expected = expected.rstrip() + "\n"
+    actual = path.read_text(encoding="utf-8") if path.exists() else None
+    if actual == expected:
+        return
+    if check:
+        errors.append(f"out of sync: {path.relative_to(ROOT)}")
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(expected, encoding="utf-8", newline="\n")
+    print(f"updated {path.relative_to(ROOT)}")
+
+
+def check_invariants(errors: list[str]) -> None:
+    for relative in INVARIANT_FILES:
+        path = ROOT / relative
+        if not path.exists():
+            errors.append(f"missing invariant file: {relative}")
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "750" not in text or "1320" not in text:
+            errors.append(f"missing fixed canvas literals: {relative}")
+        if relative != "scripts/validate-html.py":
+            for forbidden in FORBIDDEN_ACTIVE_TEXT:
+                if forbidden.lower() in text.lower():
+                    errors.append(f"stale canvas rule '{forbidden}' in {relative}")
+
+
+def sync_plugin(check: bool, errors: list[str]) -> None:
+    for relative in MIRROR_FILES:
+        source = ROOT / relative
+        if not source.exists():
+            errors.append(f"missing package source: {relative}")
+            continue
+        target = PLUGIN_ROOT / relative
+        compare_or_write(target, source.read_text(encoding="utf-8"), check, errors)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true", help="fail when generated or mirrored files differ")
+    args = parser.parse_args()
+    try:
+        data = load_source()
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"brand source error: {exc}", file=sys.stderr)
+        return 2
+
+    errors: list[str] = []
+    for path, expected in generated_files(data).items():
+        compare_or_write(path, expected, args.check, errors)
+    check_invariants(errors)
+    sync_plugin(args.check, errors)
+
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
+        return 1
+    print("brand artifacts and plugin mirror are synchronized")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

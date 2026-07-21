@@ -10,7 +10,7 @@
 #
 # What this does:
 #   1. Starts a local server to serve the HTML (fonts and assets need HTTP)
-#   2. Uses Playwright to screenshot each slide at 1920x1080
+#   2. Uses Playwright to screenshot each slide at the fixed 750x1320 canvas
 #   3. Combines all screenshots into a single PDF
 #   4. Cleans up the server and temp files
 #
@@ -31,38 +31,26 @@ ok()    { echo -e "${GREEN}✓${NC} $*"; }
 warn()  { echo -e "${YELLOW}⚠${NC} $*"; }
 err()   { echo -e "${RED}✗${NC} $*" >&2; }
 
-# ─── Parse flags ──────────────────────────────────────────
+# ─── Fixed export canvas ──────────────────────────────────
 
-# Default resolution: 1920x1080 (full HD, ~1-2MB per slide)
-# Compact resolution: 1280x720 (HD, ~50-70% smaller files)
-VIEWPORT_W=1920
-VIEWPORT_H=1080
-COMPACT=false
+VIEWPORT_W=750
+VIEWPORT_H=1320
 
-POSITIONAL=()
 for arg in "$@"; do
-    case $arg in
-        --compact)
-            COMPACT=true
-            VIEWPORT_W=1280
-            VIEWPORT_H=720
-            ;;
-        *)
-            POSITIONAL+=("$arg")
-            ;;
-    esac
+    if [[ "$arg" == --* ]]; then
+        err "Unsupported option: $arg. This internal edition exports only at 750x1320."
+        exit 1
+    fi
 done
-set -- "${POSITIONAL[@]}"
 
 # ─── Input validation ─────────────────────────────────────
 
 if [[ $# -lt 1 ]]; then
-    err "Usage: bash scripts/export-pdf.sh <path-to-html> [output.pdf] [--compact]"
+    err "Usage: bash scripts/export-pdf.sh <path-to-html> [output.pdf]"
     err ""
     err "Examples:"
     err "  bash scripts/export-pdf.sh ./my-deck/index.html"
     err "  bash scripts/export-pdf.sh ./presentation.html ./slides.pdf"
-    err "  bash scripts/export-pdf.sh ./presentation.html --compact   # smaller file size"
     exit 1
 fi
 
@@ -113,7 +101,7 @@ ok "Node.js found"
 # We use a temporary Node.js script with Playwright to:
 # 1. Start a local server (so fonts load correctly)
 # 2. Navigate to each slide
-# 3. Screenshot each slide at 1920x1080 (16:9 landscape)
+# 3. Screenshot each slide at the fixed 750x1320 portrait canvas
 # 4. Combine into a single PDF
 
 TEMP_DIR=$(mktemp -d)
@@ -128,26 +116,26 @@ cat > "$TEMP_SCRIPT" << 'EXPORT_SCRIPT'
 //
 // How it works:
 // 1. Starts a local HTTP server (needed for fonts/assets to load)
-// 2. Opens the presentation in a headless browser at 1920x1080
+// 2. Opens the presentation in a headless browser at 750x1320
 // 3. Counts the total number of slides
 // 4. Screenshots each slide one by one
-// 5. Generates a PDF with all slides as landscape pages
+// 5. Generates a PDF with one fixed portrait page per slide
 
 import { chromium } from 'playwright';
 import { createServer } from 'http';
 import { readFileSync, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
-import { join, extname, resolve } from 'path';
+import { join, extname, resolve, sep } from 'path';
 import { execSync } from 'child_process';
 
 const SERVE_DIR = process.argv[2];
 const HTML_FILE = process.argv[3];
 const OUTPUT_PDF = process.argv[4];
 const SCREENSHOT_DIR = process.argv[5];
-const VP_WIDTH = parseInt(process.argv[6]) || 1920;
-const VP_HEIGHT = parseInt(process.argv[7]) || 1080;
+const VP_WIDTH = parseInt(process.argv[6]) || 750;
+const VP_HEIGHT = parseInt(process.argv[7]) || 1320;
 
 // ─── Simple static file server ────────────────────────────
-// (We need HTTP so that Google Fonts and relative assets load correctly)
+// (We need HTTP so local approved fonts and relative assets load correctly.)
 
 const MIME_TYPES = {
   '.html': 'text/html',
@@ -167,9 +155,15 @@ const MIME_TYPES = {
 };
 
 const server = createServer((req, res) => {
-  // Decode URL-encoded characters (e.g., %20 → space) so filenames with spaces resolve correctly
-  const decodedUrl = decodeURIComponent(req.url);
-  let filePath = join(SERVE_DIR, decodedUrl === '/' ? HTML_FILE : decodedUrl);
+  const root = resolve(SERVE_DIR);
+  const decodedUrl = decodeURIComponent((req.url || '/').split('?')[0]);
+  const relativePath = decodedUrl === '/' ? HTML_FILE : decodedUrl.replace(/^[/\\]+/, '');
+  const filePath = resolve(root, relativePath);
+  if (filePath !== root && !filePath.startsWith(root + sep)) {
+    res.writeHead(403);
+    res.end('Forbidden');
+    return;
+  }
   try {
     const content = readFileSync(filePath);
     const ext = extname(filePath).toLowerCase();
@@ -382,10 +376,6 @@ info "Exporting slides to PDF..."
 echo ""
 
 # Run from the temp dir so Node can find the locally-installed playwright
-if [[ "$COMPACT" == "true" ]]; then
-    info "Using compact mode (1280×720) for smaller file size"
-fi
-
 node "$TEMP_SCRIPT" "$SERVE_DIR" "$HTML_FILENAME" "$OUTPUT_PDF" "$SCREENSHOT_DIR" "$VIEWPORT_W" "$VIEWPORT_H" || {
     err "PDF export failed."
     rm -rf "$TEMP_DIR"

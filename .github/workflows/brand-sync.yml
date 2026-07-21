@@ -1,0 +1,32 @@
+name: brand-sync
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+      - name: Check generated brand artifacts and package mirror
+        run: python scripts/sync-brand.py --check
+      - name: Validate Skill metadata
+        run: python scripts/validate-skill.py
+      - name: Check rendered validator syntax
+        run: node --check scripts/validate-rendered.mjs
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Install rendered-validation dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Validate rendered fixture
+        run: npm run validate:rendered

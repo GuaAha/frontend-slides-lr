@@ -1,0 +1,12 @@
+{
+  "name": "frontend-slides-lr-validation",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate:rendered": "node scripts/validate-rendered.mjs tests/fixtures/minimal-deck.html"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1"
+  }
+}

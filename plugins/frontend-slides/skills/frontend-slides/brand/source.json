@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "approval_status": "draft",
+  "source_note": "Provisional internal tokens. Replace with approved brand assets and set approval_status to approved before external delivery.",
+  "brand": {
+    "name": "LR Internal",
+    "short_name": "LR",
+    "language": "zh-CN"
+  },
+  "canvas": {
+    "width": 750,
+    "height": 1320
+  },
+  "colors": {
+    "background": "#F4F1EA",
+    "surface": "#FFFFFF",
+    "surface_strong": "#E8E2D7",
+    "text": "#14213D",
+    "text_muted": "#5F6B7A",
+    "primary": "#E4572E",
+    "accent": "#F3B61F",
+    "success": "#2A9D8F",
+    "danger": "#B23A48"
+  },
+  "typography": {
+    "display": {
+      "family": "Noto Sans SC",
+      "fallbacks": ["Microsoft YaHei", "sans-serif"],
+      "asset": null
+    },
+    "body": {
+      "family": "Noto Sans SC",
+      "fallbacks": ["Microsoft YaHei", "sans-serif"],
+      "asset": null
+    },
+    "minimum_body_px": 24,
+    "minimum_caption_px": 18
+  },
+  "logo": {
+    "primary_asset": null,
+    "inverse_asset": null,
+    "minimum_width_px": 72,
+    "clear_space_px": 20
+  },
+  "shape": {
+    "corner_radius_px": 18,
+    "stroke_width_px": 2
+  },
+  "spacing": {
+    "slide_padding_px": 52,
+    "content_gap_px": 28
+  },
+  "motion": {
+    "duration_ms": 520,
+    "stagger_ms": 80,
+    "easing": "cubic-bezier(0.16, 1, 0.3, 1)"
+  },
+  "density": {
+    "speaker_led": {
+      "max_bullets": 3,
+      "max_cards": 3
+    },
+    "reading_first": {
+      "max_bullets": 6,
+      "max_cards": 5
+    }
+  },
+  "visual_directions": [
+    {
+      "id": "editorial-axis",
+      "name": "Editorial Axis",
+      "layout_thesis": "Strong vertical type axis, generous margins, asymmetric editorial rhythm.",
+      "motion_emphasis": "staggered-type"
+    },
+    {
+      "id": "modular-evidence",
+      "name": "Modular Evidence",
+      "layout_thesis": "Structured evidence blocks, annotated data, disciplined modular grid.",
+      "motion_emphasis": "panel-sequence"
+    },
+    {
+      "id": "cinematic-focus",
+      "name": "Cinematic Focus",
+      "layout_thesis": "One dominant statement or image per slide with cropped layers and deep negative space.",
+      "motion_emphasis": "slow-reveal"
+    }
+  ]
+}

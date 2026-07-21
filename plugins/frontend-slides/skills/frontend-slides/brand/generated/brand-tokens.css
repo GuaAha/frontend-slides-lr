@@ -1,0 +1,25 @@
+/* GENERATED from brand/source.json. Do not edit. */
+:root {
+  --brand-canvas-width: 750px;
+  --brand-canvas-height: 1320px;
+  --brand-background: #F4F1EA;
+  --brand-surface: #FFFFFF;
+  --brand-surface-strong: #E8E2D7;
+  --brand-text: #14213D;
+  --brand-text-muted: #5F6B7A;
+  --brand-primary: #E4572E;
+  --brand-accent: #F3B61F;
+  --brand-success: #2A9D8F;
+  --brand-danger: #B23A48;
+  --brand-font-display: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --brand-font-body: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --brand-min-body: 24px;
+  --brand-min-caption: 18px;
+  --brand-slide-padding: 52px;
+  --brand-content-gap: 28px;
+  --brand-corner-radius: 18px;
+  --brand-stroke-width: 2px;
+  --brand-motion-duration: 520ms;
+  --brand-motion-stagger: 80ms;
+  --brand-motion-easing: cubic-bezier(0.16, 1, 0.3, 1);
+}

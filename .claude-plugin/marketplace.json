@@ -1,18 +1,18 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "frontend-slides",
-  "description": "Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files.",
+  "name": "frontend-slides-lr",
+  "description": "Create fixed-brand internal HTML presentations on the mandatory 750×1320 canvas.",
   "owner": {
-    "name": "zarazhangrui",
-    "url": "https://github.com/zarazhangrui"
+    "name": "GuaAha",
+    "url": "https://github.com/GuaAha"
   },
   "plugins": [
     {
-      "name": "frontend-slides",
-      "description": "Zero-dependency HTML presentation generator with safe presets, bold template-library styles, PPT conversion, and anti-AI-slop design philosophy.",
+      "name": "frontend-slides-lr",
+      "description": "Single-brand internal slide generator with synchronized rules, three branded previews, validation, and fixed 750×1320 export.",
       "source": "./plugins/frontend-slides",
       "category": "productivity",
-      "tags": ["presentations", "slides", "html", "design", "powerpoint", "templates"]
+      "tags": ["presentations", "slides", "html", "internal", "brand", "powerpoint"]
     }
   ]
 }

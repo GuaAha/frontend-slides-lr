@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fixed-Brand Internal Slides"
+  short_description: "Create fixed-brand 750 by 1320 internal decks"
+  default_prompt: "Use $frontend-slides-brand-internal to create a fixed-brand 750 by 1320 internal presentation."

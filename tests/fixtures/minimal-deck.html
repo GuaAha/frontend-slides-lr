@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="frontend-slides-brand-status" content="draft">
+  <title>Validation fixture</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    .deck-viewport { position: fixed; inset: 0; }
+    .deck-stage { position: absolute; left: 0; top: 0; width: 750px; height: 1320px; }
+    .slide { position: absolute; inset: 0; width: 750px; height: 1320px; visibility: hidden; opacity: 0; }
+    .slide.active, .slide.visible { visibility: visible; opacity: 1; }
+    .slide-content { position: relative; height: 100%; padding: 52px; }
+    h1 { margin: 0; font: 700 68px/1.1 sans-serif; }
+    p { margin: 36px 0 0; width: 560px; font: 400 28px/1.5 sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="deck-viewport">
+    <main class="deck-stage">
+      <section class="slide active visible">
+        <div class="slide-content">
+          <h1>固定品牌演示</h1>
+          <p>这是用于验证 750 × 1320 固定画布、文本边界与浏览器渲染流程的最小样例。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
