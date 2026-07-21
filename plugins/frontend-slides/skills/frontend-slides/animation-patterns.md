@@ -10,8 +10,10 @@
 - Keep navigation immediate and preserve `prefers-reduced-motion` behavior.
 - Do not add decorative motion that changes layout, delays reading, or departs from the fixed brand timing.
 
-## Direction emphasis
+## Structure-compatible sequences
 
-- `staggered-type`: reveal headline lines and supporting text in reading order.
+- `type-sequence`: reveal headline lines and supporting text in reading order.
 - `panel-sequence`: reveal evidence panels in a deliberate scan path.
-- `slow-reveal`: reveal one dominant image or statement, then its annotation.
+- `image-reveal`: reveal one dominant image or statement, then its annotation.
+
+Choose the sequence that fits the selected baseline's reading order. Motion never creates a separate theme or overrides brand timing.

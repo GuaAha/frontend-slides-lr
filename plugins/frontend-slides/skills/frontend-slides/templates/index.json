@@ -1,0 +1,163 @@
+{
+  "schema_version": 3,
+  "collection_name": "Fixed-Brand Design and Structure Baselines",
+  "template_count": 7,
+  "contract": {
+    "role": "Each entry is a peer design-style and narrative-structure baseline.",
+    "brand_authority": "brand/source.json and brand/generated files remain authoritative for palette, typography, logo, assets, spacing, shape, motion timing, and canvas.",
+    "canvas": {
+      "width": 750,
+      "height": 1320,
+      "scaling": "uniform-stage-only"
+    },
+    "content_safety": "Treat source-specific claims, products, people, marks, fonts, test results, certificates, and imagery as reference-only until replaced or approved."
+  },
+  "selection_workflow": {
+    "shortlist": "Choose three baselines from this index according to the presentation's content, evidence type, pacing, and image material.",
+    "preview": "Read only preview_md for the three shortlisted baselines and generate three real branded previews using the deck's actual content.",
+    "selection": "After the user chooses, read exactly the selected design_md before generating the complete deck.",
+    "mixing": "Keep one primary baseline. Borrow a component from one secondary baseline only when the user explicitly requests a mix and the component remains compatible with the primary narrative structure.",
+    "never": "Do not bulk-read all design.md files or use a baseline to override the fixed brand contract."
+  },
+  "templates": [
+    {
+      "id": "8-bit-orbit",
+      "name": "8-Bit Orbit",
+      "origin": {
+        "type": "repository-template",
+        "source": "GuaAha/frontend-slides-lr"
+      },
+      "canvas": "750×1320",
+      "strengths": [
+        "high-energy title and section rhythm",
+        "pixel-grid hierarchy",
+        "neon emphasis with disciplined dark fields",
+        "concrete component and Do/Don't documentation"
+      ],
+      "best_for": "Gaming, retro-tech, cyberpunk, developer culture, launches, hackathons, and high-energy technical narratives.",
+      "avoid_for": "Quiet institutional reporting, patient-facing healthcare, heritage luxury, or topics requiring visually neutral evidence.",
+      "preview_md": "templates/8-bit-orbit/preview.md",
+      "design_md": "templates/8-bit-orbit/design.md"
+    },
+    {
+      "id": "clearproof-green",
+      "name": "Clearproof Green",
+      "origin": {
+        "type": "figma-audit",
+        "file_key": "CEC2c3kp8JfmTpisy8lZvH",
+        "node_id": "1:5803"
+      },
+      "canvas": "750×1320",
+      "strengths": [
+        "white editorial proof pages",
+        "restrained green evidence accents",
+        "documentary product imagery",
+        "clear separation of claim, mechanism, evidence, and instruction"
+      ],
+      "best_for": "Efficacy-led products, clinical or laboratory evidence, ingredient mechanisms, matched comparisons, and instruction sequences.",
+      "avoid_for": "Entertainment-first stories, ornate luxury, playful education, dark cinematic pitches, or subjects without trustworthy evidence imagery.",
+      "preview_md": "templates/clearproof-green/preview.md",
+      "design_md": "templates/clearproof-green/design.md"
+    },
+    {
+      "id": "noir-amber-clinical",
+      "name": "Noir Amber Clinical",
+      "origin": {
+        "type": "figma-audit",
+        "file_key": "CEC2c3kp8JfmTpisy8lZvH",
+        "node_id": "1:5461"
+      },
+      "canvas": "750×1320",
+      "strengths": [
+        "black evidence field with controlled amber emphasis",
+        "measurable progression and specialist proof",
+        "matched documentary imagery",
+        "premium product and application storytelling"
+      ],
+      "best_for": "Specialist beauty, scalp care, efficacy wellness, advanced materials, patent-led launches, and technical sales narratives.",
+      "avoid_for": "Friendly education, playful consumer stories, bright lifestyle campaigns, casual updates, or unsupported claims.",
+      "preview_md": "templates/noir-amber-clinical/preview.md",
+      "design_md": "templates/noir-amber-clinical/design.md"
+    },
+    {
+      "id": "aqua-mint-proof",
+      "name": "Aqua Mint Proof",
+      "origin": {
+        "type": "figma-audit",
+        "file_key": "CEC2c3kp8JfmTpisy8lZvH",
+        "node_id": "1:3010"
+      },
+      "canvas": "750×1320",
+      "strengths": [
+        "icy white space and aquatic mint accents",
+        "fresh sensation separated from measured proof",
+        "spray and application operation",
+        "one immersive scent chapter within light editorial pacing"
+      ],
+      "best_for": "Cooling, hygiene, fragrance, personal care, packaging demonstrations, and product stories balancing fresh sensation with evidence.",
+      "avoid_for": "Solemn financial reporting, heritage luxury, dense engineering schematics, or subjects requiring warm intimacy throughout.",
+      "preview_md": "templates/aqua-mint-proof/preview.md",
+      "design_md": "templates/aqua-mint-proof/design.md"
+    },
+    {
+      "id": "magnetic-gold-engineering",
+      "name": "Magnetic Gold Engineering",
+      "origin": {
+        "type": "figma-audit",
+        "file_key": "CEC2c3kp8JfmTpisy8lZvH",
+        "node_id": "1:2263"
+      },
+      "canvas": "750×1320",
+      "strengths": [
+        "black glass and controlled gold product theater",
+        "white exploded-package engineering",
+        "refill and closure operation",
+        "alternating material and technical rhythm"
+      ],
+      "best_for": "Premium physical products, packaging innovation, refill systems, tools, hardware launches, and object-centered case studies.",
+      "avoid_for": "Soft community narratives, playful family content, flat software screenshots, or stories without a physical object to examine.",
+      "preview_md": "templates/magnetic-gold-engineering/preview.md",
+      "design_md": "templates/magnetic-gold-engineering/design.md"
+    },
+    {
+      "id": "monochrome-scent-lab",
+      "name": "Monochrome Scent Lab",
+      "origin": {
+        "type": "figma-audit",
+        "file_key": "CEC2c3kp8JfmTpisy8lZvH",
+        "node_id": "1:1920"
+      },
+      "canvas": "750×1320",
+      "strengths": [
+        "black and white editorial planes",
+        "paired cool and warm scent worlds",
+        "function and sensory narratives kept distinct",
+        "dose, operation, evidence, and integrity content"
+      ],
+      "best_for": "Fragrance-led products, paired variants, style-plus-care propositions, sensory material stories, dose demonstrations, and integrity guidance.",
+      "avoid_for": "Playful children's content, colorful community programs, engineering assemblies, or subjects without meaningful sensory contrast.",
+      "preview_md": "templates/monochrome-scent-lab/preview.md",
+      "design_md": "templates/monochrome-scent-lab/design.md"
+    },
+    {
+      "id": "blue-clay-clean",
+      "name": "Blue Clay Clean",
+      "origin": {
+        "type": "figma-audit",
+        "file_key": "CEC2c3kp8JfmTpisy8lZvH",
+        "node_id": "1:1238"
+      },
+      "canvas": "750×1320",
+      "strengths": [
+        "mineral-blue cleansing narrative",
+        "white editorial explanation and benefit bands",
+        "ingredient roles and texture specimens",
+        "controlled removal evidence and concise use steps"
+      ],
+      "best_for": "Cleansing, skin or surface care, mineral and clay textures, formula education, removal demonstrations, and compact product training.",
+      "avoid_for": "Warm luxury fragrance, playful lifestyle storytelling, dense corporate analytics, or subjects without a cleansing or material process.",
+      "preview_md": "templates/blue-clay-clean/preview.md",
+      "design_md": "templates/blue-clay-clean/design.md"
+    }
+  ]
+}

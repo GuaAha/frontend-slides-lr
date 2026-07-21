@@ -64,25 +64,5 @@
       "max_bullets": 6,
       "max_cards": 5
     }
-  },
-  "visual_directions": [
-    {
-      "id": "editorial-axis",
-      "name": "Editorial Axis",
-      "layout_thesis": "Strong vertical type axis, generous margins, asymmetric editorial rhythm.",
-      "motion_emphasis": "staggered-type"
-    },
-    {
-      "id": "modular-evidence",
-      "name": "Modular Evidence",
-      "layout_thesis": "Structured evidence blocks, annotated data, disciplined modular grid.",
-      "motion_emphasis": "panel-sequence"
-    },
-    {
-      "id": "cinematic-focus",
-      "name": "Cinematic Focus",
-      "layout_thesis": "One dominant statement or image per slide with cropped layers and deep negative space.",
-      "motion_emphasis": "slow-reveal"
-    }
-  ]
+  }
 }

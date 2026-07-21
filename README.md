@@ -7,11 +7,11 @@ The active product contract is intentionally narrow:
 - one brand source: `brand/source.json`;
 - one fixed canvas: `750 × 1320`;
 - one nine-step workflow from content ingestion to editing/export;
-- three real visual previews that vary layout, not brand identity;
+- three real visual previews selected from one unified set of seven design-and-structure baselines;
 - generated brand rules and a synchronized Claude Code plugin mirror;
 - CI checks for source/derived drift and stale canvas rules.
 
-The inherited bold template library remains in the repository as upstream reference material, but the internal Skill does not load it or treat it as a brand source.
+The seven peer baselines live under `templates/`. They shape composition, pacing, evidence structure, and component grammar while `brand/source.json` remains the only brand authority.
 
 ## Brand status
 

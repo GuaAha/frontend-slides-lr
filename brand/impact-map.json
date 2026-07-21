@@ -5,13 +5,12 @@
     "brand/generated/brand-tokens.css",
     "brand/generated/brand-runtime.js",
     "viewport-base.css",
-    "STYLE_PRESETS.md",
     "animation-patterns.md"
   ],
   "checked_for_invariants": [
     "SKILL.md",
     "html-template.md",
-    "bold-template-pack/deck-stage.js",
+    "runtime/deck-stage.js",
     "scripts/export-pdf.sh",
     "scripts/validate-html.py",
     "scripts/validate-rendered.mjs",

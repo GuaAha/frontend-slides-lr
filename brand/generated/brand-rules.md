@@ -18,12 +18,11 @@
 - Reading-first: at most 6 bullets or 5 cards per slide.
 - Split content instead of reducing type below the minimum sizes.
 
-## Three within-brand directions
+## Design and structure baselines
 
-- **Editorial Axis** (`editorial-axis`): Strong vertical type axis, generous margins, asymmetric editorial rhythm. Motion: `staggered-type`.
-- **Modular Evidence** (`modular-evidence`): Structured evidence blocks, annotated data, disciplined modular grid. Motion: `panel-sequence`.
-- **Cinematic Focus** (`cinematic-focus`): One dominant statement or image per slide with cropped layers and deep negative space. Motion: `slow-reveal`.
-
-Keep palette, font roles, logo rules, shape tokens, and motion timings identical across all three directions.
+- Read `templates/index.json` when preparing the three real branded previews.
+- Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.
+- Use baseline composition and component grammar without overriding the brand source.
+- Keep palette, font roles, logo rules, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.
 
 > Source note: Provisional internal tokens. Replace with approved brand assets and set approval_status to approved before external delivery.

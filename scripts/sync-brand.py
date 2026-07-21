@@ -13,9 +13,27 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "brand" / "source.json"
 PLUGIN_ROOT = ROOT / "plugins" / "frontend-slides" / "skills" / "frontend-slides"
 
+TEMPLATE_IDS = (
+    "8-bit-orbit",
+    "clearproof-green",
+    "noir-amber-clinical",
+    "aqua-mint-proof",
+    "magnetic-gold-engineering",
+    "monochrome-scent-lab",
+    "blue-clay-clean",
+)
+
+TEMPLATE_FILES = (
+    "templates/index.json",
+    *(
+        f"templates/{template_id}/{filename}"
+        for template_id in TEMPLATE_IDS
+        for filename in ("design.md", "preview.md")
+    ),
+)
+
 MIRROR_FILES = (
     "SKILL.md",
-    "STYLE_PRESETS.md",
     "viewport-base.css",
     "html-template.md",
     "animation-patterns.md",
@@ -26,7 +44,8 @@ MIRROR_FILES = (
     "brand/generated/brand-tokens.css",
     "brand/generated/brand-runtime.js",
     "references/validation.md",
-    "bold-template-pack/deck-stage.js",
+    "runtime/deck-stage.js",
+    *TEMPLATE_FILES,
     "scripts/extract-pptx.py",
     "scripts/export-pdf.sh",
     "scripts/validate-html.py",
@@ -39,7 +58,7 @@ INVARIANT_FILES = (
     "SKILL.md",
     "html-template.md",
     "references/validation.md",
-    "bold-template-pack/deck-stage.js",
+    "runtime/deck-stage.js",
     "scripts/export-pdf.sh",
     "scripts/validate-html.py",
     "scripts/validate-rendered.mjs",
@@ -69,7 +88,6 @@ def load_source() -> dict:
         "spacing",
         "motion",
         "density",
-        "visual_directions",
     )
     missing = [key for key in required if key not in data]
     if missing:
@@ -78,11 +96,6 @@ def load_source() -> dict:
         raise ValueError("approval_status must be 'draft' or 'approved'")
     if data["canvas"] != {"width": 750, "height": 1320}:
         raise ValueError("the internal edition supports only a literal 750 × 1320 canvas")
-    if len(data["visual_directions"]) != 3:
-        raise ValueError("visual_directions must contain exactly three within-brand directions")
-    ids = [item["id"] for item in data["visual_directions"]]
-    if len(ids) != len(set(ids)):
-        raise ValueError("visual direction ids must be unique")
     return data
 
 
@@ -286,43 +299,16 @@ def render_rules(data: dict) -> str:
         f"- Reading-first: at most {density['reading_first']['max_bullets']} bullets or {density['reading_first']['max_cards']} cards per slide.",
         "- Split content instead of reducing type below the minimum sizes.",
         "",
-        "## Three within-brand directions",
+        "## Design and structure baselines",
+        "",
+        "- Read `templates/index.json` when preparing the three real branded previews.",
+        "- Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.",
+        "- Use baseline composition and component grammar without overriding the brand source.",
+        "- Keep palette, font roles, logo rules, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.",
+        "",
+        f"> Source note: {data['source_note']}",
         "",
     ]
-    for item in data["visual_directions"]:
-        lines.append(f"- **{item['name']}** (`{item['id']}`): {item['layout_thesis']} Motion: `{item['motion_emphasis']}`.")
-    lines.extend(
-        [
-            "",
-            "Keep palette, font roles, logo rules, shape tokens, and motion timings identical across all three directions.",
-            "",
-            f"> Source note: {data['source_note']}",
-            "",
-        ]
-    )
-    return "\n".join(lines)
-
-
-def render_presets(data: dict) -> str:
-    lines = [
-        "# Three fixed-brand visual directions",
-        "",
-        "> Generated from `brand/source.json`. These are layout directions, not separate themes.",
-        "",
-    ]
-    for index, item in enumerate(data["visual_directions"], 1):
-        lines.extend(
-            [
-                f"## {index}. {item['name']}",
-                "",
-                f"- Direction ID: `{item['id']}`",
-                f"- Layout thesis: {item['layout_thesis']}",
-                f"- Motion emphasis: `{item['motion_emphasis']}`",
-                "- Keep all colors, fonts, logos, corners, strokes, and motion timing from the generated brand tokens.",
-                "- Use real presentation content; never render this direction name on the slide.",
-                "",
-            ]
-        )
     return "\n".join(lines)
 
 
@@ -340,11 +326,13 @@ def render_animation(data: dict) -> str:
 - Keep navigation immediate and preserve `prefers-reduced-motion` behavior.
 - Do not add decorative motion that changes layout, delays reading, or departs from the fixed brand timing.
 
-## Direction emphasis
+## Structure-compatible sequences
 
-- `staggered-type`: reveal headline lines and supporting text in reading order.
+- `type-sequence`: reveal headline lines and supporting text in reading order.
 - `panel-sequence`: reveal evidence panels in a deliberate scan path.
-- `slow-reveal`: reveal one dominant image or statement, then its annotation.
+- `image-reveal`: reveal one dominant image or statement, then its annotation.
+
+Choose the sequence that fits the selected baseline's reading order. Motion never creates a separate theme or overrides brand timing.
 """
 
 
@@ -354,7 +342,6 @@ def generated_files(data: dict) -> dict[Path, str]:
         ROOT / "brand" / "generated" / "brand-tokens.css": render_brand_tokens(data),
         ROOT / "brand" / "generated" / "brand-runtime.js": render_runtime(data),
         ROOT / "viewport-base.css": render_viewport_css(data),
-        ROOT / "STYLE_PRESETS.md": render_presets(data),
         ROOT / "animation-patterns.md": render_animation(data),
     }
 
@@ -369,6 +356,18 @@ def compare_or_write(path: Path, expected: str, check: bool, errors: list[str]) 
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(expected, encoding="utf-8", newline="\n")
+    print(f"updated {path.relative_to(ROOT)}")
+
+
+def compare_or_write_bytes(path: Path, expected: bytes, check: bool, errors: list[str]) -> None:
+    actual = path.read_bytes() if path.exists() else None
+    if actual == expected:
+        return
+    if check:
+        errors.append(f"out of sync: {path.relative_to(ROOT)}")
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(expected)
     print(f"updated {path.relative_to(ROOT)}")
 
 
@@ -387,6 +386,34 @@ def check_invariants(errors: list[str]) -> None:
                     errors.append(f"stale canvas rule '{forbidden}' in {relative}")
 
 
+def check_templates(errors: list[str]) -> None:
+    index_path = ROOT / "templates" / "index.json"
+    try:
+        index = json.loads(index_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"invalid template index: {exc}")
+        return
+
+    indexed_ids = [item.get("id") for item in index.get("templates", [])]
+    if index.get("template_count") != len(TEMPLATE_IDS):
+        errors.append(f"template_count must be {len(TEMPLATE_IDS)}")
+    if tuple(indexed_ids) != TEMPLATE_IDS:
+        errors.append("template index ids must match the canonical seven-template order")
+
+    actual_ids = tuple(sorted(path.name for path in index_path.parent.iterdir() if path.is_dir()))
+    if actual_ids != tuple(sorted(TEMPLATE_IDS)):
+        errors.append("template directories do not match the canonical seven-template set")
+
+    for template_id in TEMPLATE_IDS:
+        for filename in ("design.md", "preview.md"):
+            path = index_path.parent / template_id / filename
+            if not path.exists():
+                errors.append(f"missing template file: {path.relative_to(ROOT)}")
+                continue
+            if "750×1320" not in path.read_text(encoding="utf-8"):
+                errors.append(f"missing fixed template canvas literal: {path.relative_to(ROOT)}")
+
+
 def sync_plugin(check: bool, errors: list[str]) -> None:
     for relative in MIRROR_FILES:
         source = ROOT / relative
@@ -394,7 +421,7 @@ def sync_plugin(check: bool, errors: list[str]) -> None:
             errors.append(f"missing package source: {relative}")
             continue
         target = PLUGIN_ROOT / relative
-        compare_or_write(target, source.read_text(encoding="utf-8"), check, errors)
+        compare_or_write_bytes(target, source.read_bytes(), check, errors)
 
 
 def main() -> int:
@@ -411,6 +438,7 @@ def main() -> int:
     for path, expected in generated_files(data).items():
         compare_or_write(path, expected, args.check, errors)
     check_invariants(errors)
+    check_templates(errors)
     sync_plugin(args.check, errors)
 
     if errors:
