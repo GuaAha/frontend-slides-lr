@@ -2,6 +2,10 @@
 
 Use this file to decide whether Clearproof Green fits the presentation. Load `design.md` only after selection; the full file contains exact tokens, component rules, evidence handling, fixed-stage behavior, CJK guidance, implementation constraints, and known gaps.
 
+## Fixed-Brand Preview Override
+
+Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+
 ## Files
 
 - Preview: `preview.md`
@@ -28,7 +32,7 @@ Across a full deck, the rhythm reads as a proof chain rather than a gallery of i
 ## Preview Ingredients
 
 - **Palette:** `#FFFFFF` white field, `#000000` ink, `#42B265` functional green, `#F5F5F5` proof surfaces, `#B4B4B4` secondary explanations, and restricted `#588626` botanical support.
-- **Type:** MAKE SENSE 70S/45S when licensed; otherwise Noto Sans SC / PingFang SC / Microsoft YaHei. Use the observed 75/60/45/30/24/20/15/13px scale rather than fluid type.
+- **Type:** MAKE SENSE 70S/45S when licensed; otherwise Noto Sans SC / PingFang SC / Microsoft YaHei. Use only the fixed 75/45/45/30/15px hierarchy with 100% line height and -5% letter spacing.
 - **Canvas:** Fixed 750×1320px. Standard x=60–690 content rail, 630px working width, title near y=120, and a 310/10/310 comparison grid.
 - **Signature moves:** Two-beat Chinese claims, one green outcome phrase, large green metrics, minimal charts, matched before/after crops, ingredient material fields, black caption strips, green sensory bands, step labels, and bottom-aligned source notes.
 - **Depth:** Flat. No drop shadows, glass panels, floating UI cards, or decorative glow.

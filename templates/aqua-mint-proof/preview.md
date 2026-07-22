@@ -7,6 +7,10 @@ source_node: "1:3010"
 
 # Aqua Mint Proof — Preview
 
+## Fixed-Brand Preview Override
+
+Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+
 ## Files
 
 - `design.md` — complete visual system, component specifications, evidence rules, and fixed-stage behavior.
@@ -34,7 +38,7 @@ The system should feel dry, cold, breathable, and precise. It should not feel li
 
 - Frost background with a restrained top-to-bottom mint cast.
 - One `MintClaimTag`, maximum 10 Chinese characters.
-- 64–78 px black claim, no more than three lines.
+- 75px black claim, no more than three lines.
 - One large product crop and one translucent water or glass gesture.
 - No chart, ingredient list, or small icon row.
 
@@ -76,7 +80,7 @@ The system should feel dry, cold, breathable, and precise. It should not feel li
 
 ## Text Richness Standard
 
-Every page needs enough text to explain why the visual exists, but not enough to compete with it. A normal content page carries one claim, two to four supporting statements, and one source or qualifier. Body copy is usually 21–25 px and should remain below roughly 85 Chinese characters per page. Evidence pages may use more metadata, provided the hierarchy stays obvious.
+Every page needs enough text to explain why the visual exists, but not enough to compete with it. A normal content page carries one claim, two to four supporting statements, and one source or qualifier. Body copy uses the 30px description level and should remain below roughly 85 Chinese characters per page. Evidence pages may use more metadata, provided the hierarchy stays obvious.
 
 ## Do / Don't Preview
 

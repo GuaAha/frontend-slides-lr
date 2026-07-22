@@ -31,9 +31,9 @@ typography:
   source_reference_only: "MAKE SENSE 70S; HYQiHei 70S; Helvetica Now Display Medium"
 spacing:
   base: 10
-  safe_x: 52
-  safe_top: 56
-  safe_bottom: 52
+  safe_x: 60
+  safe_top: 120
+  safe_bottom: 60
   section_gap: 40
   module_gap: 18
   technical_gap: 12
@@ -59,9 +59,21 @@ components:
 
 # Magnetic Gold Engineering
 
+## Mandatory Fixed-Brand Override
+
+This block overrides every conflicting reference value later in this file.
+
+- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
+- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- Product-detail logo: do not add a separately authored brand-logo layer.
+- Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
+
 ## Fixed Stage Contract
 
-All reusable slides use a fixed `750×1320` coordinate system. Browser presentation scales the complete stage uniformly; internal content never reflows. Keep critical copy, arrows, evidence labels, and source notes within x=52–698 and y=56–1268. Product photography may bleed or extend beyond the lower edge when the crop is intentional.
+All reusable slides use a fixed `750×1320` coordinate system. Browser presentation scales the complete stage uniformly; internal content never reflows. Keep all authored copy, arrows, evidence labels, and source notes within x=60–690 and y=120–1260. Product photography may bleed or extend beyond the lower edge when the crop is intentional.
 
 This system is premium because it makes physical design legible. Black glass, a warm rim light, and restrained gold create desire; exploded views, hand gestures, and white engineering pages create trust. Neither half is complete alone.
 
@@ -131,14 +143,13 @@ The source’s display faces are not packaged. Recreate its authority through de
 
 ### Scale
 
-- Market number: 92–112 px, compact, maximum one per page.
-- Hero claim: 62–78 px, bold, 0.92–1.05 line height.
-- Section claim: 42–56 px, 1.0–1.15 line height.
-- Engineering title: 34–46 px, semibold.
-- Feature label: 23–29 px.
-- Body: 20–24 px, 1.45–1.65 line height.
-- Diagram label: 16–19 px.
-- Evidence/source note: 14–16 px.
+- Headline: 75px for hero, section claim, market number, and primary proof.
+- Subheadline: 45px for engineering titles and strong support lines.
+- Label: 45px for feature labels and prominent diagram annotations.
+- Description: 30px for body copy, qualifiers, and concise explanations.
+- Disclaimer: 15px for small diagram labels, evidence notes, sources, and legal copy.
+
+Every Chinese role uses 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels rather than introducing oversized exceptions.
 
 ### Dark-page type
 
@@ -152,14 +163,13 @@ Technical headings can be more compact and direct: component / action / user val
 
 ### Grid
 
-Use 6 columns inside the 52 px safe margins with 15–18 px gutters. Dark heroes often use a 2/4 or 3/3 split, with product mass occupying the wider side. Technical pages use a 4-column diagram field plus a 2-column annotation field, or a centered object with symmetric labels.
+Use 6 columns inside the 60 px horizontal safe margins with 15–18 px gutters. Dark heroes often use a 2/4 or 3/3 split, with product mass occupying the wider side. Technical pages use a 4-column diagram field plus a 2-column annotation field, or a centered object with symmetric labels.
 
 ### Vertical pacing
 
-- Header/eyebrow: y=56–112
-- Claim: y=138–320
+- Header/claim: y=120–320
 - Object or diagram: y=338–1010
-- Method/source: y=1080–1268
+- Method/source: y=1080–1260
 
 An exploded package view may extend from y=260 to y=1080. A market-signal opener may place its large number at y=300–650 with very little else.
 
@@ -223,7 +233,7 @@ Show two products or methods as a sequence rather than a bundle shot. Explain th
 
 ### EngineeringNote
 
-Small 14–16 px source or schematic note. Keep it within the fixed safe area and directly adjacent to the diagram it qualifies.
+Use the 15px disclaimer level for a source or schematic note. Keep it within the fixed safe area and directly adjacent to the diagram it qualifies.
 
 ## Page Blueprint Library
 
@@ -364,7 +374,7 @@ Avoid bevels, metal gradients on type, fake lens flares, dust overlays, and exce
 
 ## Shapes and Diagrams
 
-Geometry comes from circles, cylindrical parts, thin leader lines, section cuts, and flat comparison rules. Corners are mostly square or subtly rounded, 0–12 px. Use arrowheads only for motion or assembly; use simple leaders for labels. Diagram numbers are small dark discs or unfilled circles, not colored badges.
+Geometry comes from cylindrical parts, thin leader lines, section cuts, and flat comparison rules. Every authored container, annotation, crop, and control uses square zero-radius corners. Use arrowheads only for motion or assembly; use simple leaders for labels. Circular object details may appear only as intrinsic diagram geometry, never as rounded UI chrome.
 
 ## Do
 
@@ -406,7 +416,7 @@ The shell centers and uniformly scales the `750×1320` stage. On narrow devices,
 
 Motion should expose physical behavior: a 400–700 ms object reveal, a three-step exploded assembly, a magnetic-close sequence, or a short rim-light sweep. Use at most one signature movement per page. Never continuously rotate a product during reading. With reduced motion, show the final assembled or exploded state immediately.
 
-For export, inspect black detail on the target display, confirm gold does not clip into yellow, and make thin technical lines at least 1.5 px at source size. Test transparent product edges on both RGB screens and PDF output. Keep source notes at least 14 px.
+For export, inspect black detail on the target display, confirm gold does not clip into yellow, and make thin technical lines at least 1.5 px at source size. Test transparent product edges on both RGB screens and PDF output. Keep source notes at the 15px disclaimer level.
 
 ## CJK Guidance
 

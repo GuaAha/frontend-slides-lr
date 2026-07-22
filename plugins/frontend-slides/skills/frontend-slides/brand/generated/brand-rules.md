@@ -10,9 +10,9 @@
 - Minimum body text: **30px**
 - Minimum caption text: **15px**
 - Corner radius: **0px** for every authored container
-- Text safe area: **top 120px / right 60px / bottom 120px / left 60px**
-- Logo minimum width: **72px**
-- Logo clear space: **20px**
+- Text safe area: **top 120px / right 60px / bottom 60px / left 60px**
+- Product-detail pages: **no separately authored brand logo**
+- Tone mode: the user chooses **light** or **dark** before preview generation.
 
 ## Density
 
@@ -29,6 +29,9 @@
 | vi | Noto Sans | 60 | 30 | 25 | 15 | 9 | -6% |
 | th | Noto Sans Thai | 60 | 30 | 25 | 15 | 10 | -3% |
 - All locale levels use **100%** line height.
+- Every authored text run maps to one of the five locale levels; large proof numerals do not create a display-size exception.
+- Locale letter spacing and line height apply to every authored text leaf, including metrics, superscripts, utility labels, and dense answers.
+- Pure non-Chinese runs declare `lang`; mixed Chinese/Latin copy follows the Chinese contract unless explicitly separated by the source.
 - Chinese output embeds the approved local MAKE SENSE 70S font asset.
 
 ## Shape
@@ -43,6 +46,6 @@
 - Read `templates/index.json` when preparing the three real branded previews.
 - Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.
 - Use baseline composition and component grammar without overriding the brand source.
-- Keep palette, font roles, logo rules, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.
+- Keep the selected light/dark tone, approved color tokens, typography, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.
 
-> Source note: Confirmed multilingual typography and square-corner rules are imported from the internal rules source. Palette and logo approval remain draft; set approval_status to approved only after the remaining brand inputs are confirmed.
+> Source note: Confirmed multilingual typography, fixed safe area, square-corner rules, and product-detail no-logo policy are imported from the internal rules source. Light or dark tone is selected by the user for each run.

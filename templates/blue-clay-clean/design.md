@@ -32,9 +32,9 @@ typography:
   source_reference_only: "MAKE SENSE 70S"
 spacing:
   base: 10
-  safe_x: 54
-  safe_top: 58
-  safe_bottom: 54
+  safe_x: 60
+  safe_top: 120
+  safe_bottom: 60
   section_gap: 38
   card_gap: 16
   label_gap: 10
@@ -58,9 +58,21 @@ components:
 
 # Blue Clay Clean
 
+## Mandatory Fixed-Brand Override
+
+This block overrides every conflicting reference value later in this file.
+
+- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
+- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- Product-detail logo: do not add a separately authored brand-logo layer.
+- Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
+
 ## Fixed Stage Contract
 
-Every page is a fixed `750×1320` stage. Presentation shells scale the stage uniformly without rearranging columns, wrapping modules differently, or cropping critical content. Maintain 54 px horizontal safe margins. Photographic gradients and texture smears may bleed; claims, ingredient leaders, comparison labels, and method notes stay within y=58–1266.
+Every page is a fixed `750×1320` stage. Presentation shells scale the stage uniformly without rearranging columns, wrapping modules differently, or cropping critical content. Keep all authored copy inside x=60–690 and y=120–1260. Photographic gradients and texture smears may bleed; claims, ingredient leaders, comparison labels, and method notes may not.
 
 The system balances two propositions that often conflict visually: deep cleansing and retained comfort. Dark navy and mineral texture establish removal power; mist blue, white space, fluid spheres, and measured editorial copy establish hydration and calm.
 
@@ -124,14 +136,13 @@ The source face is not bundled. Use the approved CJK system stack with dense dis
 
 ### Scale
 
-- Hero claim: 62–76 px, bold, two to three lines.
-- Section headline: 42–54 px.
-- Benefit title: 26–34 px.
-- Proof number: 62–90 px.
-- Body: 20–24 px, 1.5–1.65 line height.
-- Mechanism label: 17–21 px.
-- Caption: 16–19 px.
-- Method/source: 14–16 px.
+- Headline: 75px for hero, section claim, and primary proof number.
+- Subheadline: 45px for a secondary claim or strong support line.
+- Label: 45px for benefit titles, mechanism labels, and prominent annotations.
+- Description: 30px for body copy, qualifiers, and concise explanations.
+- Disclaimer: 15px for captions, methods, sources, and legal copy.
+
+Every Chinese role uses 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels rather than introducing oversized exceptions.
 
 ### Blue phrase pattern
 
@@ -145,16 +156,15 @@ Break by tension and resolution: remove excess / retain comfort, cleanse / do no
 
 ### Grid
 
-Use 6 columns between x=54 and x=696 with 14–18 px gutters. Heroes center or slightly offset the product. Editorial pages use a 3/3 portrait-and-copy split, a 2/4 mechanism split, or a full-width lower benefit band.
+Use 6 columns between x=60 and x=690 with 14–18 px gutters. Heroes center or slightly offset the product. Editorial pages use a 3/3 portrait-and-copy split, a 2/4 mechanism split, or a full-width lower benefit band.
 
 ### Vertical zones
 
-- Eyebrow/identity: y=58–112
-- Claim: y=132–314
+- Headline and claim: y=120–314
 - Main image or system: y=330–1010
-- Method/source: y=1080–1266
+- Method/source: y=1080–1260
 
-Benefit bands usually begin between y=850 and y=960 and can run to the bottom edge, provided all labels remain above the 54 px bottom safe margin.
+Benefit bands usually begin between y=850 and y=960 and can run to the bottom edge, provided all authored labels remain above y=1260.
 
 ### Density
 
@@ -208,7 +218,7 @@ Use amount / emulsify / cleanse-and-rinse, or another honest three-step sequence
 
 ### MethodNote and PageMarker
 
-Use 14–16 px gray text inside the safe area. Evidence pages always include a method note; conceptual pages include a schematic note. Page markers are optional and can use a small blue rule plus chapter name.
+Use the 15px disclaimer level inside the safe area. Evidence pages always include a method note; conceptual pages include a schematic note. Page markers are optional and can use a small blue rule plus chapter name.
 
 ## Page Blueprint Library
 
@@ -349,7 +359,7 @@ Avoid cyan neon, heavy bevels, underwater caustic overlays, excessive bubble par
 
 ## Shapes and Iconography
 
-Shapes derive from tubes, clay ribbons, spheres, foam cells, thin leader lines, and broad rectangular benefit bands. Corners are mostly square or subtly rounded, 0–14 px. Icons are monoline at 1.5–2 px. Avoid droplet icons for every benefit; use text hierarchy when the meaning is already clear.
+Shapes derive from tubes, clay ribbons, spheres, foam cells, thin leader lines, and broad rectangular benefit bands. Every authored container, annotation, crop, and control uses square zero-radius corners. Icons are monoline at 1.5–2 px. Avoid droplet icons for every benefit; use text hierarchy when the meaning is already clear.
 
 ## Do
 
@@ -391,7 +401,7 @@ The responsive shell uniformly scales and centers the complete `750×1320` stage
 
 Motion can reveal the mineral gradient, sequence contact/capture/lift/rinse, settle 3–4 ingredient spheres into place, or crossfade matched removal evidence. Use 350–700 ms transitions and stop all movement before detailed reading. Do not loop bubbles or liquid behind text. Reduced-motion mode shows stable final states.
 
-For print, test separation between ice and white, dark detail in navy, and leader-line visibility. Keep diagram rules at least 1.5 px and source notes at least 14 px. Confirm transparent spheres do not disappear when flattened.
+For print, test separation between ice and white, dark detail in navy, and leader-line visibility. Keep diagram rules at least 1.5 px and source notes at the 15px disclaimer level. Confirm transparent spheres do not disappear when flattened.
 
 ## CJK Guidance
 

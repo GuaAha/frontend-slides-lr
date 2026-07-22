@@ -37,6 +37,8 @@ class DeckParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.class_counts: dict[str, int] = {}
         self.brand_status: str | None = None
+        self.deck_id: str | None = None
+        self.tone_mode: str | None = None
         self.external_resources: list[str] = []
         self.visible_text: list[str] = []
         self.css_sources: list[str] = []
@@ -49,6 +51,10 @@ class DeckParser(HTMLParser):
             self.class_counts[class_name] = self.class_counts.get(class_name, 0) + 1
         if tag == "meta" and attr_map.get("name") == "frontend-slides-brand-status":
             self.brand_status = attr_map.get("content")
+        if tag == "meta" and attr_map.get("name") == "frontend-slides-deck-id":
+            self.deck_id = attr_map.get("content")
+        if tag == "body":
+            self.tone_mode = attr_map.get("data-tone-mode")
         if tag in RESOURCE_TAGS:
             value = attr_map.get("src") or attr_map.get("href")
             if value and re.match(r"^https?://", value, flags=re.I):
@@ -120,6 +126,10 @@ def validate(path: Path, allow_draft: bool) -> tuple[list[str], list[str]]:
     expected_status = source["approval_status"]
     if parser.brand_status != expected_status:
         errors.append(f"brand status meta must equal {expected_status!r}")
+    if not parser.deck_id or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", parser.deck_id):
+        errors.append("frontend-slides-deck-id meta must be a stable ASCII deck identifier")
+    if parser.tone_mode not in {"light", "dark"}:
+        errors.append("body data-tone-mode must be exactly 'light' or 'dark'")
     if expected_status != "approved":
         message = "brand source is draft; final delivery and external publishing are blocked"
         if allow_draft:

@@ -2,6 +2,10 @@
 
 Use this file to decide whether Noir Amber Clinical fits the presentation. Load design.md after selection for tokens, evidence rules, components, CJK behavior, implementation guidance, and known gaps.
 
+## Fixed-Brand Preview Override
+
+Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+
 ## Files
 
 - Preview: preview.md
@@ -28,7 +32,7 @@ The full narrative behaves like a specialist proof dossier. It establishes the r
 ## Preview Ingredients
 
 - **Palette:** #000000, #FFFFFF, #F1E18D, #8A6845, #211A12, #969696.
-- **Type:** MAKE SENSE 70S with Noto Sans SC / PingFang SC fallback; 75/45/30/20/15px hierarchy.
+- **Type:** MAKE SENSE 70S with Noto Sans SC / PingFang SC fallback; fixed 75/45/45/30/15px hierarchy, 100% line height, and -5% letter spacing.
 - **Canvas:** Fixed 750×1320; x=60–690 content rail and title near y=120.
 - **Signature moves:** White claim plus one amber result line, product monument, scalp-zone map, matched comparison, amber time curve, ingredient filmstrip, application hero, and compact source note.
 - **Depth:** Product lighting and atmospheric gradient only; structural shadows are absent.

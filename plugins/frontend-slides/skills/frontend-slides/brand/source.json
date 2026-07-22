@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "approval_status": "draft",
-  "source_note": "Confirmed multilingual typography and square-corner rules are imported from the internal rules source. Palette and logo approval remain draft; set approval_status to approved only after the remaining brand inputs are confirmed.",
+  "source_note": "Confirmed multilingual typography, fixed safe area, square-corner rules, and product-detail no-logo policy are imported from the internal rules source. Light or dark tone is selected by the user for each run.",
   "brand": {
     "name": "LR Internal",
     "short_name": "LR",
@@ -126,7 +126,7 @@
   "spacing": {
     "slide_padding_px": 60,
     "safe_top_px": 120,
-    "safe_bottom_px": 120,
+    "safe_bottom_px": 60,
     "content_gap_px": 40,
     "item_gap_px": 10,
     "disclaimer_gap_px": 40

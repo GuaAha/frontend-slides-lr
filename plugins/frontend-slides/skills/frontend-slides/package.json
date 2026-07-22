@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "validate:rendered": "node scripts/validate-rendered.mjs tests/fixtures/minimal-deck.html"
+    "validate:rendered": "node scripts/validate-rendered.mjs tests/fixtures/minimal-deck.html",
+    "validate:runtime": "node scripts/validate-runtime.mjs tests/fixtures/minimal-deck.html"
   },
   "devDependencies": {
     "playwright": "1.61.1"

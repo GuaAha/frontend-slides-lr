@@ -24,100 +24,110 @@ shadows:
 typography:
   pixel-hero:
     fontFamily: "'Tektur', cursive"
-    fontSize: 80px
+    fontSize: 75px
     fontWeight: 900
-    lineHeight: 1.05
-    letterSpacing: 0.04em
+    lineHeight: 1
+    letterSpacing: -0.05em
   display:
     fontFamily: "'Tektur', cursive"
-    fontSize: 56px
+    fontSize: 75px
     fontWeight: 700
-    lineHeight: 1.15
+    lineHeight: 1
+    letterSpacing: -0.05em
   headline:
     fontFamily: "'Tektur', cursive"
-    fontSize: 44px
+    fontSize: 75px
     fontWeight: 700
-    lineHeight: 1.15
+    lineHeight: 1
+    letterSpacing: -0.05em
   subhead:
     fontFamily: "'Tektur', cursive"
-    fontSize: 30px
+    fontSize: 45px
     fontWeight: 700
-    lineHeight: 1.15
+    lineHeight: 1
+    letterSpacing: -0.05em
   stat-number:
     fontFamily: "'Tektur', cursive"
-    fontSize: 64px
+    fontSize: 75px
     fontWeight: 900
     lineHeight: 1
+    letterSpacing: -0.05em
   body:
     fontFamily: "'Chakra Petch', sans-serif"
-    fontSize: 24px
+    fontSize: 30px
     fontWeight: 400
-    lineHeight: 1.7
+    lineHeight: 1
+    letterSpacing: -0.05em
   hero-tagline:
     fontFamily: "'Chakra Petch', sans-serif"
-    fontSize: 24px
+    fontSize: 30px
     fontWeight: 400
-    lineHeight: 1.8
+    lineHeight: 1
+    letterSpacing: -0.05em
   quote-body:
     fontFamily: "'Chakra Petch', sans-serif"
-    fontSize: 30px
+    fontSize: 45px
     fontWeight: 500
-    lineHeight: 1.8
+    lineHeight: 1
+    letterSpacing: -0.05em
   label-pill:
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
+    fontSize: 45px
     fontWeight: 700
     lineHeight: 1
-    letterSpacing: 0.2em
+    letterSpacing: -0.05em
     textTransform: uppercase
   label-eyebrow:
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
+    fontSize: 45px
     fontWeight: 400
     lineHeight: 1
-    letterSpacing: 0.3em
+    letterSpacing: -0.05em
     textTransform: uppercase
   badge:
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
+    fontSize: 15px
     fontWeight: 400
     lineHeight: 1
-    letterSpacing: 0.1em
+    letterSpacing: -0.05em
     textTransform: uppercase
   chart-value:
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
+    fontSize: 45px
     fontWeight: 700
     lineHeight: 1
+    letterSpacing: -0.05em
   chart-label:
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
+    fontSize: 15px
     fontWeight: 400
     lineHeight: 1
-    letterSpacing: 0.05em
+    letterSpacing: -0.05em
   date-chip:
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
+    fontSize: 15px
     fontWeight: 400
     lineHeight: 1
+    letterSpacing: -0.05em
   counter:
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
+    fontSize: 15px
     fontWeight: 400
     lineHeight: 1
-    letterSpacing: 0.15em
+    letterSpacing: -0.05em
 
 spacing:
   pixel-unit: 4px
-  pad-slide-y: 52px
-  pad-slide-x: 52px
+  pad-slide-top: 120px
+  pad-slide-bottom: 60px
+  pad-slide-x: 60px
   pad-card-lg: "32px 40px"
   pad-card-md: "28px"
   pad-card-sm: "16px 20px"
   gap-grid-lg: 32px
   gap-grid-md: 24px
   gap-grid-sm: 16px
-  content-max-width: 646px
+  content-max-width: 630px
 
 canvas:
   width: 750
@@ -131,19 +141,19 @@ components:
     background: "{colors.deep-navy}"
     color: "{colors.neon-yellow}"
     padding: "6px 14px"
-    fontSize: 18px
+    fontSize: 45px
     fontWeight: 700
-    letterSpacing: 0.2em
+    letterSpacing: -0.05em
     textTransform: uppercase
     fontFamily: "'Space Mono', monospace"
-    description: "Universal section tag. Default fill is deep-navy with neon-yellow text. Variant fills swap text color so the pill stays legible (e.g., navy bg with cyan text, navy bg with pink text)."
+    description: "Universal square section tag with border-radius 0. Default fill is deep-navy with neon-yellow text; variants may swap text color while retaining the rectangular geometry."
   pixel-button:
     background: "{colors.neon-cyan}"
     color: "{colors.deep-navy}"
     padding: "16px 36px"
     fontFamily: "'Tektur', cursive"
     fontWeight: 700
-    letterSpacing: 0.08em
+    letterSpacing: -0.05em
     textTransform: uppercase
     boxShadow: "{shadows.pixel-stack-cyan-yellow}"
     description: "The signature stacked-shadow CTA. The pink variant swaps cyan body for pink and yellow shadow halo for cyan halo."
@@ -186,15 +196,16 @@ components:
     color: "{colors.neon-cyan}"
     padding: "2px 10px"
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
-    description: "Small inline date marker on timeline events."
+    fontSize: 15px
+    letterSpacing: -0.05em
+    description: "Small square inline date marker on timeline events; border-radius remains 0."
   hero-badge:
     border: "2px solid {colors.neon-yellow}"
     color: "{colors.neon-yellow}"
     padding: "8px 16px"
     fontFamily: "'Space Mono', monospace"
-    fontSize: 18px
-    letterSpacing: 0.1em
+    fontSize: 15px
+    letterSpacing: -0.05em
     textTransform: uppercase
     description: "Outline-only chip used in clusters under hero headlines."
   bg-grid:
@@ -230,20 +241,32 @@ components:
     description: "Short yellow rule with navy offset shadow, used as a separator under quote bodies."
 ---
 
+## Mandatory Fixed-Brand Override
+
+This block overrides every conflicting reference value later in this file.
+
+- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
+- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- Product-detail logo: do not add a separately authored brand-logo layer.
+- Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
+
 ## Fixed Stage Contract
 
-Generate every slide as a **fixed 750×1320 stage**. Scale the complete stage uniformly to the browser viewport; it may letterbox or pillarbox, but it never reflows internal content. Keep critical type and controls inside 52px horizontal and vertical safe margins.
+Generate every slide as a **fixed 750×1320 stage**. Scale the complete stage uniformly to the browser viewport; it may letterbox or pillarbox, but it never reflows internal content. Keep all authored copy inside x=60–690 and y=120–1260.
 
 This template is a design-style and narrative-structure baseline, not a brand source. Preserve its pixel-grid hierarchy, atmospheric layers, component grammar, and evidence treatment while translating palette, font family, logo, assets, spacing limits, and motion timing through `brand/source.json` and generated brand rules.
 
-Use `runtime/deck-stage.js` or the equivalent generated scaler: render at 750×1320, apply one uniform transform, and verify every rendered page for text overflow, panel overlap, and minimum text size.
+Use only the inlined `brand/generated/brand-runtime.js`: render at 750×1320, apply one uniform transform, and verify every rendered page for text overflow, panel overlap, minimum text size, and runtime interactions.
 
 
 ## Overview
 
 8-Bit Orbit is a **retro-futuristic pixel-art presentation system**. Its foundational premise is the **4-pixel unit**: every shadow offset, every border, every corner bracket, every label height resolves to a multiple of 4px. Layouts feel as if they were rasterized on an old CRT and dragged into HTML — and atmospheric overlays (scanlines, grain, vignette glow, animated starfields) reinforce the illusion on every surface.
 
-The type stack is three faces working in concert. **Tektur** is the display face — a chunky, geometric, semi-pixelated grotesque that carries headlines, hero text, stat numerals, and any text that needs to feel like it was drawn on the pixel grid. **Chakra Petch** is the body face — a humanist sans with subtle geometric cuts that reads cleanly at small sizes and avoids fighting Tektur for attention. **Space Mono** is the system face — used exclusively for labels, captions, badges, chart values, dates, and counters. The mono treatment + wide tracking on these elements makes them feel like HUD readouts, not editorial captions.
+The type stack is three faces working in concert. **Tektur** is the display face — a chunky, geometric, semi-pixelated grotesque that carries headlines, hero text, stat numerals, and any text that needs to feel like it was drawn on the pixel grid. **Chakra Petch** is the body face — a humanist sans with subtle geometric cuts that avoids fighting Tektur for attention. **Space Mono** is the system face — used exclusively for labels, captions, badges, chart values, dates, and counters. Font choice preserves the HUD contrast while every Chinese text role follows the fixed five-level type contract.
 
 The palette is built around **deep navy as ground** (`{colors.dark-void}` and `{colors.deep-navy}`) lit by **three saturated neons** — cyan, hot pink, yellow — plus a soft lavender pastel. Surfaces alternate: a dark navy surface (cyan grid wallpaper, white text, neon accents glowing in front) followed by a colored surface (pink, cyan, or lavender ground with navy text and navy grid lines etched at low opacity). The neons never appear as body text — they are reserved for headlines, stat numerals, accent rules, and label fills. The result is high contrast without being harsh: the neons feel illuminated rather than printed.
 
@@ -259,7 +282,7 @@ Depth is the system's signature trick: **stacked hard offset shadows in the pixe
 - Stacked hard offset shadows are the system's depth language — never blurred, never colored on text shadows except in the yellow→navy cascade.
 - Every slide carries the persistent scanline + grain + CRT-vignette trio at z-index 49-51.
 - L-shaped corner brackets (`{components.pixel-corner-bracket}`) replace rounded corners and frame regions, cards, and stat tiles.
-- A monospace label pill (`{components.label-pill}`) sits as the universal eyebrow on every region — navy fill, neon text, 0.2em tracking, uppercase.
+- A monospace label rectangle (`{components.label-pill}`) sits as the universal eyebrow on every region — navy fill, neon text, `-0.05em` tracking, uppercase where the source language supports it.
 - Animated starfields and floating particle squares wallpaper dark surfaces — ambient, not decorative.
 
 ## Colors
@@ -303,32 +326,24 @@ The transferable rule is role separation: heavy geometric display, calm readable
 
 ### Typography Scale
 
-| Token | Fixed size | Reference family | Weight | Use |
-|---|---|---|---|---|
-| `{typography.pixel-hero}` | 80px | Tektur | 900 | Hero or cover display title — carries the two-layer text shadow |
-| `{typography.display}` | 56px | Tektur | 700 | Large section opener |
-| `{typography.headline}` | 44px | Tektur | 700 | Primary section headline |
-| `{typography.subhead}` | 30px | Tektur | 700 | Region-level subheading or card title |
-| `{typography.stat-number}` | 64px | Tektur | 900 | Stat tile numeral — pairs with the small text shadow |
-| `{typography.body}` | 24px | Chakra Petch | 400 | Paragraph body |
-| `{typography.hero-tagline}` | 24px | Chakra Petch | 400 | Hero subtitle / lede paragraph below a pixel-hero |
-| `{typography.quote-body}` | 30px | Chakra Petch | 500 | Quote text |
-| `{typography.label-pill}` | 18px | Space Mono | 700 | Text inside the navy label pill |
-| `{typography.label-eyebrow}` | 18px | Space Mono | 400 | Standalone uppercase eyebrow above a headline |
-| `{typography.badge}` | 18px | Space Mono | 400 | Outline-only hero badge text |
-| `{typography.chart-value}` | 18px | Space Mono | 700 | Chart bar value numerals |
-| `{typography.chart-label}` | 18px | Space Mono | 400 | Chart axis or category labels |
-| `{typography.date-chip}` | 18px | Space Mono | 400 | Date marker on timeline events |
-| `{typography.counter}` | 18px | Space Mono | 400 | Persistent slide counter (NN / NN) |
+| Contract role | Fixed size | Reference family | Weight | Use |
+|---|---:|---|---:|---|
+| Headline | 75px | Tektur | 700–900 | Hero, cover, section opener, or primary claim |
+| Subheadline | 45px | Tektur / Chakra Petch | 500–700 | Region heading or quote |
+| Label | 45px | Space Mono / approved brand family | 400–700 | Eyebrow, evidence value, or prominent label |
+| Description | 30px | Chakra Petch | 400–500 | Body, lede, or short explanation |
+| Disclaimer | 15px | Space Mono / approved brand family | 400–700 | Badge, chart annotation, date, counter, or legal note |
+
+All five roles use `100%` line height and `-5%` (`-0.05em`) letter spacing. Metrics and proof numerals resolve to one of the same five levels; they do not create an exception.
 
 ### Defaults
 
-- **Default size for a hero or cover title**: `{typography.pixel-hero}` (80px) — reference weight 900 with the two-layer text shadow.
-- **Default size for a primary section headline**: `{typography.headline}` (44px) — reference weight 700.
-- **Default size for paragraph body**: `{typography.body}` (24px) — never reduce it to force content into the stage.
-- **Default size for a stat numeral**: `{typography.stat-number}` (64px) — always carries the 3px navy text shadow treatment.
-- **Default size for an eyebrow label**: `{typography.label-pill}` or `{typography.label-eyebrow}` at 18px.
-- **Default tracking for any Space Mono label**: 0.1em (badges) to 0.3em (eyebrow labels). Mono without wide tracking reads as code, not HUD.
+- **Default size for a hero, cover title, or primary section headline**: 75px.
+- **Default size for a subheadline or prominent label**: 45px.
+- **Default size for paragraph body and lede copy**: 30px — never reduce it to force content into the stage.
+- **Default size for a stat numeral**: 75px or 45px according to hierarchy; it may carry the reference text-shadow treatment.
+- **Default size for a badge, chart annotation, counter, or disclaimer**: 15px.
+- **Default tracking and leading for every Chinese role**: `-0.05em` letter spacing and `100%` line height.
 - **Default body weight**: 400 for Chakra Petch, 500 for quote bodies.
 - **Default display weight**: 700 for headlines, 900 for hero scale and stat numerals.
 
@@ -340,24 +355,24 @@ These treatments are **non-optional whenever the corresponding element type is u
 
 - **Every pixel-hero element carries the stacked text-shadow.** The pattern is `4px 4px 0 {colors.neon-yellow}, 8px 8px 0 {colors.deep-navy}` on cyan text. A pixel-hero element without this two-layer cascade reads as untreated display type and breaks the arcade voice.
 - **Every stat numeral carries the small text-shadow.** The pattern is `3px 3px 0 {colors.deep-navy}` on cyan text. Stat numerals on dark surfaces need this shadow to feel illuminated; without it they read flat.
-- **Every Space Mono element is uppercase with wide tracking** — minimum 0.05em for chart labels, 0.08–0.2em for pills and badges, 0.3em for standalone eyebrow labels. Sentence-case mono does not exist in this system.
-- **Every Tektur display element keeps its native letter-spacing or slight positive (+0.04em on hero scale).** Tektur is wide-bodied by design — adding negative tracking compresses it into something that no longer reads as the same face.
-- **Every Chakra Petch body block uses line-height ≥ 1.6.** The face is dense; tighter line-height on body bleeds into unreadable.
-- **Every label pill uses the approved annotation treatment at 18px on the authored stage.** Latin-only reference builds may use the mono voice and 0.2em tracking; CJK uses 0 tracking.
+- **Every Chinese text element uses the fixed `-0.05em` tracking.** Uppercase remains a language-dependent styling choice, not a spacing exception.
+- **Every Tektur display element uses the same `-0.05em` tracking and `100%` line height as the rest of the Chinese hierarchy.** Visual distinction comes from family, weight, color, and shadow.
+- **Every Chakra Petch body block uses `100%` line height.** Create breathing room with block gaps instead of extra leading.
+- **Every label rectangle resolves to 45px for a prominent label or 15px for annotation-level chrome.** It uses `-0.05em` tracking.
 - **Every chart bar value / axis label uses Space Mono.** Numerical chrome is mono, never Tektur or Chakra Petch.
 
 ### Typography Principles
 
 The voice contrast is **chunky display ↔ humanist body ↔ wide-tracked mono chrome**. Switching any of the three roles to a different face flattens the system into a generic dark-mode aesthetic. Italic is never used in display or body — the only italic that appears anywhere is implicit in the slight tilt on pixel-art decorative elements.
 
-Tektur should always feel **planted** — left-aligned, generous line-height, never centered for body-length runs (centering is permitted on hero and CTA titles only). Chakra Petch should always feel **calm** — left-aligned by default, no all-caps treatment, no letter-spacing.
+Tektur should always feel **planted** — left-aligned and separated by deliberate block spacing, never centered for body-length runs (centering is permitted on hero and CTA titles only). Chakra Petch should always feel **calm** and left-aligned by default. Both follow the fixed line-height and letter-spacing contract.
 
 ## Layout
 
 ### Canvas System
 The system targets a fixed `750×1320` stage per slide. Slides remain mounted inside the runtime stage while only the active slide is visible. Navigation changes the active state; it does not move or reflow the authored geometry.
 
-Default slide padding is `52px`. The maximum content width is `646px`. Use a 6-column internal grid with 14–18px gutters, then choose a 3/3, 2/4, or full-width composition according to the page job. Atmospheric backgrounds may bleed to the edge; text, labels, and evidence notes remain inside the safe area.
+Use 60px horizontal padding, a 120px top safe area, a 60px bottom safe area, and a maximum content width of 630px. Use a 6-column internal grid with 14–18px gutters, then choose a 3/3, 2/4, or full-width composition according to the page job. Atmospheric backgrounds may bleed to the edge; text, labels, and evidence notes remain inside the safe area.
 
 ### Pixel Unit
 Every measurement in the system snaps to a **4px grid**. Border widths are 2px or 4px. Shadow offsets are 4px or 8px. Corner brackets are 24×24 with 4px stroke. The background grid is 40px (10 × pixel-unit). Card padding usually resolves to multiples of 8 (16, 24, 32, 48). This discipline is what makes the system feel rasterized rather than vector.
@@ -365,8 +380,8 @@ Every measurement in the system snaps to a **4px grid**. Border widths are 2px o
 ### Persistent Chrome
 Three elements appear on every slide:
 - **Navigation dot rail** — vertical stack of 12×12 cyan-bordered squares, fixed at `right: 24px`, vertically centered. Active state fills the inner 8×8 with cyan.
-- **Slide counter** — Space Mono `01 / 10` format, fixed at `bottom: 24px`, horizontally centered, dark-navy semi-transparent pill background.
-- **Nav hint** — `USE KEYS ↑ ↓`, Space Mono 11px at 50% opacity, fixed at `bottom: 24px right: 24px`.
+- **Slide counter** — Space Mono `01 / 10` format at 15px, placed in application chrome outside the branded safe area.
+- **Nav hint** — `USE KEYS ↑ ↓` at 15px, placed in application chrome outside the branded safe area.
 
 The cursor across the entire deck is `crosshair` — an additional arcade signal.
 
@@ -421,7 +436,7 @@ Borders are always solid, always navy or neon, never dashed except for the timel
 
 **Pixel corner bracket** — Two outward L-shapes (top-left + bottom-right) bracketing a region. 24×24 with 4px stroke. Default color is cyan; yellow and pink variants exist. The bracket pattern is the system's most distinctive non-typographic mark.
 
-**Label pill** — Navy rectangle with an 18px system-style label. The universal section eyebrow. Latin-only reference builds may use mono text at 0.2em; CJK uses the approved brand family at 0 tracking. Variants flip the text color to cyan or pink while keeping the navy fill.
+**Label rectangle** — Navy rectangle with a 45px prominent label or 15px annotation. It uses `-0.05em` tracking and the approved brand family for CJK. Variants flip the text color to cyan or pink while keeping the navy fill.
 
 **Hero badge** — Outline-only 2px yellow border with yellow Space Mono text. Appears in clusters under hero titles as feature tags.
 
@@ -435,7 +450,7 @@ Borders are always solid, always navy or neon, never dashed except for the timel
 
 **Timeline node** — 24×24 cyan square with a 4px navy border, positioned on a dashed navy rail. Active state swaps fill to yellow.
 
-**Date chip** — Inline 2px-padded navy pill with cyan Space Mono text, used to mark timeline events.
+**Date chip** — Inline 2px-padded navy rectangle with cyan Space Mono text, used to mark timeline events. It remains square with zero radius.
 
 **Pixel face** — A 120×120 grouping of square "facial features" (cyan eyes, pink mouth) rendered as absolutely positioned divs inside a navy avatar zone. Functions as both a friendly mascot and a system-signature decorative module.
 
@@ -452,7 +467,7 @@ Borders are always solid, always navy or neon, never dashed except for the timel
 - Apply `{shadows.pixel-text-shadow}` to every pixel-hero element and `{shadows.pixel-text-shadow-small}` to every stat numeral. Tektur display type without its text-shadow reads flat.
 - Snap every measurement to the 4px pixel unit — border widths, shadow offsets, padding, corner-bracket dimensions. Off-grid values break the rasterized feel.
 - Use Tektur for display, Chakra Petch for body, Space Mono for chrome — exclusively. Cross-mixing the three voices flattens the system.
-- Wrap eyebrows in the `{components.label-pill}` (navy bg, yellow Space Mono text, 0.2em tracking, uppercase) as the universal section tag.
+- Wrap eyebrows in the square `{components.label-pill}` (navy background, yellow annotation text, `-0.05em` tracking) as the universal section tag.
 - Pair the navy ground with at least one neon glow per region — text, chart bar, corner bracket, or button shadow halo. Pure navy without a neon accent reads as dead screen.
 - Layer animated starfields and pixel-particle floaters on dark hero and CTA surfaces. The motion is part of the atmosphere.
 - Render charts with cyan → pink → yellow series order and Space Mono numerals/labels. The neon trio is the chart palette.
@@ -461,14 +476,14 @@ Borders are always solid, always navy or neon, never dashed except for the timel
 ### Don't
 
 - Don't substitute fonts. Tektur, Chakra Petch, and Space Mono are the three voices — replacing any of them with Inter, Roboto, or Space Grotesk collapses the system.
-- Don't round any corner. The pixel aesthetic depends on square edges. Border-radius is reserved for SVG donut chart geometry only.
+- Don't round any corner. The pixel aesthetic depends on square edges. SVG charts may use intrinsic circular geometry, but every containing webpage layer still uses `border-radius: 0`.
 - Don't blur any shadow. Every shadow is hard-edged at zero blur. `0 4px 12px rgba(0,0,0,0.1)` does not exist here.
 - Don't place neon text on neon surfaces. Cyan headlines on the pink grid become illegible — switch to deep-navy on colored grounds.
 - Don't use Tektur in sentence-case body runs or Chakra Petch in chrome/labels. Each face has a single role.
 - Don't introduce a fourth neon. The palette is cyan + pink + yellow + lavender pastel. Adding green or orange breaks the curated neon trio.
 - Don't omit the atmospheric overlay stack on any slide, even chart-heavy or table-heavy slides. The overlays are non-negotiable.
 - Don't use uppercase Chakra Petch body text. Body always sentence-case; uppercase is reserved for Space Mono and Tektur display.
-- Don't drop the navy label pill in favor of a plain text eyebrow. The pill is the most recognizable small chrome in the system.
+- Don't drop the square navy label rectangle in favor of a plain text eyebrow. The filled rectangular tag is the most recognizable small chrome in the system.
 - Don't shadow text or chrome with off-axis offsets. Every shadow steps down-right in 4px increments — left or upward offsets do not exist.
 
 ## Responsive Behavior
@@ -476,13 +491,13 @@ Borders are always solid, always navy or neon, never dashed except for the timel
 8-Bit Orbit is a **fixed-stage system**. All internal coordinates, type sizes, gaps, and image crops are authored once at `750×1320`. The browser scales the complete stage with one uniform transform. No component changes columns or reading order because the viewport is narrower.
 
 ### Scaling Behavior
-- Author the hero at 80px, the main headline at 44px, body at 24px, and captions or HUD labels at no less than 18px.
+- Author headline text at 75px, subheadlines and prominent labels at 45px, descriptions at 30px, and captions or HUD labels at 15px.
 - Keep the 4px pixel unit, 40px background grid, 4px scanline stripe, and 24px corner-bracket geometry fixed inside the authored stage.
 - Compute scale as `min(viewportWidth / 750, viewportHeight / 1320)` and apply it to the whole stage.
 - Permit letterboxing or pillarboxing outside the stage. Never crop the stage to fill the viewport.
 
 ### Internal Grid
-- Use up to three cards or stat blocks on one row; use a 2×2 field only when each item remains legible at 24px body scale.
+- Use up to three cards or stat blocks on one row; use a 2×2 field only when each item remains legible at the 30px description scale.
 - Split four-column feature grids into two stages rather than shrinking them.
 - Preserve the same layout at desktop, tablet, mobile, screenshot, PDF, and presenter sizes.
 - Keep page-to-page navigation outside the branded content area.
@@ -511,7 +526,7 @@ When using this template for Chinese or other CJK content, use the approved bran
 |---|---|---|
 | Display / hero / stat numerals | Tektur 700–900 | 思源黑体 Noto Sans SC 900 |
 | Body / hero tagline / quote body | Chakra Petch 400–500 | 思源黑体 Noto Sans SC 400 |
-| HUD labels / badges / chart values / counter | Space Mono 400–700 (uppercase + wide tracking) | 思源黑体 Noto Sans SC 500 (no transform, no tracking) — see Known CJK Gap below |
+| HUD labels / badges / chart values / counter | Space Mono 400–700 | 思源黑体 Noto Sans SC 500 with the fixed `-0.05em` tracking |
 
 ### Mixed-Content Strategy
 
@@ -523,8 +538,8 @@ Load only the font assets declared in `brand/source.json`. When no approved font
 
 ### Universal CJK Adjustments
 
-- **Line-height**: increase by ~15–25% from the Latin spec. Body 1.75–1.85 (up from 1.7–1.8), display 1.15–1.25 (up from 1.05–1.15). CJK characters are square and visually full — they crowd vertically more than Latin.
-- **Letter-spacing**: set to 0 on every CJK run. The template's positive tracking on Tektur display (+0.04em) and 0.1–0.3em mono tracking on Space Mono labels looks broken on square CJK glyphs — they're already evenly spaced by design.
+- **Line-height**: use `100%` for every level. Add separation through layout gaps, not leading exceptions.
+- **Letter-spacing**: use `-0.05em` for every Chinese role, including display, labels, numerals, and disclaimers.
 - **Text transform**: don't apply `uppercase` to Chinese text — CJK has no case. Every Space Mono label in this system uses `text-transform: uppercase`; remove it for CJK runs.
 - **Punctuation**: use full-width Chinese punctuation （，。：；！？「」（））.
 - **No period on display headlines**: Chinese typography convention omits trailing 。 on display-scale headlines.
@@ -535,19 +550,19 @@ Load only the font assets declared in `brand/source.json`. When no approved font
 
 The system's identity rests on three voices — Tektur (chunky arcade display), Chakra Petch (humanist body), Space Mono (HUD readouts) — and a CJK build cannot preserve that three-face contrast. Compensate by leaning harder on the **non-typographic** signature elements: the stacked text-shadow (yellow at +4/+4, navy at +8/+8) still works on 思源黑体 900 headlines and is what carries the arcade voice when the face itself is generic. Keep all atmospheric overlays (scanlines, grain, CRT vignette, starfields, grid wallpaper) — they do more identity work in a CJK build than in the Latin original.
 
-The system's mono label-pill is the most recognizable small chrome and translates poorly: CJK characters do not accept wide tracking or uppercase transformation. Render Chinese label-pills with the approved brand body family at weight 500, 0 tracking, no transform, and at least 18px on the authored stage. The colored pill background and corner-bracket framing carry the recognition load.
+The system's label rectangle is recognizable chrome. Render Chinese label text with the approved brand body family at weight 500, `-0.05em` tracking, `100%` line height, and either the 45px label or 15px disclaimer level. The colored rectangular background and corner-bracket framing carry the recognition load.
 
 ### Known CJK Gap
 
 - **No approved Chinese pixel face is assumed.** A conventional bold CJK family gives heft but loses the pixel-grid signal. Let scanlines, grain, vignette, starfields, grid wallpaper, and pixel-bevel shadow stacks carry the arcade voice.
-- **CJK does not preserve the Latin mono HUD treatment.** Monospaced rhythm, uppercase, and wide tracking do not transfer. Lean on label fill, contrast, geometry, and corner-bracket framing while keeping text at or above the brand caption minimum.
+- **CJK does not depend on Latin uppercase rhythm.** Lean on label fill, contrast, geometry, and corner-bracket framing while keeping text on the fixed five-level scale.
 
 ## Iteration Guide
 
 1. Any new slide gets the full atmospheric overlay trio (scanlines + grain + crt-glow on dark surfaces, scanlines + grain on colored surfaces) and a 40px etched grid surface. Don't skip the overlays.
 2. Any new display element uses Tektur. Any new body element uses Chakra Petch. Any new label, badge, counter, or chart value uses Space Mono. Never cross the role boundaries.
 3. Any new headline gets `{colors.neon-cyan}` on dark surfaces or `{colors.deep-navy}` on colored grids — both with the appropriate Tektur weight and (for hero scale) the stacked text-shadow.
-4. Any new eyebrow uses the `{components.label-pill}` — navy fill, neon-yellow annotation text at 18px, with uppercase and tracking only for compatible Latin runs. Don't substitute a plain h-tag.
+4. Any new eyebrow uses the square `{components.label-pill}` — navy fill, neon-yellow annotation text at 45px or 15px, and `-0.05em` tracking. Don't substitute a plain h-tag.
 5. Any new card or region gets the L-shaped corner brackets at opposite corners (top-left + bottom-right) instead of a full outline. The implied frame is the system's signature.
 6. Any new measurement snaps to the 4px pixel unit. Borders 2-4px, shadow offsets 4px / 8px, corner brackets 24px, grid 40px. Off-grid values feel wrong.
 7. Any new shadow is hard-edged at zero blur. For buttons use the six-step cascade; for cards use 6px navy or 8px yellow; for text use the two-layer cascade.

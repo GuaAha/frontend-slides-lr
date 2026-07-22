@@ -7,6 +7,10 @@ source_node: "1:1920"
 
 # Monochrome Scent Lab — Preview
 
+## Fixed-Brand Preview Override
+
+Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+
 ## Files
 
 - `design.md` — complete black/white, dual-scent, function, proof, and integrity specification.
@@ -33,7 +37,7 @@ The direction feels editorial, sensorial, and controlled. It should not feel lik
 ### Page 01 — Split-tone hero
 
 - Black-to-white or black-to-gray field.
-- One 62–78 px claim fully inside one tonal zone.
+- One 75px claim fully inside one tonal zone.
 - One or two product variants placed at the boundary.
 - Optional category signal only with scope and source.
 

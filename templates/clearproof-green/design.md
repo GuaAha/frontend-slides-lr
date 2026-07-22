@@ -48,69 +48,76 @@ typography:
     fontSize: 75px
     fontWeight: 500
     lineHeight: 1
-    letterSpacing: -0.045em
+    letterSpacing: -0.05em
   display:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "70S"
-    fontSize: 60px
+    fontSize: 75px
     fontWeight: 500
     lineHeight: 1
-    letterSpacing: -0.04em
+    letterSpacing: -0.05em
   headline:
+    fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
+    fontStyle: "70S"
+    fontSize: 75px
+    fontWeight: 500
+    lineHeight: 1
+    letterSpacing: -0.05em
+  subhead:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "70S"
     fontSize: 45px
     fontWeight: 500
     lineHeight: 1
-    letterSpacing: -0.03em
-  subhead:
-    fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
-    fontStyle: "70S"
-    fontSize: 30px
-    fontWeight: 500
-    lineHeight: 1
+    letterSpacing: -0.05em
   body-large:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "70S"
     fontSize: 30px
     fontWeight: 500
-    lineHeight: 1.2
+    lineHeight: 1
+    letterSpacing: -0.05em
   body:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "70S"
-    fontSize: 24px
+    fontSize: 30px
     fontWeight: 500
-    lineHeight: 1.25
+    lineHeight: 1
+    letterSpacing: -0.05em
   support:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "70S"
-    fontSize: 20px
+    fontSize: 30px
     fontWeight: 500
-    lineHeight: 1.25
+    lineHeight: 1
+    letterSpacing: -0.05em
   caption:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "45S"
     fontSize: 15px
     fontWeight: 300
     lineHeight: 1
+    letterSpacing: -0.05em
   legal:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "45S"
-    fontSize: 13px
+    fontSize: 15px
     fontWeight: 300
-    lineHeight: 1.15
+    lineHeight: 1
+    letterSpacing: -0.05em
   stat-number:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
     fontStyle: "70S"
-    fontSize: 60px
+    fontSize: 75px
     fontWeight: 500
     lineHeight: 1
-    letterSpacing: -0.035em
+    letterSpacing: -0.05em
   step-label:
     fontFamily: "Arial, 'Noto Sans SC', sans-serif"
-    fontSize: 30px
+    fontSize: 45px
     fontWeight: 400
     lineHeight: 1
+    letterSpacing: -0.05em
     textTransform: uppercase
 
 spacing:
@@ -148,7 +155,9 @@ components:
     description: "The dominant claim at y=120. Use one deliberate line break to create a two-beat statement. It owns the top of the page and is never placed inside a card."
   source-superscript:
     color: "{colors.ink}"
-    fontSize: 13px
+    fontSize: 15px
+    lineHeight: 1
+    letterSpacing: -0.05em
     verticalAlign: super
     description: "A compact evidence marker attached directly to the claim or metric it qualifies. Every visible marker must resolve to a readable footnote on the same slide."
   accent-phrase:
@@ -236,6 +245,18 @@ components:
     description: "A bottom-aligned source, claim qualifier, patent number, or safety note. It is quiet but must remain readable at 100% stage scale."
 ---
 
+## Mandatory Fixed-Brand Override
+
+This block overrides every conflicting reference value later in this file.
+
+- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
+- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- Product-detail logo: do not add a separately authored brand-logo layer.
+- Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
+
 ## Frontend Slides Fixed-Stage Policy
 
 Clearproof Green is a fixed vertical stage, not a responsive web page. Every slide is authored at exactly **750×1320px** and must preserve that composition at every viewport size. The browser may uniformly scale the complete stage to fit, but internal elements must not reflow, wrap differently, change order, or move between breakpoints.
@@ -313,20 +334,15 @@ Latin-only step labels may use Arial because the source treats `STEP 1`, `TYPE 1
 
 ### Typography Scale
 
-| Role | Size | Weight | Line Height | Typical Use |
-|---|---:|---:|---:|---|
-| Hero Display | 75px | 500 | 1.0 | Two-line promise, problem, or section claim |
-| Display | 60px | 500 | 1.0 | Large result or shorter cover title |
-| Headline | 45px | 500 | 1.0 | Evidence group, benefit, ingredient, or module title |
-| Subhead | 30px | 500 | 1.0 | Product name, question, action verb, or strong support line |
-| Body Large | 30px | 500 | 1.2 | Q&A answers and short explanatory paragraphs |
-| Body | 24px | 500 | 1.25 | Captions, axes, qualifiers, product combination copy |
-| Support | 20px | 500 | 1.25 | Labels around images and secondary descriptors |
-| Caption | 15px | 300 | 1.0 | User-recognition labels, small chart copy, product details |
-| Legal | 13px | 300 | 1.15 | Sources, patents, superscripts, and claim qualification |
-| Stat Number | 60–70px | 500 | 1.0 | Percentages, counts, dates, and measured outcomes |
+| Role | Size | Weight | Line Height | Letter Spacing | Typical Use |
+|---|---:|---:|---:|---:|---|
+| Headline | 75px | 500 | 100% | -5% | Promise, problem, result, or section claim |
+| Subheadline | 45px | 500 | 100% | -5% | Product name, question, action, or support line |
+| Label | 45px | 400–500 | 100% | -5% | Evidence group, benefit label, step, or prominent annotation |
+| Description | 30px | 500 | 100% | -5% | Q&A answer, qualifier, product copy, or concise explanation |
+| Disclaimer | 15px | 300–500 | 100% | -5% | Caption, source, patent, superscript, method, or claim qualification |
 
-The audited source concentrates on 30px, 15px, 24px, 45px, 75px, 13px, and 20px. Preserve those stops instead of filling the interface with intermediate sizes. The tight scale creates repeatable rhythm across otherwise diverse page types.
+These are the only Chinese type levels. Metrics and proof numerals use 75px or 45px according to hierarchy; they do not create additional sizes.
 
 ### Defaults
 
@@ -343,7 +359,7 @@ Avoid bold-weight inflation. The source creates strength through 75px scale, den
 - **Metric opposition:** black metric label at left, large green result at right, separated from the chart by a 1px rule.
 - **Utility tab:** `STEP`, `TYPE`, `BEFORE`, or `AFTER` in neutral Latin capitals; white on black or green.
 - **Quiet answer:** black question followed by a cool-gray explanation, using whitespace rather than boxes.
-- **Same-line source marker:** 13px superscript placed immediately after the qualified text, with its note anchored near the bottom rail.
+- **Same-line source marker:** 15px superscript placed immediately after the qualified text, with its note anchored near the bottom rail.
 
 ### Typography Principles
 
@@ -399,7 +415,7 @@ This is a rhythm, not a rigid template. A cover may devote most of the lower 900
 
 The source is information-rich but each individual region is simple. A slide may contain many proof labels, yet it should still communicate one decision. Use no more than four primary modules on a 1320px stage and no more than two competing data stories. If more evidence is required, continue the claim on a second slide rather than reducing all text.
 
-Treat footnotes separately from body copy. A 13px source line may run across the full 630px rail, but it should not become a dense paragraph. If the source qualification exceeds two lines, move the detailed methodology to a dedicated appendix slide and retain a short source label in the main narrative.
+Treat footnotes separately from body copy. A 15px source line may run across the full 630px rail, but it should not become a dense paragraph. If the source qualification exceeds two lines, move the detailed methodology to a dedicated appendix slide and retain a short source label in the main narrative.
 
 ## Evidence Architecture
 
@@ -506,7 +522,7 @@ Use four images only when the four problems are genuinely parallel. Captions sho
 
 ### Benefit Architecture
 
-Introduce the benefit set before presenting evidence. Each benefit uses a 45px headline and a 20–24px explanation. Two wider benefits may span the full rail; two secondary benefits may share the bottom row. Do not place full charts on this overview page.
+Introduce the benefit set before presenting evidence. Each benefit uses a 45px label and a 30px explanation. Two wider benefits may span the full rail; two secondary benefits may share the bottom row. Do not place full charts on this overview page.
 
 ### Mechanism and Ingredients
 
@@ -542,7 +558,7 @@ Use Q&A to address real adoption friction, not to restate marketing claims. Four
 - **Do use functional green to identify the result, active mechanism, or selected category.** Every green element should have a semantic reason.
 - **Do show the evidence chain.** Pair the claim with duration, method, source, and qualification rather than presenting a naked percentage.
 - **Do match before/after crops.** Keep scale, orientation, lighting, and anatomical region comparable.
-- **Do preserve the observed type stops.** Use 75/60/45/30/24/20/15/13px instead of inventing many near-duplicate sizes.
+- **Do preserve the fixed type stops.** Use only 75/45/45/30/15px for headline/subheadline/label/description/disclaimer roles.
 - **Do use square, flat surfaces.** Let whitespace, rules, and image crop create separation.
 - **Do make image roles distinct.** Pack shots sell form, documentary images prove, ingredient images explain, and lifestyle images contextualize.
 - **Do keep labels grammatically parallel within grids and sequences.** Repetition should feel intentional and scannable.
@@ -563,7 +579,7 @@ Use Q&A to address real adoption friction, not to restate marketing claims. Four
 - **Don't mix survey recognition, instrument measurements, and clinical outcomes under one undifferentiated heading.** Name the evidence type.
 - **Don't alter evidence imagery to exaggerate a result.** No selective retouching, lighting shifts, smoothing, or inconsistent crops.
 - **Don't let automatic wrapping decide Chinese headline rhythm.** Set semantic line breaks and inspect punctuation.
-- **Don't shrink legal notes below 13px on the 750px stage.** Move detail elsewhere if it cannot fit legibly.
+- **Don't shrink legal notes below the 15px disclaimer level on the 750px stage.** Move detail elsewhere if it cannot fit legibly.
 - **Don't use the source product's percentages, ingredients, patents, or safety claims as placeholder facts.** Replace and verify every claim.
 - **Don't combine instructions, lifestyle scenes, bundles, and FAQ on one closing slide.** Each module answers a different decision question.
 - **Don't ship with generic labels such as `标题`, `TYPE`, or `Q&A` unless they are intentional audience-facing content.** Remove source placeholders.
@@ -625,11 +641,11 @@ Declare the full CJK fallback stack and wait for fonts before measuring or anima
 
 ### Universal CJK Adjustments
 
-- Set headline line height to approximately `1.0`; add optical breathing room through block spacing, not leading.
+- Set every Chinese type role to `100%` line height and `-5%` letter spacing; add optical breathing room through block spacing, not leading.
 - Use explicit `<br>` boundaries for two-line claims after editorial review.
 - Prevent line starts with closing punctuation and line ends with opening punctuation.
 - Avoid orphaned numerals, units, and superscript markers.
-- Keep body copy near 1.2–1.3 line height; Q&A answers need enough space to separate dense strokes.
+- Keep body copy at `100%` line height; separate dense Q&A answers with layout gaps.
 - Do not use artificial letter spacing to make Chinese look premium. Tighten display copy only after testing the actual font.
 - Keep Chinese emphasis typographic or color-based; do not rely on italics.
 - Use localized punctuation and full-width Chinese marks in Chinese sentences.
@@ -675,7 +691,7 @@ The preview must not become a reduced design manual. Keep it around one substant
 5. **Variables:** no semantic Figma variable system was available from the audited node; color and spacing tokens here were reconstructed from observed properties and repeated geometry.
 6. **Placeholder remnants:** the source contains hidden layers and at least one draft-like title layer. Production slides must remove unused, hidden, or placeholder content.
 7. **Claim portability:** percentages, timelines, ingredients, patents, safety statements, and Q&A answers in the source are not reusable facts. They require project-specific verification.
-8. **Minimum legal size:** 13px matches the source but can become difficult at small presenter scales. Use an appendix when qualification cannot remain legible.
+8. **Minimum legal size:** the fixed 15px disclaimer level can become difficult at small presenter scales. Use an appendix when qualification cannot remain legible.
 9. **Evidence imagery:** before/after skin photography may involve consent, privacy, sensitivity, and jurisdiction-specific advertising requirements that this visual specification cannot resolve.
 10. **Motion reference:** the Figma node is static. Animation guidance is an inferred presentation translation, not an observed source behavior.
 11. **Accessibility:** the observed cool-gray answer text may not meet contrast expectations at every size and display. Darken it where required while preserving hierarchy.

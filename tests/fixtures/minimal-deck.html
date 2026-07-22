@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="frontend-slides-brand-status" content="draft">
+  <meta name="frontend-slides-deck-id" content="runtime-validation-fixture">
   <title>Validation fixture</title>
   <style>
     * { box-sizing: border-box; }
@@ -12,21 +13,28 @@
     .deck-stage { position: absolute; left: 0; top: 0; width: 750px; height: 1320px; }
     .slide { position: absolute; inset: 0; width: 750px; height: 1320px; visibility: hidden; opacity: 0; }
     .slide.active, .slide.visible { visibility: visible; opacity: 1; }
-    .slide-content { position: relative; height: 100%; padding: 52px; }
-    h1 { margin: 0; font: 700 68px/1.1 sans-serif; }
-    p { margin: 36px 0 0; width: 560px; font: 400 28px/1.5 sans-serif; }
+    .slide-content { position: relative; height: 100%; padding: 120px 60px 60px; }
+    h1 { margin: 0; font: 700 75px/1 sans-serif; letter-spacing: -0.05em; }
+    p { margin: 45px 0 0; width: 560px; font: 400 30px/1 sans-serif; letter-spacing: -0.05em; }
   </style>
 </head>
-<body>
+<body data-tone-mode="light" data-export-filename="runtime-validation-fixture.html">
   <div class="deck-viewport">
-    <main class="deck-stage">
+    <main class="deck-stage" id="deckStage">
       <section class="slide active visible">
         <div class="slide-content">
-          <h1>固定品牌演示</h1>
-          <p>这是用于验证 750 × 1320 固定画布、文本边界与浏览器渲染流程的最小样例。</p>
+          <h1 data-copy-id="fixture-title" data-editable="text" data-edit-id="fixture-title">固定品牌演示</h1>
+          <p data-copy-id="fixture-body" data-editable="text" data-edit-id="fixture-body">这是用于验证 750 × 1320 固定画布、文本边界与浏览器渲染流程的最小样例。</p>
+        </div>
+      </section>
+      <section class="slide">
+        <div class="slide-content">
+          <h1 data-copy-id="fixture-title-2" data-editable="text" data-edit-id="fixture-title-2">第二张切片</h1>
+          <p data-copy-id="fixture-body-2" data-editable="text" data-edit-id="fixture-body-2">用于验证键盘、点击和触摸导航。</p>
         </div>
       </section>
     </main>
   </div>
+  <div class="deck-controls" aria-label="演示控制"></div>
 </body>
 </html>

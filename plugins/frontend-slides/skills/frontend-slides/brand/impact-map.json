@@ -10,9 +10,11 @@
   "checked_for_invariants": [
     "SKILL.md",
     "html-template.md",
-    "runtime/deck-stage.js",
+    "runtime/brand-runtime.template.js",
+    "brand/generated/brand-runtime.js",
     "scripts/export-pdf.sh",
     "scripts/validate-html.py",
+    "scripts/validate-runtime.mjs",
     "scripts/validate-rendered.mjs",
     "references/validation.md"
   ],

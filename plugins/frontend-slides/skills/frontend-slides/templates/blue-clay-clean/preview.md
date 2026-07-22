@@ -7,6 +7,10 @@ source_node: "1:1238"
 
 # Blue Clay Clean — Preview
 
+## Fixed-Brand Preview Override
+
+Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+
 ## Files
 
 - `design.md` — complete mineral-blue visual system, component rules, evidence discipline, and fixed-stage contract.
@@ -33,7 +37,7 @@ The direction feels mineral, fresh, balanced, and evidence-aware. It should not 
 ### Page 01 — Mineral hero
 
 - Deep navy to ice gradient.
-- One 62–76 px white claim in the dark region.
+- One 75px white claim in the dark region.
 - One pale blue product object at 40–55% of stage height.
 - One powder or clay specimen.
 - No icon row or chart.

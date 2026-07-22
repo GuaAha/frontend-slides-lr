@@ -35,9 +35,9 @@ typography:
   source_reference_only: "MAKE SENSE 70S"
 spacing:
   base: 10
-  safe_x: 52
-  safe_top: 58
-  safe_bottom: 54
+  safe_x: 60
+  safe_top: 120
+  safe_bottom: 60
   section_gap: 42
   material_gap: 18
   micro_gap: 8
@@ -62,9 +62,21 @@ components:
 
 # Monochrome Scent Lab
 
+## Mandatory Fixed-Brand Override
+
+This block overrides every conflicting reference value later in this file.
+
+- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
+- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- Product-detail logo: do not add a separately authored brand-logo layer.
+- Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
+
 ## Fixed Stage Contract
 
-The internal template is fixed at `750×1320`. It scales as one composition and never reflows its internal grid. Critical copy remains inside 52 px horizontal margins and a 58–1266 px vertical safe region. Full-bleed material or fragrance imagery may reach the edges, but essential labels, duration claims, and legal notes may not.
+The internal template is fixed at `750×1320`. It scales as one composition and never reflows its internal grid. All authored copy remains inside x=60–690 and y=120–1260. Full-bleed material or fragrance imagery may reach the edges, but essential labels, duration claims, and legal notes may not.
 
 The system’s identity is a conversation between opposites: black and white, styling and care, ocean mineral and warm wood, atmosphere and measured use. Accent color appears inside a material world, not as a universal brand coating.
 
@@ -134,15 +146,13 @@ The source display type is reference-only. The internal version relies on a stro
 
 ### Scale
 
-- Category number: 92–112 px, only with full evidence context.
-- Hero claim: 62–78 px, bold, two to three lines.
-- Section headline: 42–56 px.
-- Scent-world name: 34–46 px.
-- Proof number: 58–88 px.
-- Card or step title: 24–30 px.
-- Body: 20–24 px, 1.45–1.65 line height.
-- Note label: 17–20 px.
-- Source/legal: 14–16 px, never condensed below readability.
+- Headline: 75px for hero, section claim, category number, and primary proof.
+- Subheadline: 45px for a scent-world name or strong support line.
+- Label: 45px for card titles, step titles, and prominent annotations.
+- Description: 30px for body copy, qualifiers, and concise explanations.
+- Disclaimer: 15px for note labels, sources, and legal copy.
+
+Every Chinese role uses 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels rather than introducing oversized exceptions.
 
 ### Voice through type
 
@@ -150,20 +160,19 @@ Functional copy is direct sans-serif. Scent prose may use one serif line or ligh
 
 ### CJK hierarchy
 
-Use weight before letter spacing to create Chinese hierarchy. Avoid excessive tracking on multi-line Chinese. Break hero copy into action / result or category / differentiator. Keep paired scent names optically equal even when character counts differ.
+Use weight, family, color, and placement to create Chinese hierarchy while keeping every role at -5% letter spacing. Break hero copy into action / result or category / differentiator. Keep paired scent names optically equal even when character counts differ.
 
 ## Layout System
 
 ### Grid
 
-Use 6 columns inside x=52–698 with 14–18 px gutters. Heroes may use a centered 3/3 balance or a 2/4 split. Technical and matrix pages use three paired columns or two broad fields. Scent diptychs usually use two stacked material panels of roughly 430–500 px each plus a title and transition zone.
+Use 6 columns inside x=60–690 with 14–18 px gutters. Heroes may use a centered 3/3 balance or a 2/4 split. Technical and matrix pages use three paired columns or two broad fields. Scent diptychs usually use two stacked material panels of roughly 430–500 px each plus a title and transition zone.
 
 ### Stage zones
 
-- Identity: y=58–116
-- Primary claim: y=136–330
+- Identity and primary claim: y=120–330
 - Material, comparison, or operation: y=340–1050
-- Evidence/legal: y=1080–1266
+- Evidence/legal: y=1080–1260
 
 On a diptych page, the upper scent panel may run y=200–690 and the lower panel y=710–1200. Keep a strong boundary or 18–24 px breathing gap.
 
@@ -227,7 +236,7 @@ Close with a narrow evidence strip containing only cleared certifications, miles
 
 ### IntegrityFooter
 
-Required warnings, authenticity guidance, disclaimers, or legal notes receive a dedicated page or clearly separated footer. Use 16–20 px for actionable instructions and 14–16 px for formal details. High contrast is mandatory. Do not hide integrity content in decorative fine print.
+Required warnings, authenticity guidance, disclaimers, or legal notes receive a dedicated page or clearly separated footer. Use the 30px description level for actionable instructions and the 15px disclaimer level for formal details. High contrast is mandatory. Do not hide integrity content in decorative fine print.
 
 ## Page Blueprint Library
 
@@ -409,11 +418,11 @@ Center and uniformly scale the complete `750×1320` stage. Presenter tools, note
 
 Motion may reveal the split-tone boundary, crossfade matched before/after imagery, transition between the two scent materials, or step through pump operation. Keep transitions 350–750 ms and use one concept per page. Avoid looping smoke, liquid, or spectrum noise behind text. Reduced-motion mode shows final states immediately.
 
-In print, verify shadow detail in black materials and separation between porcelain and paper white. Test all text on photographic material fields. Thin rules should remain at least 1.5 px at source size. Legal and source copy stays at least 14 px.
+In print, verify shadow detail in black materials and separation between porcelain and paper white. Test all text on photographic material fields. Thin rules should remain at least 1.5 px at source size. Legal and source copy stays at the 15px disclaimer level.
 
 ## CJK Guidance
 
-Use semantic breaks and plain functional verbs. Paired Chinese scent names should have equal optical scale even if lengths differ. Avoid arbitrary wide tracking. Attach Arabic numerals to units. Bilingual note names stay subordinate. Use a robust system CJK stack; the audited font is a reference, not an included asset.
+Use semantic breaks and plain functional verbs. Paired Chinese scent names should have equal optical scale even if lengths differ. Use the fixed -5% Chinese tracking. Attach Arabic numerals to units. Bilingual note names stay subordinate. Use a robust system CJK stack; the audited font is a reference, not an included asset.
 
 ## Iteration Guide
 

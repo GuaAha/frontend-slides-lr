@@ -32,9 +32,9 @@ typography:
   source_reference_only: "MAKE SENSE 70S; Helvetica Now Display Medium"
 spacing:
   base: 10
-  safe_x: 54
-  safe_top: 58
-  safe_bottom: 54
+  safe_x: 60
+  safe_top: 120
+  safe_bottom: 60
   section_gap: 38
   card_gap: 16
   micro_gap: 8
@@ -60,9 +60,21 @@ components:
 
 # Aqua Mint Proof
 
+## Mandatory Fixed-Brand Override
+
+This block overrides every conflicting reference value later in this file.
+
+- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
+- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- Product-detail logo: do not add a separately authored brand-logo layer.
+- Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
+
 ## Fixed Stage Contract
 
-Every page is authored on a fixed `750×1320` stage. The stage may be scaled uniformly for preview, export, or projection, but its internal coordinates, type sizes, crop logic, and spacing do not reflow. Keep all decision-critical copy inside a 54 px horizontal safe area. Background photography may bleed to the edge; captions and proof labels may not.
+Every page is authored on a fixed `750×1320` stage. The stage may be scaled uniformly for preview, export, or projection, but its internal coordinates, type sizes, crop logic, and spacing do not reflow. Keep all authored copy inside x=60–690 and y=120–1260. Background photography may bleed to the edge; captions and proof labels may not.
 
 This is a clean product-evidence system, not a generic wellness theme. Its signature comes from five relationships: near-white air, decisive black type, one cool mint claim color, watery imagery, and proof blocks that remain visibly separate from atmosphere.
 
@@ -128,14 +140,13 @@ The source uses proprietary display faces as visual reference only; they are not
 
 ### Scale on 750×1320
 
-- Hero claim: 64–78 px, 0.95–1.05 line height, usually two or three lines.
-- Section claim: 42–54 px, 1.05–1.15 line height.
-- Proof number: 64–96 px, compact numeric face where available.
-- Card title: 25–32 px, semibold.
-- Body: 21–25 px, 1.45–1.65 line height.
-- Caption: 16–19 px, 1.35–1.5 line height.
-- Source note: 14–16 px, 1.4–1.55 line height.
-- Eyebrow: 14–17 px, uppercase English or compact Chinese, 0.08–0.14 em tracking.
+- Headline: 75px for hero, section claim, and primary proof number.
+- Subheadline: 45px for the secondary claim or strong support line.
+- Label: 45px for card titles, prominent evidence labels, and benefit names.
+- Description: 30px for body copy, qualifiers, and concise explanations.
+- Disclaimer: 15px for captions, eyebrows, source notes, methods, and legal copy.
+
+Every Chinese role uses 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels rather than introducing oversized exceptions.
 
 ### Hierarchy rules
 
@@ -149,16 +160,15 @@ Write Chinese headlines as semantic units. Preferred breaks are benefit / qualif
 
 ### Base grid
 
-Use a 6-column internal grid between x=54 and x=696. Columns are separated by 14–18 px gutters. Most content uses either a 3/3 split or a 2/4 asymmetry. Keep the top identity zone between y=58 and y=116; start the main claim between y=132 and y=220 unless an image deliberately opens the page.
+Use a 6-column internal grid between x=60 and x=690. Columns are separated by 14–18 px gutters. Most content uses either a 3/3 split or a 2/4 asymmetry. Start the main claim at y=120; do not place authored identity text above it.
 
 ### Vertical zones
 
 The stage can be divided into:
 
-- Identity zone: 58–116
-- Claim zone: 132–330
+- Identity and claim zone: 120–330
 - Evidence or image zone: 350–1060
-- Source and page marker zone: 1100–1266
+- Source and page marker zone: 1100–1260
 
 These are guides, not boxes. A full-bleed image may ignore them; type still respects the safe area. Maintain at least 34 px between a headline and the next semantic group, and 18 px between card elements.
 
@@ -178,7 +188,7 @@ A compact zero-radius field, underline, or open rule with mint emphasis and dark
 
 ### BenefitRail
 
-Use three or four benefits aligned horizontally or as a 2×2 field. Each benefit contains a 20–28 px title and one 16–20 px qualifier. Benefits that describe experience, mechanism, and test evidence must be labeled accordingly. Do not flatten unlike evidence into identical icon cards.
+Use three or four benefits aligned horizontally or as a 2×2 field. Each benefit contains a 45px label and one 30px qualifier. Benefits that describe experience, mechanism, and test evidence must be labeled accordingly. Do not flatten unlike evidence into identical icon cards.
 
 ### ApplicationMap
 
@@ -218,7 +228,7 @@ Compare no more than four options. Use rows for scenario, feel, intensity, and f
 
 ### SourceNote and PageMarker
 
-Source notes use 14–16 px gray copy and sit inside the safe area. Page markers are optional and may use `03 / 12` or a concise chapter name. Do not use them as decorative noise on every page if the deck is shorter than six slides.
+Source notes use the 15px disclaimer level and sit inside the safe area. Page markers are optional and may use `03 / 12` or a concise chapter name. Do not use them as decorative noise on every page if the deck is shorter than six slides.
 
 ## Page Blueprint Library
 
@@ -412,7 +422,7 @@ Use 300–700 ms dissolves, gentle upward reveals, one spray-line draw, or one s
 
 ### Print and export
 
-Flatten blur cautiously and confirm transparent water assets retain edges. Make footnotes at least 14 px on the 750-wide source stage. Test white-on-ocean copy in grayscale. Export without the outer responsive shell.
+Flatten blur cautiously and confirm transparent water assets retain edges. Keep footnotes at the 15px disclaimer level on the 750-wide source stage. Test white-on-ocean copy in grayscale. Export without the outer responsive shell.
 
 ## CJK Content Guidance
 

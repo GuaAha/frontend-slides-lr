@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -46,12 +47,13 @@ MIRROR_FILES = (
     "brand/generated/brand-tokens.css",
     "brand/generated/brand-runtime.js",
     "references/validation.md",
-    "runtime/deck-stage.js",
+    "runtime/brand-runtime.template.js",
     *TEMPLATE_FILES,
     "scripts/extract-pptx.py",
     "scripts/export-pdf.sh",
     "scripts/validate-html.py",
     "scripts/validate-rendered.mjs",
+    "scripts/validate-runtime.mjs",
     "package.json",
     "package-lock.json",
 )
@@ -60,7 +62,8 @@ INVARIANT_FILES = (
     "SKILL.md",
     "html-template.md",
     "references/validation.md",
-    "runtime/deck-stage.js",
+    "runtime/brand-runtime.template.js",
+    "brand/generated/brand-runtime.js",
     "scripts/export-pdf.sh",
     "scripts/validate-html.py",
     "scripts/validate-rendered.mjs",
@@ -73,6 +76,14 @@ FORBIDDEN_ACTIVE_TEXT = (
     "16:9",
     "1280×720",
     "1280x720",
+)
+
+DESIGN_CONTRACT_MARKER = "## Mandatory Fixed-Brand Override"
+PREVIEW_CONTRACT_MARKER = "## Fixed-Brand Preview Override"
+FORBIDDEN_DESIGN_GUIDANCE = (
+    "radii may appear",
+    "subtly rounded",
+    "border-radius is reserved",
 )
 
 
@@ -100,6 +111,16 @@ def load_source() -> dict:
         raise ValueError("the internal edition supports only a literal 750 × 1320 canvas")
     if data["shape"].get("corner_radius_px") != 0:
         raise ValueError("the fixed brand requires corner_radius_px = 0")
+    spacing = data["spacing"]
+    if (
+        spacing.get("safe_top_px") != 120
+        or spacing.get("safe_bottom_px") != 60
+        or spacing.get("slide_padding_px") != 60
+    ):
+        raise ValueError("the fixed safe area must be top 120px / right 60px / bottom 60px / left 60px")
+    typography = data["typography"]
+    if typography.get("line_height_percent") != 100:
+        raise ValueError("the fixed typography requires line_height_percent = 100")
     locale_rules = data["typography"].get("locale_rules", {})
     if set(locale_rules) != {"zh", "en", "vi", "th"}:
         raise ValueError("typography.locale_rules must contain exactly zh/en/vi/th")
@@ -107,6 +128,17 @@ def load_source() -> dict:
     for locale, rule in locale_rules.items():
         if set(rule.get("styles", {})) != required_levels or set(rule.get("sizes_px", {})) != required_levels:
             raise ValueError(f"typography.locale_rules.{locale} must define all five levels")
+    zh_rule = locale_rules["zh"]
+    if zh_rule["sizes_px"] != {
+        "headline": 75,
+        "subheadline": 45,
+        "label": 45,
+        "description": 30,
+        "disclaimer": 15,
+    }:
+        raise ValueError("the fixed Chinese type levels must be 75/45/45/30/15px")
+    if zh_rule.get("letter_spacing_percent") != -5:
+        raise ValueError("the fixed Chinese typography requires letter_spacing_percent = -5")
     for role_name in ("display", "body"):
         asset = data["typography"][role_name].get("asset")
         if not asset or not (ROOT / asset).is_file():
@@ -117,6 +149,11 @@ def load_source() -> dict:
 def css_font(role: dict) -> str:
     names = [role["family"], *role.get("fallbacks", [])]
     return ", ".join(f'"{name}"' if " " in name else name for name in names)
+
+
+def css_em_from_percent(value: int | float) -> str:
+    """Render tracking as em so it scales with the active type level."""
+    return f"{value / 100:g}em"
 
 
 def render_embedded_font_faces(typography: dict) -> str:
@@ -172,7 +209,11 @@ def render_brand_tokens(data: dict) -> str:
   --brand-type-label: {zh['sizes_px']['label']}px;
   --brand-type-description: {zh['sizes_px']['description']}px;
   --brand-type-disclaimer: {zh['sizes_px']['disclaimer']}px;
-  --brand-letter-spacing: {zh['letter_spacing_percent']}%;
+  --brand-letter-spacing: {css_em_from_percent(zh['letter_spacing_percent'])};
+  --brand-letter-spacing-zh: {css_em_from_percent(locale_rules['zh']['letter_spacing_percent'])};
+  --brand-letter-spacing-en: {css_em_from_percent(locale_rules['en']['letter_spacing_percent'])};
+  --brand-letter-spacing-vi: {css_em_from_percent(locale_rules['vi']['letter_spacing_percent'])};
+  --brand-letter-spacing-th: {css_em_from_percent(locale_rules['th']['letter_spacing_percent'])};
   --brand-line-height: {typography['line_height_percent']}%;
   --brand-min-body: {typography['minimum_body_px']}px;
   --brand-min-caption: {typography['minimum_caption_px']}px;
@@ -180,6 +221,8 @@ def render_brand_tokens(data: dict) -> str:
   --brand-safe-top: {spacing['safe_top_px']}px;
   --brand-safe-bottom: {spacing['safe_bottom_px']}px;
   --brand-content-gap: {spacing['content_gap_px']}px;
+  --brand-item-gap: {spacing['item_gap_px']}px;
+  --brand-disclaimer-gap: {spacing['disclaimer_gap_px']}px;
   --brand-corner-radius: {shape['corner_radius_px']}px;
   --brand-stroke-width: {shape['stroke_width_px']}px;
   --brand-motion-duration: {motion['duration_ms']}ms;
@@ -236,7 +279,75 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
 
 .deck-controls {
   position: fixed;
+  left: 50%;
+  bottom: 18px;
   z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0;
+  background: rgba(11, 13, 18, 0.94);
+  color: #FFFFFF;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.deck-controls.is-visible,
+.deck-controls:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.deck-controls button,
+.deck-controls output {
+  min-height: 32px;
+  padding: 8px 10px;
+  border-radius: 0;
+  color: inherit;
+  font-family: var(--brand-font-body);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: -0.05em;
+}
+
+.deck-controls button {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: transparent;
+  cursor: pointer;
+}
+
+.deck-controls button:hover,
+.deck-controls button:focus-visible,
+.deck-controls button[aria-pressed="true"] {
+  border-color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.14);
+  outline: none;
+}
+
+.deck-controls output {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+}
+
+.deck-controls__divider {
+  align-self: stretch;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+body.is-editing [data-editable="text"][data-edit-id] {
+  outline: 2px dashed currentColor;
+  outline-offset: 4px;
+  cursor: text;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -263,71 +374,22 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
 def render_runtime(data: dict) -> str:
     status = json.dumps(data["approval_status"], ensure_ascii=False)
     name = json.dumps(data["brand"]["name"], ensure_ascii=False)
-    return f"""/* GENERATED from brand/source.json. Do not edit. */
-(() => {{
-  const CANVAS_WIDTH = 750;
-  const CANVAS_HEIGHT = 1320;
-  const BRAND_STATUS = {status};
-  const BRAND_NAME = {name};
-
-  window.FRONTEND_SLIDES_BRAND = Object.freeze({{
-    name: BRAND_NAME,
-    approvalStatus: BRAND_STATUS,
-    canvas: Object.freeze({{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }})
-  }});
-
-  class BrandSlidePresentation {{
-    constructor(stage = document.getElementById('deckStage')) {{
-      this.stage = stage;
-      this.slides = Array.from(document.querySelectorAll('.slide'));
-      this.index = 0;
-      if (!this.stage || !this.slides.length) return;
-      this.fit = this.fit.bind(this);
-      this.bind();
-      this.show(0);
-      this.fit();
-    }}
-
-    bind() {{
-      window.addEventListener('resize', this.fit);
-      document.addEventListener('keydown', (event) => {{
-        const target = event.target;
-        if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
-        if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') this.show(this.index + 1);
-        else if (event.key === 'ArrowLeft' || event.key === 'PageUp') this.show(this.index - 1);
-        else if (event.key === 'Home') this.show(0);
-        else if (event.key === 'End') this.show(this.slides.length - 1);
-      }});
-    }}
-
-    fit() {{
-      const scale = Math.min(window.innerWidth / CANVAS_WIDTH, window.innerHeight / CANVAS_HEIGHT);
-      const x = (window.innerWidth - CANVAS_WIDTH * scale) / 2;
-      const y = (window.innerHeight - CANVAS_HEIGHT * scale) / 2;
-      this.stage.style.transform = `translate(${{x}}px, ${{y}}px) scale(${{scale}})`;
-    }}
-
-    show(index) {{
-      this.index = Math.max(0, Math.min(index, this.slides.length - 1));
-      this.slides.forEach((slide, i) => {{
-        slide.classList.toggle('active', i === this.index);
-        slide.classList.toggle('visible', i === this.index);
-      }});
-      document.dispatchEvent(new CustomEvent('brand-slide-change', {{ detail: {{ index: this.index, total: this.slides.length }} }}));
-    }}
-  }}
-
-  window.BrandSlidePresentation = BrandSlidePresentation;
-  const start = () => {{ window.presentation = new BrandSlidePresentation(); }};
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {{ once: true }});
-  else start();
-}})();
-"""
+    template_path = ROOT / "runtime" / "brand-runtime.template.js"
+    template = template_path.read_text(encoding="utf-8")
+    required_placeholders = ("__BRAND_STATUS__", "__BRAND_NAME__")
+    missing = [placeholder for placeholder in required_placeholders if placeholder not in template]
+    if missing:
+        raise ValueError(f"runtime template is missing placeholders: {', '.join(missing)}")
+    rendered = template.replace("__BRAND_STATUS__", status).replace("__BRAND_NAME__", name)
+    return rendered.replace(
+        "/* SOURCE template for brand/generated/brand-runtime.js. Do not execute directly. */",
+        "/* GENERATED from brand/source.json. Do not edit. */",
+        1,
+    )
 
 
 def render_rules(data: dict) -> str:
     typography = data["typography"]
-    logo = data["logo"]
     density = data["density"]
     shape = data["shape"]
     locale_rules = typography["locale_rules"]
@@ -345,8 +407,8 @@ def render_rules(data: dict) -> str:
         f"- Minimum caption text: **{typography['minimum_caption_px']}px**",
         f"- Corner radius: **{shape['corner_radius_px']}px** for every authored container",
         f"- Text safe area: **top {data['spacing']['safe_top_px']}px / right {data['spacing']['slide_padding_px']}px / bottom {data['spacing']['safe_bottom_px']}px / left {data['spacing']['slide_padding_px']}px**",
-        f"- Logo minimum width: **{logo['minimum_width_px']}px**",
-        f"- Logo clear space: **{logo['clear_space_px']}px**",
+        "- Product-detail pages: **no separately authored brand logo**",
+        "- Tone mode: the user chooses **light** or **dark** before preview generation.",
         "",
         "## Density",
         "",
@@ -363,6 +425,9 @@ def render_rules(data: dict) -> str:
             for locale, rule in locale_rules.items()
         ),
         f"- All locale levels use **{typography['line_height_percent']}%** line height.",
+        "- Every authored text run maps to one of the five locale levels; large proof numerals do not create a display-size exception.",
+        "- Locale letter spacing and line height apply to every authored text leaf, including metrics, superscripts, utility labels, and dense answers.",
+        "- Pure non-Chinese runs declare `lang`; mixed Chinese/Latin copy follows the Chinese contract unless explicitly separated by the source.",
         "- Chinese output embeds the approved local MAKE SENSE 70S font asset.",
         "",
         "## Shape",
@@ -377,7 +442,7 @@ def render_rules(data: dict) -> str:
         "- Read `templates/index.json` when preparing the three real branded previews.",
         "- Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.",
         "- Use baseline composition and component grammar without overriding the brand source.",
-        "- Keep palette, font roles, logo rules, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.",
+        "- Keep the selected light/dark tone, approved color tokens, typography, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.",
         "",
         f"> Source note: {data['source_note']}",
         "",
@@ -457,6 +522,10 @@ def check_invariants(errors: list[str]) -> None:
             for forbidden in FORBIDDEN_ACTIVE_TEXT:
                 if forbidden.lower() in text.lower():
                     errors.append(f"stale canvas rule '{forbidden}' in {relative}")
+        if relative in {"runtime/brand-runtime.template.js", "brand/generated/brand-runtime.js"}:
+            for match in re.finditer(r"border-radius\s*:\s*([^;]+)", text, flags=re.I):
+                if match.group(1).strip().lower() not in {"0", "0px"}:
+                    errors.append(f"non-zero runtime control radius {match.group(1).strip()}: {relative}")
 
 
 def check_templates(errors: list[str]) -> None:
@@ -473,6 +542,10 @@ def check_templates(errors: list[str]) -> None:
     if tuple(indexed_ids) != TEMPLATE_IDS:
         errors.append("template index ids must match the canonical seven-template order")
 
+    tones = [item.get("tone_mode") for item in index.get("templates", [])]
+    if any(tone not in {"light", "dark"} for tone in tones):
+        errors.append("every template index entry must declare tone_mode as light or dark")
+
     actual_ids = tuple(sorted(path.name for path in index_path.parent.iterdir() if path.is_dir()))
     if actual_ids != tuple(sorted(TEMPLATE_IDS)):
         errors.append("template directories do not match the canonical seven-template set")
@@ -485,6 +558,56 @@ def check_templates(errors: list[str]) -> None:
                 continue
             if "750×1320" not in path.read_text(encoding="utf-8"):
                 errors.append(f"missing fixed template canvas literal: {path.relative_to(ROOT)}")
+        preview_path = index_path.parent / template_id / "preview.md"
+        if preview_path.exists():
+            preview = preview_path.read_text(encoding="utf-8")
+            if PREVIEW_CONTRACT_MARKER not in preview:
+                errors.append(f"missing fixed-brand preview override: {preview_path.relative_to(ROOT)}")
+            for required in (
+                "x=60–690 and y=120–1260",
+                "75/45/45/30/15px",
+                "100% line height",
+                "-5% letter spacing",
+                "border-radius: 0",
+                "Product-detail pages have no separately authored brand-logo layer",
+            ):
+                if required not in preview:
+                    errors.append(f"missing preview contract text {required!r}: {preview_path.relative_to(ROOT)}")
+
+        design_path = index_path.parent / template_id / "design.md"
+        if not design_path.exists():
+            continue
+        design = design_path.read_text(encoding="utf-8")
+        if DESIGN_CONTRACT_MARKER not in design:
+            errors.append(f"missing mandatory fixed-brand override: {design_path.relative_to(ROOT)}")
+        for required in (
+            "top 120px / right 60px / bottom 60px / left 60px",
+            "75 / 45 / 45 / 30 / 15px",
+            "100% line height",
+            "-5% letter spacing",
+            "border-radius: 0",
+        ):
+            if required not in design:
+                errors.append(f"missing design contract text {required!r}: {design_path.relative_to(ROOT)}")
+        lowered = design.lower()
+        for forbidden in FORBIDDEN_DESIGN_GUIDANCE:
+            if forbidden in lowered:
+                errors.append(f"forbidden rounded-corner guidance {forbidden!r}: {design_path.relative_to(ROOT)}")
+        for match in re.finditer(r"fontSize:\s*(\d+)px", design):
+            if int(match.group(1)) not in {75, 45, 30, 15}:
+                errors.append(
+                    f"non-contract fontSize {match.group(1)}px: {design_path.relative_to(ROOT)}"
+                )
+        for match in re.finditer(r"lineHeight:\s*([^\s]+)", design):
+            if match.group(1).strip('"\'') not in {"1", "100%"}:
+                errors.append(
+                    f"non-contract lineHeight {match.group(1)}: {design_path.relative_to(ROOT)}"
+                )
+        for match in re.finditer(r"letterSpacing:\s*([^\s]+)", design):
+            if match.group(1).strip('"\'') != "-0.05em":
+                errors.append(
+                    f"non-contract letterSpacing {match.group(1)}: {design_path.relative_to(ROOT)}"
+                )
 
 
 def sync_plugin(check: bool, errors: list[str]) -> None:

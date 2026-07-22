@@ -2,6 +2,10 @@
 
 Use this small file for title-slide previews only. For final deck generation, read the full design doc listed below.
 
+## Fixed-Brand Preview Override
+
+Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+
 ## Files
 
 - Full design doc: `templates/8-bit-orbit/design.md`
@@ -43,7 +47,7 @@ A retro-futuristic pixel-art presentation system that fuses 16-bit arcade nostal
 ## Preview Rules
 
 - Build exactly one title slide at 750×1320 inside the fixed-stage model.
-- Preserve the palette, type roles, surface rhythm, and decorative vocabulary described above.
+- Preserve the contrast roles, type-role relationships, surface rhythm, and decorative vocabulary described above while using only the approved brand tokens and selected tone.
 - Use the user's real title/subtitle/context; do not copy demo slide content.
 - The rendered preview must look like a real first slide, not a template-selection card.
 - Never place internal workflow text on the slide: no `preview`, `generated from`, `preview.md`, `template`, `preset`, `style option`, `Option A/B/C`, file names, paths, or source-doc labels.

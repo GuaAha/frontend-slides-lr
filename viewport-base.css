@@ -44,7 +44,75 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
 
 .deck-controls {
   position: fixed;
+  left: 50%;
+  bottom: 18px;
   z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0;
+  background: rgba(11, 13, 18, 0.94);
+  color: #FFFFFF;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.deck-controls.is-visible,
+.deck-controls:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.deck-controls button,
+.deck-controls output {
+  min-height: 32px;
+  padding: 8px 10px;
+  border-radius: 0;
+  color: inherit;
+  font-family: var(--brand-font-body);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: -0.05em;
+}
+
+.deck-controls button {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: transparent;
+  cursor: pointer;
+}
+
+.deck-controls button:hover,
+.deck-controls button:focus-visible,
+.deck-controls button[aria-pressed="true"] {
+  border-color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.14);
+  outline: none;
+}
+
+.deck-controls output {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+}
+
+.deck-controls__divider {
+  align-self: stretch;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+body.is-editing [data-editable="text"][data-edit-id] {
+  outline: 2px dashed currentColor;
+  outline-offset: 4px;
+  cursor: text;
 }
 
 @media (prefers-reduced-motion: reduce) {

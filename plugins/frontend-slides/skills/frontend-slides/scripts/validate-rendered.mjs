@@ -1,10 +1,23 @@
 #!/usr/bin/env node
 /** Rendered geometry validation for fixed-brand 750 × 1320 decks. */
 
-import { mkdirSync } from 'fs';
-import { resolve, join } from 'path';
-import { pathToFileURL } from 'url';
+import { mkdirSync, readFileSync } from 'fs';
+import { resolve, join, dirname } from 'path';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { chromium } from 'playwright';
+
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const brandSource = JSON.parse(readFileSync(resolve(repoRoot, 'brand/source.json'), 'utf8'));
+const typographyContract = {
+  lineHeightPercent: brandSource.typography.line_height_percent,
+  localeRules: brandSource.typography.locale_rules,
+};
+const safeAreaContract = {
+  top: brandSource.spacing.safe_top_px,
+  right: brandSource.spacing.slide_padding_px,
+  bottom: brandSource.spacing.safe_bottom_px,
+  left: brandSource.spacing.slide_padding_px,
+};
 
 const args = process.argv.slice(2);
 const inputArg = args.find((arg) => !arg.startsWith('--'));
@@ -54,7 +67,7 @@ try {
     }, index);
     await page.waitForTimeout(80);
 
-    const diagnostics = await page.evaluate((activeIndex) => {
+    const diagnostics = await page.evaluate(({ activeIndex, typographyContract, safeAreaContract }) => {
       const slide = document.querySelectorAll('.slide')[activeIndex];
       if (!slide) return [{ kind: 'structure', message: 'Active slide missing' }];
       const issues = [];
@@ -122,6 +135,69 @@ try {
         return ownText && rect.width > 0 && rect.height > 0;
       });
 
+      const localeFor = (element) => {
+        const declared = element.closest('[lang]')?.getAttribute('lang')
+          || document.documentElement.getAttribute('lang')
+          || 'zh';
+        const locale = declared.toLowerCase().split('-')[0];
+        return typographyContract.localeRules[locale] ? locale : 'zh';
+      };
+      const closeTypography = (left, right) => Math.abs(left - right) <= 0.15;
+      for (const element of textElements) {
+        if (!element.closest('[data-copy-id]')) continue;
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        const locale = localeFor(element);
+        const localeRule = typographyContract.localeRules[locale];
+        const fontSize = Number.parseFloat(style.fontSize);
+        const allowedSizes = new Set(Object.values(localeRule.sizes_px).map(Number));
+        const label = element.closest('[data-copy-id]')?.getAttribute('data-copy-id')
+          || element.tagName.toLowerCase();
+
+        const safeLeft = slideRect.left + safeAreaContract.left;
+        const safeRight = slideRect.right - safeAreaContract.right;
+        const safeTop = slideRect.top + safeAreaContract.top;
+        const safeBottom = slideRect.bottom - safeAreaContract.bottom;
+        if (rect.left < safeLeft - 1 || rect.right > safeRight + 1
+          || rect.top < safeTop - 1 || rect.bottom > safeBottom + 1) {
+          issues.push({
+            kind: 'safe-area',
+            message: `${label} falls outside x=${safeAreaContract.left}–${750 - safeAreaContract.right}, y=${safeAreaContract.top}–${1320 - safeAreaContract.bottom}`,
+          });
+        }
+
+        if (![...allowedSizes].some((size) => closeTypography(fontSize, size))) {
+          issues.push({
+            kind: 'type-size',
+            message: `${label} uses ${style.fontSize}; allowed ${locale} sizes are ${[...allowedSizes].join(', ')}px`,
+          });
+        }
+
+        if (style.lineHeight === 'normal') {
+          issues.push({ kind: 'line-height', message: `${label} uses browser-normal line height` });
+        } else {
+          const expectedLineHeight = fontSize * typographyContract.lineHeightPercent / 100;
+          const actualLineHeight = Number.parseFloat(style.lineHeight);
+          if (!closeTypography(actualLineHeight, expectedLineHeight)) {
+            issues.push({
+              kind: 'line-height',
+              message: `${label} resolves to ${style.lineHeight}; expected ${expectedLineHeight}px`,
+            });
+          }
+        }
+
+        const expectedLetterSpacing = fontSize * localeRule.letter_spacing_percent / 100;
+        const actualLetterSpacing = style.letterSpacing === 'normal'
+          ? 0
+          : Number.parseFloat(style.letterSpacing);
+        if (!closeTypography(actualLetterSpacing, expectedLetterSpacing)) {
+          issues.push({
+            kind: 'letter-spacing',
+            message: `${label} resolves to ${style.letterSpacing}; expected ${expectedLetterSpacing}px for ${locale}`,
+          });
+        }
+      }
+
       for (let leftIndex = 0; leftIndex < textElements.length; leftIndex += 1) {
         const left = textElements[leftIndex];
         const leftRect = left.getBoundingClientRect();
@@ -140,7 +216,7 @@ try {
         }
       }
       return issues;
-    }, index);
+    }, { activeIndex: index, typographyContract, safeAreaContract });
 
     diagnostics.forEach((issue) => errors.push({ slide: index + 1, ...issue }));
     if (screenshotDir) {

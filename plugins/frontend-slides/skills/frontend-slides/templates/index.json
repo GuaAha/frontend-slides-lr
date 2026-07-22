@@ -10,10 +10,25 @@
       "height": 1320,
       "scaling": "uniform-stage-only"
     },
+    "safe_area": {
+      "top": 120,
+      "right": 60,
+      "bottom": 60,
+      "left": 60
+    },
+    "typography_zh": {
+      "sizes_px": [75, 45, 45, 30, 15],
+      "line_height_percent": 100,
+      "letter_spacing_percent": -5
+    },
+    "corner_radius_px": 0,
     "content_safety": "Treat source-specific claims, products, people, marks, fonts, test results, certificates, and imagery as reference-only until replaced or approved."
   },
   "selection_workflow": {
-    "shortlist": "Choose three baselines from this index according to the presentation's content, evidence type, pacing, and image material.",
+    "tone_choice": "Require the user to choose light or dark before shortlisting. Use tone_mode metadata now and resolve paths from this index when templates are later grouped into light/dark folders.",
+    "shortlist": "Choose three baselines compatible with the approved tone_mode, then rank them by content, evidence type, pacing, and image material.",
+    "category_semantics": "For facial cleansers, body cleansers, and other cleansing products, require a clean semantic theme: clear, hygienic, low-noise, evidence-legible, and restrained in product staging.",
+    "category_color_limit": "The user-selected light/dark tone controls surface dominance and contrast allocation. It does not authorize colors outside brand/source.json.",
     "preview": "Read only preview_md for the three shortlisted baselines and generate three real branded previews using the deck's actual content.",
     "selection": "After the user chooses, read exactly the selected design_md before generating the complete deck.",
     "mixing": "Keep one primary baseline. Borrow a component from one secondary baseline only when the user explicitly requests a mix and the component remains compatible with the primary narrative structure.",
@@ -27,6 +42,7 @@
         "type": "repository-template",
         "source": "GuaAha/frontend-slides-lr"
       },
+      "tone_mode": "dark",
       "canvas": "750×1320",
       "strengths": [
         "high-energy title and section rhythm",
@@ -47,6 +63,7 @@
         "file_key": "CEC2c3kp8JfmTpisy8lZvH",
         "node_id": "1:5803"
       },
+      "tone_mode": "light",
       "canvas": "750×1320",
       "strengths": [
         "white editorial proof pages",
@@ -67,6 +84,7 @@
         "file_key": "CEC2c3kp8JfmTpisy8lZvH",
         "node_id": "1:5461"
       },
+      "tone_mode": "dark",
       "canvas": "750×1320",
       "strengths": [
         "black evidence field with controlled amber emphasis",
@@ -87,6 +105,7 @@
         "file_key": "CEC2c3kp8JfmTpisy8lZvH",
         "node_id": "1:3010"
       },
+      "tone_mode": "light",
       "canvas": "750×1320",
       "strengths": [
         "icy white space and aquatic mint accents",
@@ -107,6 +126,7 @@
         "file_key": "CEC2c3kp8JfmTpisy8lZvH",
         "node_id": "1:2263"
       },
+      "tone_mode": "dark",
       "canvas": "750×1320",
       "strengths": [
         "black glass and controlled gold product theater",
@@ -127,6 +147,7 @@
         "file_key": "CEC2c3kp8JfmTpisy8lZvH",
         "node_id": "1:1920"
       },
+      "tone_mode": "dark",
       "canvas": "750×1320",
       "strengths": [
         "black and white editorial planes",
@@ -147,6 +168,7 @@
         "file_key": "CEC2c3kp8JfmTpisy8lZvH",
         "node_id": "1:1238"
       },
+      "tone_mode": "light",
       "canvas": "750×1320",
       "strengths": [
         "mineral-blue cleansing narrative",

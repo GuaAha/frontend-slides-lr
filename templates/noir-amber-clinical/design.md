@@ -46,43 +46,49 @@ typography:
     fontSize: 75px
     fontWeight: 500
     lineHeight: 1
-    letterSpacing: -0.04em
+    letterSpacing: -0.05em
   section:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', sans-serif"
     fontStyle: "70S"
     fontSize: 45px
     fontWeight: 500
     lineHeight: 1
+    letterSpacing: -0.05em
   label:
+    fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', sans-serif"
+    fontStyle: "70S"
+    fontSize: 45px
+    fontWeight: 500
+    lineHeight: 1
+    letterSpacing: -0.05em
+  body:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', sans-serif"
     fontStyle: "70S"
     fontSize: 30px
     fontWeight: 500
-    lineHeight: 1.1
-  body:
-    fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', sans-serif"
-    fontStyle: "70S"
-    fontSize: 20px
-    fontWeight: 500
-    lineHeight: 1.35
+    lineHeight: 1
+    letterSpacing: -0.05em
   evidence-marker:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', sans-serif"
     fontStyle: "70S"
-    fontSize: 40px
+    fontSize: 75px
     fontWeight: 500
     lineHeight: 1
+    letterSpacing: -0.05em
   legal:
     fontFamily: "'MAKE SENSE', 'Noto Sans SC', 'PingFang SC', sans-serif"
     fontStyle: "70S"
     fontSize: 15px
     fontWeight: 500
-    lineHeight: 1.2
+    lineHeight: 1
+    letterSpacing: -0.05em
   instruction-index:
     fontFamily: "'HYQiHei', 'Noto Sans SC', sans-serif"
     fontStyle: "70S"
-    fontSize: 30px
+    fontSize: 45px
     fontWeight: 700
-    lineHeight: 1.1
+    lineHeight: 1
+    letterSpacing: -0.05em
 
 spacing:
   base-unit: 5px
@@ -174,6 +180,18 @@ components:
     description: "Bottom-aligned method, sample, period, patent, or qualification note connected to visible evidence markers."
 ---
 
+## Mandatory Fixed-Brand Override
+
+This block overrides every conflicting reference value later in this file.
+
+- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
+- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- Product-detail logo: do not add a separately authored brand-logo layer.
+- Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
+
 ## Frontend Slides Fixed-Stage Policy
 
 Noir Amber Clinical is authored only at **750×1320px**. Scale the whole stage uniformly to fit a viewport; never reflow or restack internal content. The audited source is a 750×12601.8px commerce sequence with ten slices, including an evidence module 1789px high. Long modules must be split at a semantic boundary, shortened, or continued on the next slide.
@@ -241,16 +259,15 @@ Do not substitute a luxury serif. The premium quality comes from material photog
 
 ### Typography Scale
 
-| Role | Size | Use |
-|---|---:|---|
-| Hero | 75px | Two- or three-line claim |
-| Section | 45px | Mechanism, feature, action, result label |
-| Label | 30px | Ingredient, week, step, product name |
-| Body | 20px | Qualification and concise explanation |
-| Evidence Marker | 40px | Asterisk or numbered proof marker |
-| Legal | 15px | Source, scope, patent, and caution |
+| Role | Size | Line Height | Letter Spacing | Use |
+|---|---:|---:|---:|---|
+| Headline | 75px | 100% | -5% | Two- or three-line claim and primary evidence number |
+| Subheadline | 45px | 100% | -5% | Mechanism, feature, action, or result heading |
+| Label | 45px | 100% | -5% | Ingredient, week, step, product name, or proof label |
+| Description | 30px | 100% | -5% | Qualification and concise explanation |
+| Disclaimer | 15px | 100% | -5% | Source, scope, patent, marker, and caution |
 
-Keep line height close to 1.0 for large Chinese display text. A three-line claim may reach 225px but should remain a single thought. Explicitly break before the quantified outcome or mechanism shift.
+Use the same five levels for every Chinese text role, including metrics and proof. A three-line 75px claim may reach 225px but should remain a single thought. Explicitly break before the quantified outcome or mechanism shift.
 
 ### Signature Treatments
 
@@ -357,7 +374,7 @@ Amber atmosphere is permitted behind a product monument. It must behave like lig
 
 ## Shapes and Treatment
 
-Use square image wells and charts. Small 8px radii may appear on functional annotations. Product capsules and liquid drops keep their natural curvature; interface surfaces do not inherit it.
+Use square image wells, charts, and functional annotations. Every authored webpage layer stays at zero radius. Product capsules and liquid drops may keep natural curvature only when that curvature is contained inside an approved image asset.
 
 Technical diagrams use 1px lines, dashed contours, circles, and restrained arrows. Avoid thick infographic icons. STEP labels may use white rectangles on black, but they should not become pill buttons.
 
@@ -454,7 +471,7 @@ Chinese leads. BEFORE, AFTER, STEP, week numbers, and patent IDs are utility tex
 ### Adjustments
 
 - Use explicit semantic breaks for 75px headlines.
-- Keep line height near 1.0 for display and 1.2–1.35 for notes.
+- Keep every Chinese text role at `100%` line height and `-5%` letter spacing; use block spacing to separate notes.
 - Prevent asterisks and evidence numbers from wrapping alone.
 - Keep DHT, PVP, patent IDs, and percentages on one line where possible.
 - Use full-width Chinese punctuation in Chinese sentences.
