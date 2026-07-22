@@ -105,7 +105,35 @@ class BrandSyncTests(unittest.TestCase):
             path.write_text(html, encoding="utf-8")
             result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("non-zero border-radius", result.stderr)
+        self.assertIn("non-zero CSS border-radius", result.stderr)
+
+    def test_static_validator_ignores_radius_words_inside_image_content_metadata(self) -> None:
+        html = """<!doctype html><html><head>
+        <meta name="frontend-slides-brand-status" content="draft">
+        <style>.deck-stage{width:750px;height:1320px}</style>
+        </head><body><div class="deck-viewport"><main class="deck-stage">
+        <section class="slide"><img src="data:image/png;base64,AA=="
+        alt="approved source artwork includes border-radius: 24px in its metadata"></section>
+        </main></div></body></html>"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "deck.html"
+            path.write_text(html, encoding="utf-8")
+            result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_static_validator_rejects_css_radius_on_image_as_mask(self) -> None:
+        html = """<!doctype html><html><head>
+        <meta name="frontend-slides-brand-status" content="draft">
+        <style>.deck-stage{width:750px;height:1320px}img{border-radius:24px}</style>
+        </head><body><div class="deck-viewport"><main class="deck-stage">
+        <section class="slide"><img src="data:image/png;base64,AA==" alt="approved image"></section>
+        </main></div></body></html>"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "deck.html"
+            path.write_text(html, encoding="utf-8")
+            result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("image-mask layers", result.stderr)
 
 
 if __name__ == "__main__":

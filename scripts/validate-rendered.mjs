@@ -93,6 +93,24 @@ try {
           || (clipsY && element.scrollHeight > element.clientHeight + 4)) {
           issues.push({ kind: 'overflow', message: `${label} has clipped or scrolling content` });
         }
+        // Computed radii detect runtime-authored masks without inspecting the
+        // geometry contained inside raster/vector image assets.
+        const radiusValues = [
+          style.borderTopLeftRadius,
+          style.borderTopRightRadius,
+          style.borderBottomRightRadius,
+          style.borderBottomLeftRadius,
+        ];
+        const hasNonzeroRadius = radiusValues.some((value) => {
+          const numbers = value.match(/-?\d*\.?\d+/g) || [];
+          return numbers.some((number) => Math.abs(Number(number)) > 0.001);
+        });
+        if (hasNonzeroRadius) {
+          issues.push({
+            kind: 'radius',
+            message: `${label} has non-zero authored border radius (${radiusValues.join(', ')})`,
+          });
+        }
       }
 
       const textElements = elements.filter((element) => {

@@ -39,7 +39,9 @@ class DeckParser(HTMLParser):
         self.brand_status: str | None = None
         self.external_resources: list[str] = []
         self.visible_text: list[str] = []
+        self.css_sources: list[str] = []
         self._hidden_depth = 0
+        self._style_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr_map = dict(attrs)
@@ -51,14 +53,23 @@ class DeckParser(HTMLParser):
             value = attr_map.get("src") or attr_map.get("href")
             if value and re.match(r"^https?://", value, flags=re.I):
                 self.external_resources.append(value)
+        inline_style = attr_map.get("style")
+        if inline_style:
+            self.css_sources.append(inline_style)
         if tag in {"script", "style", "template", "svg"}:
             self._hidden_depth += 1
+        if tag == "style":
+            self._style_depth += 1
 
     def handle_endtag(self, tag: str) -> None:
+        if tag == "style" and self._style_depth:
+            self._style_depth -= 1
         if tag in {"script", "style", "template", "svg"} and self._hidden_depth:
             self._hidden_depth -= 1
 
     def handle_data(self, data: str) -> None:
+        if self._style_depth and data.strip():
+            self.css_sources.append(data)
         if not self._hidden_depth and data.strip():
             self.visible_text.append(data.strip())
 
@@ -91,13 +102,20 @@ def validate(path: Path, allow_draft: bool) -> tuple[list[str], list[str]]:
         if re.search(pattern, raw, flags=re.I):
             errors.append(f"stale or alternative canvas reference: {pattern}")
 
+    # Inspect authored CSS only. Image bytes, data URLs, alt text, and visible
+    # copy are opaque content and must not be classified by the shape gate.
+    # A radius declared on <img> still counts as an authored image mask.
+    authored_css = "\n".join(parser.css_sources)
     nonzero_radii = []
-    for match in re.finditer(r"border(?:-(?:top|right|bottom|left|start|end)){0,2}-radius\s*:\s*([^;{}]+)", raw, flags=re.I):
+    for match in re.finditer(r"border(?:-(?:top|right|bottom|left|start|end)){0,2}-radius\s*:\s*([^;{}]+)", authored_css, flags=re.I):
         value = match.group(1).strip()
         if not is_zero_radius(value):
             nonzero_radii.append(value)
     if nonzero_radii:
-        errors.append("non-zero border-radius is forbidden: " + ", ".join(sorted(set(nonzero_radii))))
+        errors.append(
+            "non-zero CSS border-radius is forbidden on authored text, graphic, or image-mask layers: "
+            + ", ".join(sorted(set(nonzero_radii)))
+        )
 
     expected_status = source["approval_status"]
     if parser.brand_status != expected_status:
