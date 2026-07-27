@@ -94,7 +94,6 @@ def load_source() -> dict:
         "approval_status",
         "brand",
         "canvas",
-        "colors",
         "typography",
         "logo",
         "shape",
@@ -180,7 +179,6 @@ def render_embedded_font_faces(typography: dict) -> str:
 
 
 def render_brand_tokens(data: dict) -> str:
-    colors = data["colors"]
     typography = data["typography"]
     shape = data["shape"]
     spacing = data["spacing"]
@@ -193,15 +191,6 @@ def render_brand_tokens(data: dict) -> str:
 :root {{
   --brand-canvas-width: 750px;
   --brand-canvas-height: 1320px;
-  --brand-background: {colors['background']};
-  --brand-surface: {colors['surface']};
-  --brand-surface-strong: {colors['surface_strong']};
-  --brand-text: {colors['text']};
-  --brand-text-muted: {colors['text_muted']};
-  --brand-primary: {colors['primary']};
-  --brand-accent: {colors['accent']};
-  --brand-success: {colors['success']};
-  --brand-danger: {colors['danger']};
   --brand-font-display: {css_font(typography['display'])};
   --brand-font-body: {css_font(typography['body'])};
   --brand-type-headline: {zh['sizes_px']['headline']}px;
@@ -408,7 +397,8 @@ def render_rules(data: dict) -> str:
         f"- Corner radius: **{shape['corner_radius_px']}px** for every authored container",
         f"- Text safe area: **top {data['spacing']['safe_top_px']}px / right {data['spacing']['slide_padding_px']}px / bottom {data['spacing']['safe_bottom_px']}px / left {data['spacing']['slide_padding_px']}px**",
         "- Product-detail pages: **no separately authored brand logo**",
-        "- Tone mode: the user chooses **light** or **dark** before preview generation.",
+        "- Tone mode: default to **light** when the user does not choose; keep light unless the user explicitly selects **dark** or requests an adjustment.",
+        "- Palette authority: `brand/source.json` does not define colors. Each shortlisted option uses the palette in its own `preview.md`; after selection, the chosen template's `design.md` is authoritative.",
         "",
         "## Density",
         "",
@@ -425,8 +415,8 @@ def render_rules(data: dict) -> str:
             for locale, rule in locale_rules.items()
         ),
         f"- All locale levels use **{typography['line_height_percent']}%** line height.",
-        "- Every authored text run maps to one of the five locale levels; large proof numerals do not create a display-size exception.",
-        "- Locale letter spacing and line height apply to every authored text leaf, including metrics, superscripts, utility labels, and dense answers.",
+        "- Every authored text run maps to one of the five locale levels; large proof numerals map directly to the headline level and do not create a sixth level.",
+        "- A text leaf is an element that directly carries visible text and has no descendant that carries another text role. Locale letter spacing and line height apply to every text leaf, including metrics, superscripts, utility labels, and dense answers.",
         "- Pure non-Chinese runs declare `lang`; mixed Chinese/Latin copy follows the Chinese contract unless explicitly separated by the source.",
         "- Chinese output embeds the approved local MAKE SENSE 70S font asset.",
         "",
@@ -441,8 +431,8 @@ def render_rules(data: dict) -> str:
         "",
         "- Read `templates/index.json` when preparing the three real branded previews.",
         "- Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.",
-        "- Use baseline composition and component grammar without overriding the brand source.",
-        "- Keep the selected light/dark tone, approved color tokens, typography, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.",
+        "- Use baseline composition, component grammar, and the palette declared by that baseline without overriding non-color brand rules.",
+        "- Keep typography, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.",
         "",
         f"> Source note: {data['source_note']}",
         "",
@@ -541,6 +531,14 @@ def check_templates(errors: list[str]) -> None:
         errors.append(f"template_count must be {len(TEMPLATE_IDS)}")
     if tuple(indexed_ids) != TEMPLATE_IDS:
         errors.append("template index ids must match the canonical seven-template order")
+    contract = index.get("contract", {})
+    if "preview.md and design.md" not in contract.get("palette_authority", ""):
+        errors.append("template index must make preview.md and design.md authoritative for palette")
+    workflow = index.get("selection_workflow", {})
+    if "Default tone_mode to light" not in workflow.get("tone_choice", ""):
+        errors.append("template index must default tone_mode to light")
+    if "selected template's preview.md and design.md" not in workflow.get("category_color_limit", ""):
+        errors.append("template index must source colors from each selected template")
 
     tones = [item.get("tone_mode") for item in index.get("templates", [])]
     if any(tone not in {"light", "dark"} for tone in tones):
@@ -564,6 +562,7 @@ def check_templates(errors: list[str]) -> None:
             if PREVIEW_CONTRACT_MARKER not in preview:
                 errors.append(f"missing fixed-brand preview override: {preview_path.relative_to(ROOT)}")
             for required in (
+                "The palette declared in this preview is the color authority",
                 "x=60–690 and y=120–1260",
                 "75/45/45/30/15px",
                 "100% line height",
@@ -573,6 +572,10 @@ def check_templates(errors: list[str]) -> None:
             ):
                 if required not in preview:
                     errors.append(f"missing preview contract text {required!r}: {preview_path.relative_to(ROOT)}")
+            if not re.search(r"#[0-9A-Fa-f]{6}", preview):
+                errors.append(f"preview must declare a concrete palette: {preview_path.relative_to(ROOT)}")
+            if "reference palette below describes contrast roles only" in preview:
+                errors.append(f"stale palette override in preview: {preview_path.relative_to(ROOT)}")
 
         design_path = index_path.parent / template_id / "design.md"
         if not design_path.exists():
@@ -581,6 +584,7 @@ def check_templates(errors: list[str]) -> None:
         if DESIGN_CONTRACT_MARKER not in design:
             errors.append(f"missing mandatory fixed-brand override: {design_path.relative_to(ROOT)}")
         for required in (
+            "The palette declared in this design is the color authority",
             "top 120px / right 60px / bottom 60px / left 60px",
             "75 / 45 / 45 / 30 / 15px",
             "100% line height",
@@ -589,6 +593,10 @@ def check_templates(errors: list[str]) -> None:
         ):
             if required not in design:
                 errors.append(f"missing design contract text {required!r}: {design_path.relative_to(ROOT)}")
+        if not re.search(r"#[0-9A-Fa-f]{6}", design):
+            errors.append(f"design must declare a concrete palette: {design_path.relative_to(ROOT)}")
+        if "colors declared by the brand source" in design:
+            errors.append(f"stale brand-source palette override in design: {design_path.relative_to(ROOT)}")
         lowered = design.lower()
         for forbidden in FORBIDDEN_DESIGN_GUIDANCE:
             if forbidden in lowered:

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Fixed-Brand Internal Slides"
-  short_description: "Create fixed-brand 750 by 1320 internal decks"
-  default_prompt: "Use $frontend-slides-brand-internal to create a fixed-brand 750 by 1320 internal presentation."
+  display_name: "品牌化-前端幻灯片"
+  short_description: "创建遵循单一品牌规范的内部 HTML 演示文稿"
+  default_prompt: "使用 $frontend-slides-brand-internal 创建遵循单一品牌规范的内部 HTML 演示文稿。"

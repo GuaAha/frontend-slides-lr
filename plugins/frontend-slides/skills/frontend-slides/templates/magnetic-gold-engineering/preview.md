@@ -9,7 +9,7 @@ source_node: "1:2263"
 
 ## Fixed-Brand Preview Override
 
-Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+The palette declared in this preview is the color authority for this option. Use its declared `light` or `dark` tone. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
 
 ## Files
 
@@ -25,6 +25,10 @@ Use the run's approved brand tokens and selected `light` or `dark` tone; the ref
 **Source character:** a 750×15531 detail board with 12 sections, a black-to-gold glass hero, material and gesture pages, white exploded-package engineering, refill and magnetic-close sequences, and a clean product selector.
 
 **Fixed output:** `750×1320` per page, uniformly scaled. Long e-commerce sections become a sequence of argument-sized slides.
+
+## Palette Snapshot
+
+- Carbon `#080909`, glass black `#151616`, paper `#F8F8F5`, white `#FFFFFF`, graphite `#666762`, line `#C9C9C2`, champagne `#D7B56D`, molten gold `#B9852E`, and cool outline `#6172BE`.
 
 ## Visual Snapshot
 

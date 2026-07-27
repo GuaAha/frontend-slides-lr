@@ -9,7 +9,7 @@ source_node: "1:3010"
 
 ## Fixed-Brand Preview Override
 
-Use the run's approved brand tokens and selected `light` or `dark` tone; the reference palette below describes contrast roles only. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
+The palette declared in this preview is the color authority for this option. Use its declared `light` or `dark` tone. Keep authored copy inside x=60–690 and y=120–1260. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
 
 ## Files
 
@@ -25,6 +25,10 @@ Use the run's approved brand tokens and selected `light` or `dark` tone; the ref
 **Source character:** a 750×15432 product-detail board with 12 sections, 93 text nodes, abundant product and water imagery, mostly white pages, mint evidence accents, and one immersive ocean-fragrance chapter.
 
 **Fixed output:** every reusable page is a `750×1320` stage. Long source sections are interpreted and split; they are never squeezed into a single page.
+
+## Palette Snapshot
+
+- Frost `#F6FAF9`, paper `#FFFFFF`, ink `#111614`, copy `#525C58`, mist `#DDEEE8`, mint `#47AD8D`, deep mint `#2C856E`, ocean `#4173D1`, ice blue `#C9E4EE`, and line `#C9D9D4`.
 
 ## Visual Snapshot
 

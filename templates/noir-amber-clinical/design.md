@@ -188,7 +188,7 @@ This block overrides every conflicting reference value later in this file.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
 - Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
-- Tone: use the run's approved `light` or `dark` choice and colors declared by the brand source. Palette descriptions below explain reference contrast only.
+- The palette declared in this design is the color authority for the selected template. Use its declared `light` or `dark` tone and do not introduce colors outside this palette unless the user explicitly approves a palette change.
 - Product-detail logo: do not add a separately authored brand-logo layer.
 - Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
 

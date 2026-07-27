@@ -12,7 +12,8 @@
 - Corner radius: **0px** for every authored container
 - Text safe area: **top 120px / right 60px / bottom 60px / left 60px**
 - Product-detail pages: **no separately authored brand logo**
-- Tone mode: the user chooses **light** or **dark** before preview generation.
+- Tone mode: default to **light** when the user does not choose; keep light unless the user explicitly selects **dark** or requests an adjustment.
+- Palette authority: `brand/source.json` does not define colors. Each shortlisted option uses the palette in its own `preview.md`; after selection, the chosen template's `design.md` is authoritative.
 
 ## Density
 
@@ -29,8 +30,8 @@
 | vi | Noto Sans | 60 | 30 | 25 | 15 | 9 | -6% |
 | th | Noto Sans Thai | 60 | 30 | 25 | 15 | 10 | -3% |
 - All locale levels use **100%** line height.
-- Every authored text run maps to one of the five locale levels; large proof numerals do not create a display-size exception.
-- Locale letter spacing and line height apply to every authored text leaf, including metrics, superscripts, utility labels, and dense answers.
+- Every authored text run maps to one of the five locale levels; large proof numerals map directly to the headline level and do not create a sixth level.
+- A text leaf is an element that directly carries visible text and has no descendant that carries another text role. Locale letter spacing and line height apply to every text leaf, including metrics, superscripts, utility labels, and dense answers.
 - Pure non-Chinese runs declare `lang`; mixed Chinese/Latin copy follows the Chinese contract unless explicitly separated by the source.
 - Chinese output embeds the approved local MAKE SENSE 70S font asset.
 
@@ -45,7 +46,7 @@
 
 - Read `templates/index.json` when preparing the three real branded previews.
 - Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.
-- Use baseline composition and component grammar without overriding the brand source.
-- Keep the selected light/dark tone, approved color tokens, typography, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews.
+- Use baseline composition, component grammar, and the palette declared by that baseline without overriding non-color brand rules.
+- Keep typography, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.
 
-> Source note: Confirmed multilingual typography, fixed safe area, square-corner rules, and product-detail no-logo policy are imported from the internal rules source. Light or dark tone is selected by the user for each run.
+> Source note: Confirmed non-color brand rules include multilingual typography, fixed safe area, square corners, and the product-detail no-logo policy. Palette information is defined by each template's preview.md and design.md. Tone defaults to light unless the user explicitly selects dark.

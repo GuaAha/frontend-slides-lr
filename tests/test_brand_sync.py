@@ -38,6 +38,7 @@ class BrandSyncTests(unittest.TestCase):
 
     def test_brand_source_has_confirmed_type_and_square_corners(self) -> None:
         source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
+        self.assertNotIn("colors", source)
         self.assertEqual(source["shape"]["corner_radius_px"], 0)
         self.assertEqual(source["spacing"]["safe_top_px"], 120)
         self.assertEqual(source["spacing"]["safe_bottom_px"], 60)
@@ -64,6 +65,18 @@ class BrandSyncTests(unittest.TestCase):
         self.assertIn("--brand-line-height: 100%;", css)
         self.assertIn("--brand-item-gap: 10px;", css)
         self.assertIn("--brand-disclaimer-gap: 40px;", css)
+        for color_token in (
+            "--brand-background:",
+            "--brand-surface:",
+            "--brand-surface-strong:",
+            "--brand-text:",
+            "--brand-text-muted:",
+            "--brand-primary:",
+            "--brand-accent:",
+            "--brand-success:",
+            "--brand-danger:",
+        ):
+            self.assertNotIn(color_token, css)
 
     def test_templates_are_one_peer_collection(self) -> None:
         index = json.loads((ROOT / "templates/index.json").read_text(encoding="utf-8"))
@@ -96,32 +109,46 @@ class BrandSyncTests(unittest.TestCase):
             design = (ROOT / "templates" / template_id / "design.md").read_text(encoding="utf-8")
             preview = (ROOT / "templates" / template_id / "preview.md").read_text(encoding="utf-8")
             self.assertIn("## Mandatory Fixed-Brand Override", design)
+            self.assertIn("The palette declared in this design is the color authority", design)
             self.assertIn("top 120px / right 60px / bottom 60px / left 60px", design)
             self.assertIn("75 / 45 / 45 / 30 / 15px", design)
             self.assertIn("border-radius: 0", design)
             self.assertIn("## Fixed-Brand Preview Override", preview)
+            self.assertIn("The palette declared in this preview is the color authority", preview)
             self.assertIn("75/45/45/30/15px", preview)
             self.assertIn("border-radius: 0", preview)
+            self.assertRegex(design, r"#[0-9A-Fa-f]{6}")
+            self.assertRegex(preview, r"#[0-9A-Fa-f]{6}")
+            self.assertNotIn("colors declared by the brand source", design)
+            self.assertNotIn("reference palette below describes contrast roles only", preview)
 
-    def test_skill_requires_image_and_tone_choices_with_clean_cleansing_semantics(self) -> None:
+    def test_skill_uses_separate_images_light_default_and_template_palette_authority(self) -> None:
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
         validation = (ROOT / "references/validation.md").read_text(encoding="utf-8")
         index = json.loads((ROOT / "templates/index.json").read_text(encoding="utf-8"))
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("do not browse the web, search local drives", skill)
-        self.assertIn("image_mode: placeholder", skill)
-        self.assertIn("image_mode: css-visual", skill)
-        self.assertIn("Tone: `light` or `dark`", skill)
-        self.assertIn("derived rectangular crops", skill)
-        self.assertIn("do not render a brand logo on product-detail pages", skill.lower())
-        self.assertIn("set the semantic theme to `clean`", skill)
+        self.assertIn("接收笔记、文档、Markdown 文件。图片素材可由用户另行提供。", skill)
+        self.assertIn("来源文案台账不是用户提供的原始文档本身", skill)
+        self.assertNotIn("PPT/PPTX", skill)
+        self.assertNotIn("scripts/extract-pptx.py", skill)
+        self.assertIn("色调：`light`（明亮）或 `dark`（暗黑）", skill)
+        self.assertIn("用户未指定时，先将 `tone_mode` 记录为 `light`", skill)
+        self.assertIn("大型证据数字直接归入主标题层级", skill)
+        self.assertIn("文字叶节点是直接承载可见文字", skill)
+        self.assertIn("默认使用 `light` 色调并设置语义主题 `clean`", skill)
+        self.assertIn("不生成颜色令牌", skill)
+        self.assertIn("配色只从入选模板的 `preview.md`", skill)
+        self.assertIn("`image_mode: placeholder`", skill)
+        self.assertIn("`image_mode: css-visual`", skill)
         self.assertIn("## Image-source gate", validation)
         self.assertIn("do not browse the web, search local drives", validation)
         self.assertIn("image_mode: css-visual", validation)
         self.assertIn("rectangular cropping", validation)
         self.assertIn("clean semantic theme", index["selection_workflow"]["category_semantics"])
-        self.assertIn("light/dark tone controls surface dominance", index["selection_workflow"]["category_color_limit"])
+        self.assertIn("Default tone_mode to light", index["selection_workflow"]["tone_choice"])
+        self.assertIn("preview.md and design.md", index["contract"]["palette_authority"])
+        self.assertIn("selected template's preview.md and design.md", index["selection_workflow"]["category_color_limit"])
         self.assertNotIn("logos and font files were not present", readme.lower())
         self.assertNotIn("palette and logo approval remain draft", readme.lower())
 

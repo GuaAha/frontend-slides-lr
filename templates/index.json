@@ -4,7 +4,8 @@
   "template_count": 7,
   "contract": {
     "role": "Each entry is a peer design-style and narrative-structure baseline.",
-    "brand_authority": "brand/source.json and brand/generated files remain authoritative for palette, typography, logo, assets, spacing, shape, motion timing, and canvas.",
+    "brand_authority": "brand/source.json and brand/generated files remain authoritative for typography, logo, assets, spacing, shape, motion timing, and canvas. They do not define palette colors.",
+    "palette_authority": "Palette authority belongs to each template's preview.md and design.md. Use preview.md while comparing shortlisted options, then use only the selected template's design.md for the full deck.",
     "canvas": {
       "width": 750,
       "height": 1320,
@@ -25,14 +26,14 @@
     "content_safety": "Treat source-specific claims, products, people, marks, fonts, test results, certificates, and imagery as reference-only until replaced or approved."
   },
   "selection_workflow": {
-    "tone_choice": "Require the user to choose light or dark before shortlisting. Use tone_mode metadata now and resolve paths from this index when templates are later grouped into light/dark folders.",
-    "shortlist": "Choose three baselines compatible with the approved tone_mode, then rank them by content, evidence type, pacing, and image material.",
-    "category_semantics": "For facial cleansers, body cleansers, and other cleansing products, require a clean semantic theme: clear, hygienic, low-noise, evidence-legible, and restrained in product staging.",
-    "category_color_limit": "The user-selected light/dark tone controls surface dominance and contrast allocation. It does not authorize colors outside brand/source.json.",
+    "tone_choice": "Default tone_mode to light when the user does not choose. Generate light previews first and continue with light when the user raises no objection; switch only when the user explicitly selects dark or requests an adjustment.",
+    "shortlist": "Choose three baselines compatible with the active tone_mode, then rank them by content, evidence type, pacing, and image material.",
+    "category_semantics": "For facial cleansers, body cleansers, and other cleansing products, default to light and require a clean semantic theme: clear, hygienic, low-noise, evidence-legible, and restrained in product staging. Switch tone only when the user explicitly requests it.",
+    "category_color_limit": "Use colors only from each selected template's preview.md and design.md. The active light/dark tone controls which compatible templates are shortlisted; it does not create extra colors.",
     "preview": "Read only preview_md for the three shortlisted baselines and generate three real branded previews using the deck's actual content.",
     "selection": "After the user chooses, read exactly the selected design_md before generating the complete deck.",
-    "mixing": "Keep one primary baseline. Borrow a component from one secondary baseline only when the user explicitly requests a mix and the component remains compatible with the primary narrative structure.",
-    "never": "Do not bulk-read all design.md files or use a baseline to override the fixed brand contract."
+    "mixing": "Keep one primary baseline. Borrow a component from one secondary baseline only when the user explicitly requests a mix and the component remains compatible with the primary narrative structure and primary palette.",
+    "never": "Do not bulk-read all design.md files or use a baseline to override the fixed non-color brand contract."
   },
   "templates": [
     {

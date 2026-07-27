@@ -28,8 +28,8 @@ def validate(path: Path) -> list[str]:
         errors.append(f"{path}: frontmatter must contain only name and description")
     if f"name: {EXPECTED_NAME}" not in match.group(1):
         errors.append(f"{path}: unexpected skill name")
-    if "750×1320" not in match.group(1):
-        errors.append(f"{path}: description must trigger on the fixed canvas")
+    if "单一品牌规范" not in match.group(1):
+        errors.append(f"{path}: description must trigger on the single brand specification")
     return errors
 
 
