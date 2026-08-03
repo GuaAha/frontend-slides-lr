@@ -21,8 +21,41 @@ TEMPLATE_IDS = (
     "blue-clay-clean",
 )
 
+STATIC_DESIGN_CONTRACT_MARKER = (
+    "The generated presentation is static. All visible states are fully composed and appear immediately."
+)
+FORBIDDEN_PRESENTATION_MOTION_GUIDANCE = (
+    "animation",
+    "### motion",
+    "prefers-reduced-motion",
+    "reduced-motion mode",
+    "animated starfield",
+    "float keyframe",
+    "motion timing",
+    "motion can reveal",
+    "motion may reveal",
+    "motion should expose",
+    "motion stops before",
+    "add minimal motion",
+    "add only reading-order motion",
+    "use restrained, evidence-preserving motion",
+    "motion behavior is inferred",
+    "motion reference",
+)
+
 
 class BrandSyncTests(unittest.TestCase):
+    def test_template_guidance_is_static_without_banning_physical_semantics(self) -> None:
+        for template_id in TEMPLATE_IDS:
+            design = (ROOT / "templates" / template_id / "design.md").read_text(encoding="utf-8")
+            self.assertIn(STATIC_DESIGN_CONTRACT_MARKER, design, template_id)
+            lowered = design.lower()
+            for forbidden in FORBIDDEN_PRESENTATION_MOTION_GUIDANCE:
+                self.assertNotIn(forbidden, lowered, f"{template_id}: {forbidden}")
+
+        orbit_preview = (ROOT / "templates/8-bit-orbit/preview.md").read_text(encoding="utf-8").lower()
+        self.assertNotIn("animated starfields", orbit_preview)
+
     def run_command(self, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [PYTHON, *args],

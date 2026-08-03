@@ -83,6 +83,27 @@ FORBIDDEN_ACTIVE_TEXT = (
 
 DESIGN_CONTRACT_MARKER = "## Mandatory Fixed-Brand Override"
 PREVIEW_CONTRACT_MARKER = "## Fixed-Brand Preview Override"
+STATIC_DESIGN_CONTRACT_MARKER = (
+    "The generated presentation is static. All visible states are fully composed and appear immediately."
+)
+FORBIDDEN_PRESENTATION_MOTION_GUIDANCE = (
+    "animation",
+    "### motion",
+    "prefers-reduced-motion",
+    "reduced-motion mode",
+    "animated starfield",
+    "float keyframe",
+    "motion timing",
+    "motion can reveal",
+    "motion may reveal",
+    "motion should expose",
+    "motion stops before",
+    "add minimal motion",
+    "add only reading-order motion",
+    "use restrained, evidence-preserving motion",
+    "motion behavior is inferred",
+    "motion reference",
+)
 FORBIDDEN_DESIGN_GUIDANCE = (
     "radii may appear",
     "subtly rounded",
@@ -562,6 +583,14 @@ def check_templates(errors: list[str]) -> None:
         design = design_path.read_text(encoding="utf-8")
         if DESIGN_CONTRACT_MARKER not in design:
             errors.append(f"missing mandatory fixed-brand override: {design_path.relative_to(ROOT)}")
+        if STATIC_DESIGN_CONTRACT_MARKER not in design:
+            errors.append(f"missing static presentation contract: {design_path.relative_to(ROOT)}")
+        lowered = design.lower()
+        for forbidden in FORBIDDEN_PRESENTATION_MOTION_GUIDANCE:
+            if forbidden in lowered:
+                errors.append(
+                    f"forbidden presentation-motion guidance {forbidden!r}: {design_path.relative_to(ROOT)}"
+                )
         for required in (
             "The palette declared in this design is the color authority",
             "top 120px / right 60px / bottom 60px / left 60px",
@@ -576,7 +605,6 @@ def check_templates(errors: list[str]) -> None:
             errors.append(f"design must declare a concrete palette: {design_path.relative_to(ROOT)}")
         if "colors declared by the brand source" in design:
             errors.append(f"stale brand-source palette override in design: {design_path.relative_to(ROOT)}")
-        lowered = design.lower()
         for forbidden in FORBIDDEN_DESIGN_GUIDANCE:
             if forbidden in lowered:
                 errors.append(f"forbidden rounded-corner guidance {forbidden!r}: {design_path.relative_to(ROOT)}")

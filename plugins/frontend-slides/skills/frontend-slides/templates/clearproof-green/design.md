@@ -249,6 +249,8 @@ components:
 
 This block overrides every conflicting reference value later in this file.
 
+The generated presentation is static. All visible states are fully composed and appear immediately.
+
 - Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
@@ -600,22 +602,13 @@ There are no internal layout breakpoints. The two-column 310/10/310 grid does no
 
 Navigation controls live outside the stage and must not cover the 60px safety margins. Keep next/previous hit areas large, but visually quiet. Page counters may sit in application chrome; do not add persistent navigation dots, progress bars, or browser UI inside the branded slide.
 
-### Animation Triggers
+### Static Composition
 
-Use restrained, evidence-preserving motion:
-
-- Fade or rise the headline by 12–20px.
-- Reveal metric, chart, and evidence image in that order.
-- Draw a chart line once from start to endpoint.
-- Stagger grid cells by no more than 80ms.
-- Crossfade matched before/after images only when both remain inspectable.
-- Keep product movement slow and under 3 degrees or 20px.
-
-No bounce, elastic easing, continuous bobbing, spinning ingredients, liquid shaders, or looping chart animation. Motion must clarify sequence, not simulate efficacy.
+The headline, metric, chart, and evidence image are simultaneously inspectable in a deliberate static scan order. Establish that order through placement, scale, contrast, alignment, and grouping. Show chart lines at their complete endpoints and matched before/after images together under the same comparison conditions.
 
 ### Print Behavior
 
-Print one stage per page with backgrounds and images preserved. White slides should remain white rather than acquiring a gray browser canvas. Disable transitions, animated masks, and video. If the deck uses a source-dependent web font, embed it or rasterize only after confirming text remains searchable where accessibility requirements apply.
+Print one fully composed stage per page with backgrounds and images preserved. White slides should remain white rather than acquiring a gray browser canvas. Exclude changing masks and video. If the deck uses a source-dependent web font, embed it or rasterize only after confirming text remains searchable where accessibility requirements apply.
 
 ## CJK & International Content
 
@@ -678,7 +671,7 @@ The preview must not become a reduced design manual. Keep it around one substant
 7. **Apply green semantically.** Highlight the outcome, active mechanism, or selected category and nothing else.
 8. **Attach qualification.** Add duration, method, unit, source marker, and footnote while the claim is still visible.
 9. **Split overflow.** If the content extends below the bottom safety zone, continue on another slide instead of shrinking.
-10. **Add minimal motion.** Reveal the reading order and keep evidence simultaneously inspectable.
+10. **Compose the static reading order.** Keep the headline, metric, chart, and evidence image simultaneously inspectable.
 11. **Run CJK QA.** Inspect punctuation, orphan characters, product names, numerals, superscripts, and legal line breaks.
 12. **Run stage QA.** Capture every slide at 750×1320 and at the smallest expected uniform scale; compare positions, crops, and contrast.
 
@@ -693,6 +686,6 @@ The preview must not become a reduced design manual. Keep it around one substant
 7. **Claim portability:** percentages, timelines, ingredients, patents, safety statements, and Q&A answers in the source are not reusable facts. They require project-specific verification.
 8. **Minimum legal size:** the fixed 15px disclaimer level can become difficult at small presenter scales. Use an appendix when qualification cannot remain legible.
 9. **Evidence imagery:** before/after skin photography may involve consent, privacy, sensitivity, and jurisdiction-specific advertising requirements that this visual specification cannot resolve.
-10. **Motion reference:** the Figma node is static. Animation guidance is an inferred presentation translation, not an observed source behavior.
+10. **Static source:** the Figma node supplies a complete final-state reference with no temporal behavior.
 11. **Accessibility:** the observed cool-gray answer text may not meet contrast expectations at every size and display. Darken it where required while preserving hierarchy.
 12. **Sample implementation:** this folder provides `design.md` and `preview.md`; no production HTML or rendered reference slide is included yet.

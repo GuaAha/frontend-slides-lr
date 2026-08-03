@@ -63,6 +63,8 @@ components:
 
 This block overrides every conflicting reference value later in this file.
 
+The generated presentation is static. All visible states are fully composed and appear immediately.
+
 - Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
@@ -345,7 +347,7 @@ Use `Choose [option] when [condition] matters more than [trade-off]`. This makes
 16. Recommendation cues remain understandable without color.
 17. Source and engineering notes are readable at export size.
 18. Source products, ranks, marks, and photography are replaced or cleared.
-19. Motion has a reduced-motion final state.
+19. Open, attraction, closed, exploded, and assembled states use separate fixed frames.
 20. Projector and PDF tests preserve black detail and thin lines.
 
 ## Content and Evidence Logic
@@ -410,11 +412,11 @@ Geometry comes from cylindrical parts, thin leader lines, section cuts, and flat
 13. Don't reflow the internal layout for different screens.
 14. Don't bundle source fonts, logos, award marks, or proprietary photography.
 
-## Responsive, Presenter, Animation, and Print
+## Responsive, Presenter, Static Composition, and Print
 
 The shell centers and uniformly scales the `750×1320` stage. On narrow devices, scroll between complete stages. Presenter notes and controls remain outside the canvas.
 
-Motion should expose physical behavior: a 400–700 ms object reveal, a three-step exploded assembly, a magnetic-close sequence, or a short rim-light sweep. Use at most one signature movement per page. Never continuously rotate a product during reading. With reduced motion, show the final assembled or exploded state immediately.
+Use separate fixed frames for open, attraction, closed, exploded, and assembled states. Schematic motion lines may explain physical force or assembly behavior, but each frame remains complete and simultaneously inspectable. Establish sequence through placement, numbering, leaders, and consistent object orientation.
 
 For export, inspect black detail on the target display, confirm gold does not clip into yellow, and make thin technical lines at least 1.5 px at source size. Test transparent product edges on both RGB screens and PDF output. Keep source notes at the 15px disclaimer level.
 
@@ -426,7 +428,7 @@ Chinese hero lines should be compact and physical: action / finish, object / res
 
 First build six pages: hero, factor pair, tactile sequence, exploded package, selector, close. Mark each page dark or light and read the pattern aloud. If the deck clusters too many dark pages, move explanation onto paper. If it clusters too many white pages, add one material or sensory pause rather than coloring every diagram.
 
-Run three reviews. In the object review, verify geometry, light, and material. In the evidence review, verify status, tests, and qualifiers. In the decision review, confirm each comparison leads to a usable choice. Only then tune gold intensity and animation.
+Run three reviews. In the object review, verify geometry, light, and material. In the evidence review, verify status, tests, and qualifiers. In the decision review, confirm each comparison leads to a usable choice. Only then tune gold intensity and static frame balance.
 
 ## Known Gaps
 

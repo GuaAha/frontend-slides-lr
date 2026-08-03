@@ -64,6 +64,8 @@ components:
 
 This block overrides every conflicting reference value later in this file.
 
+The generated presentation is static. All visible states are fully composed and appear immediately.
+
 - Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
@@ -180,7 +182,7 @@ Light pages may contain one hero image plus two small proofs, or one mechanism p
 
 ### AquaHero
 
-Use frost or an extremely pale vertical mint gradient. Place a short black claim in the upper-left or upper-center. A `MintClaimTag` may sit above it, but should not look like a commerce badge. Anchor one large pack shot in the lower half and let translucent liquid, glass ribbon, or mist create motion behind it. Preserve at least one calm area so the product silhouette reads immediately.
+Use frost or an extremely pale vertical mint gradient. Place a short black claim in the upper-left or upper-center. A `MintClaimTag` may sit above it, but should not look like a commerce badge. Anchor one large pack shot in the lower half and use still translucent liquid, a still glass ribbon, or still mist as fixed imagery behind it. Preserve at least one calm area so the product silhouette reads immediately.
 
 ### MintClaimTag
 
@@ -341,8 +343,8 @@ Before approving an Aqua Mint Proof deck, verify:
 15. Source notes remain legible at actual export size.
 16. Images have documented rights and appropriate consent.
 17. Source-specific product marks and claims have been replaced.
-18. Motion stops before detailed reading begins.
-19. Reduced-motion mode reveals the complete final state.
+18. Still mist, liquid, glass ribbon, and spray paths are fixed imagery.
+19. Sequential mechanism frames appear together in a clear static reading order.
 20. PDF, projector, and mobile previews preserve water-edge detail.
 
 ## Evidence and Content Discipline
@@ -406,7 +408,7 @@ Shapes come from spray cones, droplets, horizon lines, and thin circles present 
 13. Don't reflow the internal stage at different viewport sizes.
 14. Don't reuse the audited page’s proprietary fonts, logos, awards, or claims as bundled assets.
 
-## Responsive, Presenter, Animation, and Print
+## Responsive, Presenter, Static Composition, and Print
 
 ### Responsive shell
 
@@ -416,9 +418,9 @@ The HTML shell centers the fixed stage and computes one uniform scale from avail
 
 Presenter mode may show notes and navigation outside the stage. Keep navigation clear of all content. If a section label is needed, expose it to the presenter shell rather than duplicating it inside each slide.
 
-### Motion
+### Static Composition
 
-Use 300–700 ms dissolves, gentle upward reveals, one spray-line draw, or one sequential mechanism step. Stagger labels by 70–110 ms. Do not animate every droplet or run continuous water loops behind proof text. Respect `prefers-reduced-motion` by replacing motion with final-state visibility.
+Use still mist, liquid, glass ribbon, and spray paths as fixed imagery. Show sequential mechanism frames together with stable product scale and direction. Establish scan order through placement, contrast, leaders, and grouping while keeping every label and proof visible.
 
 ### Print and export
 

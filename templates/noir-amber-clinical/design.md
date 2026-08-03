@@ -184,6 +184,8 @@ components:
 
 This block overrides every conflicting reference value later in this file.
 
+The generated presentation is static. All visible states are fully composed and appear immediately.
+
 - Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
@@ -450,13 +452,13 @@ Render the slide as a fixed 750×1320 object and compute one uniform scale from 
 
 Controls remain outside the stage. Dark application chrome may blend with the slide, so provide a visible but restrained boundary around the viewport rather than placing navigation on the canvas.
 
-### Animation
+### Static Composition
 
-Reveal the white claim first, the amber outcome second, then evidence. Draw the progression curve once. Fade contours and markers together. Keep product motion under 20px and avoid fluid simulations that suggest a false mechanism.
+Show the white claim, amber outcome, progression curve, contours, markers, and evidence in their complete final state. Establish sequence through placement, scale, contrast, alignment, and grouping so the eye moves from claim to outcome to evidence without hiding any proof.
 
 ### Print
 
-Preserve black backgrounds and amber gradients. Confirm that white legal copy remains legible in PDF. Disable motion and export one stage per page.
+Preserve black backgrounds and amber gradients. Confirm that white legal copy remains legible in PDF. Export one fully composed stage per page.
 
 ## CJK & International Content
 
@@ -493,7 +495,7 @@ MAKE SENSE and HYQiHei are not bundled. Their fallback metrics may change the th
 7. Place one primary proof or product image.
 8. Add method, period, sample, and source.
 9. Split any content below the safety zone.
-10. Add only reading-order motion.
+10. Establish reading order through placement, contrast, and grouping.
 11. Inspect evidence ethics and image comparability.
 12. Validate at 750×1320 and minimum presenter scale.
 
@@ -506,6 +508,6 @@ MAKE SENSE and HYQiHei are not bundled. Their fallback metrics may change the th
 5. **Evidence ethics:** consent, privacy, and advertising requirements for hair/scalp imagery require project review.
 6. **Long proof module:** the 1789px source slice requires at least two fixed-stage slides.
 7. **No semantic variables:** tokens were reconstructed from repeated properties and screenshots.
-8. **Static source:** motion behavior is inferred for presentation use.
+8. **Static source:** every claim, outcome, curve, contour, marker, and evidence element appears in its complete final state.
 9. **Legal scale:** observed notes may be difficult after uniform downscaling.
 10. **Sample implementation:** this folder supplies documentation only; no HTML reference slide is included.

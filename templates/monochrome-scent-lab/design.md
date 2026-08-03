@@ -66,6 +66,8 @@ components:
 
 This block overrides every conflicting reference value later in this file.
 
+The generated presentation is static. All visible states are fully composed and appear immediately.
+
 - Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
@@ -348,7 +350,7 @@ Use direct verbs, a visible route, and a confirmation state. Formal legal langua
 16. Brand proof is rights-cleared and sourced.
 17. Integrity text is readable and visually separated.
 18. All proprietary products, faces, claims, and fonts are replaced or cleared.
-19. Motion stops before reading and supports reduced-motion mode.
+19. Split-tone fields, matched comparisons, scent materials, and pump-operation frames are fully composed fixed states.
 20. PDF and projector exports preserve photographic and legal contrast.
 
 ## Content and Evidence Discipline
@@ -412,11 +414,11 @@ Use hard rectangles, full-bleed image bands, hairline dividers, circular pump de
 13. Don't reflow the internal canvas across viewports.
 14. Don't bundle the source font, photography, product marks, or claim language.
 
-## Responsive, Presenter, Animation, and Print
+## Responsive, Presenter, Static Composition, and Print
 
 Center and uniformly scale the complete `750×1320` stage. Presenter tools, notes, and navigation remain outside. On mobile, show complete stages in a vertical sequence rather than altering layouts.
 
-Motion may reveal the split-tone boundary, crossfade matched before/after imagery, transition between the two scent materials, or step through pump operation. Keep transitions 350–750 ms and use one concept per page. Avoid looping smoke, liquid, or spectrum noise behind text. Reduced-motion mode shows final states immediately.
+Use fixed split-tone fields, matched before/after images, paired scent materials, and pump-operation frames. Keep one concept per page and establish sequence through placement, contrast, labels, and grouping. Measured product-duration timelines retain their stated time points and qualifiers as static evidence.
 
 In print, verify shadow detail in black materials and separation between porcelain and paper white. Test all text on photographic material fields. Thin rules should remain at least 1.5 px at source size. Legal and source copy stays at the 15px disclaimer level.
 
@@ -428,7 +430,7 @@ Use semantic breaks and plain functional verbs. Paired Chinese scent names shoul
 
 Begin with a seven-page backbone: hero, path, finish comparison, dual scent, function pair, pump/use, decision. Color-code the storyboard as black, white, cool material, or warm material. The sequence should visibly return to neutral after atmosphere.
 
-Review in three passes. First, validate that each page communicates function, sensory world, or evidence—not a vague mixture. Second, compare paired photography for honest conditions and parallel structure. Third, inspect legal, duration, rank, and source text at actual export size. Only then tune gradients and motion.
+Review in three passes. First, validate that each page communicates function, sensory world, or evidence—not a vague mixture. Second, compare paired photography for honest conditions and parallel structure. Third, inspect legal, duration, rank, and source text at actual export size. Only then tune gradients and static composition.
 
 ## Known Gaps
 

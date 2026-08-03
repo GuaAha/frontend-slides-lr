@@ -62,6 +62,8 @@ components:
 
 This block overrides every conflicting reference value later in this file.
 
+The generated presentation is static. All visible states are fully composed and appear immediately.
+
 - Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
@@ -329,7 +331,7 @@ Begin with a verb and specify quantity, water, duration, or avoidance only when 
 15. Cautions are placed next to the action they qualify.
 16. Source and method notes remain legible at export size.
 17. All source product assets and claims are replaced or cleared.
-18. Motion has a complete reduced-motion state.
+18. Mineral gradient, process frames, ingredient spheres, and removal evidence are fully composed fixed states.
 19. Grayscale review preserves order and meaning.
 20. PDF and projector tests preserve blue/white separation and leaders.
 
@@ -395,11 +397,11 @@ Shapes derive from tubes, clay ribbons, spheres, foam cells, thin leader lines, 
 13. Don't reflow the internal stage at different viewport sizes.
 14. Don't bundle the source font, product photography, brand marks, or claims.
 
-## Responsive, Presenter, Animation, and Print
+## Responsive, Presenter, Static Composition, and Print
 
 The responsive shell uniformly scales and centers the complete `750×1320` stage. On small screens, complete pages scroll vertically. Presenter controls and notes remain outside the stage.
 
-Motion can reveal the mineral gradient, sequence contact/capture/lift/rinse, settle 3–4 ingredient spheres into place, or crossfade matched removal evidence. Use 350–700 ms transitions and stop all movement before detailed reading. Do not loop bubbles or liquid behind text. Reduced-motion mode shows stable final states.
+Show the mineral gradient, contact/capture/lift/rinse frames, 3–4 ingredient spheres, and matched removal evidence as fully composed fixed states. Use placement, leaders, numbering, and grouping to establish process order while keeping every comparison simultaneously inspectable. The user's physical cleansing motion and rinse remain part of the usage description.
 
 For print, test separation between ice and white, dark detail in navy, and leader-line visibility. Keep diagram rules at least 1.5 px and source notes at the 15px disclaimer level. Confirm transparent spheres do not disappear when flattened.
 
@@ -411,7 +413,7 @@ Use direct language that distinguishes removal, moisture, feel, and use. Break h
 
 Build the eight-page skeleton first and label every page as promise, tension, overview, mechanism, formula, texture, evidence, or use. Check that none is trying to perform three jobs. Then review color rhythm: one dark hero, primarily white editorial pages, and targeted blue fields.
 
-Run a proof audit on every sphere, arrow, foam macro, and comparison. Ask what it represents and whether the caption states that honestly. Finally, view the deck in grayscale and at export size; labels and process order must remain understandable without color or animation.
+Run a proof audit on every sphere, arrow, foam macro, and comparison. Ask what it represents and whether the caption states that honestly. Finally, view the deck in grayscale and at export size; labels and process order must remain understandable without color.
 
 ## Known Gaps
 

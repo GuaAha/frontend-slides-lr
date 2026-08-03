@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: 8-Bit Orbit
-description: A retro-futuristic pixel-art presentation system that fuses 16-bit arcade nostalgia with editorial discipline. Display type runs in Tektur (a chunky geometric display face built on pixel-grid logic) paired with Chakra Petch for body and Space Mono for code-flavored labels and tabular data. The palette pivots on a deep cosmic navy (`#0F1B3D` / `#0A0E27`) lit by three saturated neons — cyan, hot pink, and a high-key yellow — with a soft lavender pastel for warm reprieves. Depth is built from stacked hard offset shadows in 4px increments (the pixel unit), CRT scanlines, atmospheric grain, vignettes, and animated starfields. The effect sits between an arcade cabinet and a Tron-era boardroom — unmistakably digital, intentionally lo-fi, and engineered to feel as if it just booted up.
+description: A retro-futuristic pixel-art presentation system that fuses 16-bit arcade nostalgia with editorial discipline. Display type runs in Tektur (a chunky geometric display face built on pixel-grid logic) paired with Chakra Petch for body and Space Mono for code-flavored labels and tabular data. The palette pivots on a deep cosmic navy (`#0F1B3D` / `#0A0E27`) lit by three saturated neons — cyan, hot pink, and a high-key yellow — with a soft lavender pastel for warm reprieves. Depth is built from stacked hard offset shadows in 4px increments (the pixel unit), CRT scanlines, atmospheric grain, vignettes, and fixed starfields. The effect sits between an arcade cabinet and a Tron-era boardroom — unmistakably digital, intentionally lo-fi, and engineered to feel as if it just booted up.
 
 colors:
   dark-void: "#0A0E27"
@@ -224,9 +224,9 @@ components:
     background: "radial-gradient(ellipse at center, transparent 50%, rgba(10, 14, 39, 0.25) 100%)"
     description: "Radial vignette that darkens the corners to mimic a CRT bulge. Applied to dark-surface slides via ::after at z-index 51."
   starfield:
-    description: "Container of small 4-6px colored squares (cyan, yellow, pink) positioned absolutely with a 3s twinkle keyframe. Lives on dark surfaces only."
+    description: "Fixed pattern of small 4-6px colored squares (cyan, yellow, pink) placed across dark surfaces only."
   pixel-particles:
-    description: "Floating 8px colored squares with an 8s float keyframe. Decorative ambient layer on hero and CTA-type surfaces."
+    description: "Fixed clusters of 8px colored squares. Decorative ambient layer on hero and CTA-type surfaces."
   nav-dot:
     width: 12px
     height: 12px
@@ -245,6 +245,8 @@ components:
 
 This block overrides every conflicting reference value later in this file.
 
+The generated presentation is static. All visible states are fully composed and appear immediately.
+
 - Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
@@ -257,14 +259,14 @@ This block overrides every conflicting reference value later in this file.
 
 Generate every slide as a **fixed 750×1320 stage**. Scale the complete stage uniformly to the browser viewport; it may letterbox or pillarbox, but it never reflows internal content. Keep all authored copy inside x=60–690 and y=120–1260.
 
-This template is a design-style and narrative-structure baseline. Preserve its declared palette, pixel-grid hierarchy, atmospheric layers, component grammar, and evidence treatment. Apply font family, logo, assets, spacing limits, motion timing, canvas, and other non-color rules from `brand/source.json` and the generated brand rules.
+This template is a design-style and narrative-structure baseline. Preserve its declared palette, pixel-grid hierarchy, atmospheric layers, component grammar, and evidence treatment. Apply font family, logo, assets, spacing limits, fixed-canvas rules, and other non-color rules from `brand/source.json` and the generated brand rules.
 
 Use only the inlined `brand/generated/brand-runtime.js`: render at 750×1320, apply one uniform transform, and verify every rendered page for text overflow, panel overlap, minimum text size, and runtime interactions.
 
 
 ## Overview
 
-8-Bit Orbit is a **retro-futuristic pixel-art presentation system**. Its foundational premise is the **4-pixel unit**: every shadow offset, every border, every corner bracket, every label height resolves to a multiple of 4px. Layouts feel as if they were rasterized on an old CRT and dragged into HTML — and atmospheric overlays (scanlines, grain, vignette glow, animated starfields) reinforce the illusion on every surface.
+8-Bit Orbit is a **retro-futuristic pixel-art presentation system**. Its foundational premise is the **4-pixel unit**: every shadow offset, every border, every corner bracket, every label height resolves to a multiple of 4px. Layouts feel as if they were rasterized on an old CRT and dragged into HTML — and atmospheric overlays (scanlines, grain, vignette glow, fixed starfields) reinforce the illusion on every surface.
 
 The type stack is three faces working in concert. **Tektur** is the display face — a chunky, geometric, semi-pixelated grotesque that carries headlines, hero text, stat numerals, and any text that needs to feel like it was drawn on the pixel grid. **Chakra Petch** is the body face — a humanist sans with subtle geometric cuts that avoids fighting Tektur for attention. **Space Mono** is the system face — used exclusively for labels, captions, badges, chart values, dates, and counters. Font choice preserves the HUD contrast while every Chinese text role follows the fixed five-level type contract.
 
@@ -283,7 +285,7 @@ Depth is the system's signature trick: **stacked hard offset shadows in the pixe
 - Every slide carries the persistent scanline + grain + CRT-vignette trio at z-index 49-51.
 - L-shaped corner brackets (`{components.pixel-corner-bracket}`) replace rounded corners and frame regions, cards, and stat tiles.
 - A monospace label rectangle (`{components.label-pill}`) sits as the universal eyebrow on every region — navy fill, neon text, `-0.05em` tracking, uppercase where the source language supports it.
-- Animated starfields and floating particle squares wallpaper dark surfaces — ambient, not decorative.
+- Fixed starfields and fixed pixel clusters wallpaper dark surfaces — ambient, not decorative.
 
 ## Colors
 
@@ -416,7 +418,7 @@ Two simpler patterns serve cards:
 The L-shaped corner brackets (`{components.pixel-corner-bracket}`) replace traditional border treatments on regions and cards. Two brackets at opposite corners imply a frame without enclosing it — the eye fills in the missing edges. On stat blocks and feature cards, brackets sit inset at `top: -2px / left: -2px` and `bottom: -2px / right: -2px` so they break the cell edge slightly, reinforcing the pixel-bevel feel.
 
 ### Atmospheric Depth
-The scanline + grain + CRT-vignette stack provides ambient depth on every surface without requiring shadow on individual elements. Animated starfields and floating particles layer additional spatial cues behind content. None of these are decorative add-ons — they are core to the depth perception of the system.
+The scanline + grain + CRT-vignette stack provides ambient depth on every surface without requiring shadow on individual elements. Fixed starfields and fixed pixel clusters layer additional spatial cues behind content. None of these are decorative add-ons — they are core to the depth perception of the system.
 
 ## Shapes and Treatment
 
@@ -469,7 +471,7 @@ Borders are always solid, always navy or neon, never dashed except for the timel
 - Use Tektur for display, Chakra Petch for body, Space Mono for chrome — exclusively. Cross-mixing the three voices flattens the system.
 - Wrap eyebrows in the square `{components.label-pill}` (navy background, yellow annotation text, `-0.05em` tracking) as the universal section tag.
 - Pair the navy ground with at least one neon glow per region — text, chart bar, corner bracket, or button shadow halo. Pure navy without a neon accent reads as dead screen.
-- Layer animated starfields and pixel-particle floaters on dark hero and CTA surfaces. The motion is part of the atmosphere.
+- Layer fixed star patterns and fixed pixel clusters on dark hero and CTA surfaces. Their distribution is part of the atmosphere.
 - Render charts with cyan → pink → yellow series order and Space Mono numerals/labels. The neon trio is the chart palette.
 - Bracket cards and stat tiles with the L-shaped corner brackets at opposite corners instead of fully outlining them. The implied frame is the system's signature card treatment.
 
@@ -510,8 +512,8 @@ Borders are always solid, always navy or neon, never dashed except for the timel
 - Mouse wheel scroll advances/reverses with an 800ms debounce lock.
 - Presenter controls and notes remain outside the fixed stage.
 
-### Animation Triggers
-Chart bars and stat counters may animate in reading order using the approved brand duration and stagger values. When a slide is exited, its bars/counters may reset so re-entry replays the animation. The `prefers-reduced-motion` media query disables transitions and starfield or particle twinkle while preserving the complete final state.
+### Static Composition
+Fixed star patterns and fixed pixel clusters may provide atmosphere. Charts and counters show final values. Reading order comes from placement, contrast, and grouping.
 
 ### Print Behavior
 Print and PDF export render every stage at exactly `750×1320`, one stage per page, with no browser margins. Disable presenter chrome and navigation. Preserve atmospheric overlays only when they remain legible and do not obscure source notes; test scanlines and grain after PDF flattening.
@@ -568,13 +570,13 @@ The system's label rectangle is recognizable chrome. Render Chinese label text w
 7. Any new shadow is hard-edged at zero blur. For buttons use the six-step cascade; for cards use 6px navy or 8px yellow; for text use the two-layer cascade.
 8. Any new chart cycles cyan → pink → yellow in series order. Numerical labels and axis labels are always Space Mono.
 9. If a surface needs to feel warmer or softer, switch to the pink, cyan, or lavender etched grid variant — but keep all typographic rules intact (navy headlines, softened-navy body).
-10. Animated elements (starfield, particles, chart bar grow, counter rollup) should respect `prefers-reduced-motion`. Atmospheric overlays (scanlines, grain, vignette) are not animated and stay on always.
+10. Keep starfields, pixel clusters, chart bars, and counters fully composed; use placement, contrast, and grouping to establish reading order. Atmospheric overlays (scanlines, grain, vignette) stay visible.
 
 ## Known Gaps
 
 - **Tektur, Chakra Petch, and Space Mono are Google Fonts** loaded via a preconnect + `<link>`. The system has no fallback strategy beyond `cursive` / `sans-serif` / `monospace` — in environments where Google Fonts fail (offline, restricted networks), the aesthetic collapses to system defaults and loses its character.
-- **Starfield and pixel-particle elements are generated by inline JS** that creates a fixed count of absolutely-positioned divs with random positions and animation delays. The animation keyframes are present in CSS, but the elements are only created if the JS runs successfully.
-- **The chart system is hardcoded**: bar heights, hbar widths, and stat counter targets are stored in `data-*` attributes and animated via `setTimeout` staggers triggered by slide-index matching. There is no data-binding layer — adding a new chart requires copying the HTML pattern and updating the JS slide-index matcher.
+- **Starfield and pixel-cluster positions require deliberate authoring.** Use a fixed count of absolutely positioned squares with stable coordinates so screenshots, print, and HTML show the same atmospheric pattern.
+- **The chart system is hardcoded**: bar heights, hbar widths, and final stat values are authored directly. There is no data-binding layer — adding a new chart requires copying the HTML pattern and updating its fixed values.
 - **The pixel-landscape on CTA surfaces is JS-generated** from a hardcoded heights array `[30, 50, 70, ...]`. Width varies per mountain (60 + (i % 3) * 20px). Replacing the landscape requires editing the JS heights array.
 - **The CRT vignette glow uses a fixed dark-navy radial gradient.** Adjusting it requires editing the CSS gradient stops; there is no tokenized vignette intensity.
 - **The cursor is set to `crosshair` deck-wide** for atmospheric reasons. This may conflict with text-selection expectations in contexts where the deck is embedded.
