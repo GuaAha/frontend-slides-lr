@@ -630,7 +630,7 @@ Latin product names and percentages should align optically with nearby Chinese. 
 
 ### Loading
 
-Declare the full CJK fallback stack and wait for fonts before measuring or animating text. A fallback swap can change Chinese line breaks, answer height, and metric alignment. For HTML output, preload only the weights actually used. If MAKE SENSE is an internal font, store it in the approved brand asset path and document its license; do not fetch an unofficial copy from the web.
+Declare the full CJK fallback stack and wait for fonts before measuring or laying out text. A fallback swap can change Chinese line breaks, answer height, and metric alignment. For HTML output, preload only the weights actually used. If MAKE SENSE is an internal font, store it in the approved brand asset path and document its license; do not fetch an unofficial copy from the web.
 
 ### Universal CJK Adjustments
 

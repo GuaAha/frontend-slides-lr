@@ -88,6 +88,7 @@ STATIC_DESIGN_CONTRACT_MARKER = (
 )
 FORBIDDEN_PRESENTATION_MOTION_GUIDANCE = (
     "animation",
+    "animating text",
     "### motion",
     "prefers-reduced-motion",
     "reduced-motion mode",
