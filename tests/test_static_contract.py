@@ -123,6 +123,8 @@ class SyncStaticContractTests(unittest.TestCase):
         forbidden_guidance = (
             "Animate every chart bar on slide entry.",
             "Use a 500ms opacity transition between slides.",
+            "Use a 500ms opacity transition.",
+            "Use a 500ms slide transition.",
             "Crossfade the before and after images over 700ms.",
             "@keyframes pulse { to { opacity: 1; } }",
             ":root { --brand-motion-duration: 0ms; }",
@@ -172,21 +174,37 @@ class SyncStaticContractTests(unittest.TestCase):
                     errors,
                 )
 
-    def test_template_index_brand_authority_must_be_explicitly_static(self) -> None:
+    def test_template_index_brand_authority_rejects_non_static_claim(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             temporary_root = Path(directory)
             shutil.copytree(ROOT / "templates", temporary_root / "templates")
             index_path = temporary_root / "templates" / "index.json"
             index = json.loads(index_path.read_text(encoding="utf-8"))
-            index["contract"]["brand_authority"] = (
-                "The brand source is authoritative for typography, shape, canvas, and motion timing."
-            )
+            index["contract"]["brand_authority"] = "This output is non-static."
             index_path.write_text(json.dumps(index, indent=2), encoding="utf-8")
             errors: list[str] = []
             with mock.patch.object(self.sync_brand, "ROOT", temporary_root):
                 self.sync_brand.check_templates(errors)
             self.assertTrue(
                 any("brand authority" in error.lower() and "static" in error.lower() for error in errors),
+                errors,
+            )
+
+    def test_template_index_brand_authority_accepts_positive_static_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            temporary_root = Path(directory)
+            shutil.copytree(ROOT / "templates", temporary_root / "templates")
+            index_path = temporary_root / "templates" / "index.json"
+            index = json.loads(index_path.read_text(encoding="utf-8"))
+            index["contract"]["brand_authority"] = (
+                "Brand files control the fixed non-color rules. All presentation output is static."
+            )
+            index_path.write_text(json.dumps(index, indent=2), encoding="utf-8")
+            errors: list[str] = []
+            with mock.patch.object(self.sync_brand, "ROOT", temporary_root):
+                self.sync_brand.check_templates(errors)
+            self.assertFalse(
+                any("brand authority" in error.lower() for error in errors),
                 errors,
             )
 

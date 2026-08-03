@@ -23,7 +23,9 @@ _ANIMATION_GUIDANCE = re.compile(r"\banimat(?:e|es|ed|ing|ion|ions)\b", re.I)
 _CROSSFADE_GUIDANCE = re.compile(r"\bcross[- ]?fade(?:s|d|ing)?\b", re.I)
 _FADE_GUIDANCE = re.compile(r"\bfade(?:s|d|ing)?\s+(?:in|out|between)\b", re.I)
 _PRESENTATION_TRANSITION = re.compile(
-    r"\btransition(?:s)?\b(?=[^.\n]*(?:\bopacity\b|\bbetween\s+(?:the\s+)?slides?\b|\b\d+(?:\.\d+)?\s*(?:ms|s)\b))",
+    r"(?=[^.\n]*\btransition(?:s)?\b)"
+    r"(?=[^.\n]*(?:\bopacity\b|\bbetween\s+(?:the\s+)?slides?\b|\b\d+(?:\.\d+)?\s*(?:ms|s)\b))"
+    r"[^.\n]+",
     re.I,
 )
 _PRESENTATION_MOTION = re.compile(

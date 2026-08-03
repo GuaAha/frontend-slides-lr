@@ -92,6 +92,7 @@ PREVIEW_CONTRACT_MARKER = "## Fixed-Brand Preview Override"
 STATIC_DESIGN_CONTRACT_MARKER = (
     "The generated presentation is static. All visible states are fully composed and appear immediately."
 )
+STATIC_INDEX_AUTHORITY_MARKER = "All presentation output is static."
 FORBIDDEN_DESIGN_GUIDANCE = (
     "radii may appear",
     "subtly rounded",
@@ -534,8 +535,11 @@ def check_templates(errors: list[str]) -> None:
         errors.append("template index ids must match the canonical seven-template order")
     contract = index.get("contract", {})
     brand_authority = contract.get("brand_authority", "")
-    if "static" not in brand_authority.lower():
-        errors.append("template index brand authority must explicitly define static presentation output")
+    if STATIC_INDEX_AUTHORITY_MARKER not in brand_authority:
+        errors.append(
+            f"template index brand authority must include the positive static contract "
+            f"{STATIC_INDEX_AUTHORITY_MARKER!r}"
+        )
     if template_motion_violations(brand_authority):
         errors.append("template index brand authority must be static and contain no motion guidance")
     if "preview.md and design.md" not in contract.get("palette_authority", ""):
