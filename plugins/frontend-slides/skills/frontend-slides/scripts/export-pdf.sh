@@ -14,7 +14,7 @@
 #   3. Combines all screenshots into a single PDF
 #   4. Cleans up the server and temp files
 #
-# The PDF preserves colors, fonts, and layout — but not animations.
+# The PDF preserves colors, fonts, and layout.
 # Perfect for email attachments, printing, or embedding in documents.
 set -euo pipefail
 
@@ -195,9 +195,6 @@ await page.goto(`http://localhost:${port}/`, { waitUntil: 'networkidle' });
 // Wait for fonts to load
 await page.evaluate(() => document.fonts.ready);
 
-// Extra wait for animations to settle on the first slide
-await page.waitForTimeout(1500);
-
 // Count slides
 const slideCount = await page.evaluate(() => {
   return document.querySelectorAll('.slide').length;
@@ -249,14 +246,7 @@ for (let i = 0; i < slideCount; i++) {
     slides[index]?.scrollIntoView({ behavior: 'instant' });
   }, i);
 
-  // Wait for any slide transition animations to finish
-  await page.waitForTimeout(300);
-
-  // Wait for intersection observer animations to trigger
-  await page.waitForTimeout(200);
-
-  // Force all .reveal elements on the current slide to be visible
-  // (animations normally trigger on scroll/intersection, but we need them visible now)
+  // Normalize legacy hidden content before capture
   await page.evaluate((index) => {
     const slides = document.querySelectorAll('.slide');
     const currentSlide = slides[index];
@@ -396,7 +386,7 @@ FILE_SIZE=$(du -h "$OUTPUT_PDF" | cut -f1 | xargs)
 echo "  Size: $FILE_SIZE"
 echo ""
 echo "  This PDF works everywhere — email, Slack, Notion, print."
-echo "  Note: Animations are not preserved (it's a static export)."
+echo "  Static HTML is exported one slide per PDF page."
 echo -e "${BOLD}════════════════════════════════════════${NC}"
 echo ""
 

@@ -105,6 +105,34 @@ class BrandSyncTests(unittest.TestCase):
             self.assertNotIn(stale, skill)
         self.assertIn("所有幻灯片、内容元素和控件状态均即时呈现", skill)
 
+    def test_skill_template_and_export_define_static_output(self) -> None:
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("无动画 HTML 演示文稿", skill)
+        for stale in (
+            "animation-patterns.md",
+            "动效时序",
+            "动效值",
+            "动效重点",
+            "减少动效行为",
+        ):
+            self.assertNotIn(stale, skill)
+        for capability in ("键盘", "触摸导航", "页码", "行内编辑", "localStorage", "HTML 文件保存", "打印"):
+            self.assertIn(capability, skill)
+
+        html_template = (ROOT / "html-template.md").read_text(encoding="utf-8")
+        self.assertNotIn("class=\"reveal\"", html_template)
+        self.assertNotIn("prefers-reduced-motion", html_template)
+        self.assertNotRegex(html_template, r"(?im)^\s*(?:animation|transition)(?:-[\w-]+)?\s*:")
+
+        exporter = (ROOT / "scripts/export-pdf.sh").read_text(encoding="utf-8")
+        for stale in (
+            "animations to settle",
+            "slide transition animations",
+            "intersection observer animations",
+            "Animations are not preserved",
+        ):
+            self.assertNotIn(stale, exporter)
+
     def test_templates_are_one_peer_collection(self) -> None:
         index = json.loads((ROOT / "templates/index.json").read_text(encoding="utf-8"))
         self.assertEqual(index["template_count"], len(TEMPLATE_IDS))

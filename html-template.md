@@ -21,19 +21,6 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
       padding: var(--brand-slide-padding);
     }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition:
-        opacity var(--brand-motion-duration) var(--brand-motion-easing),
-        transform var(--brand-motion-duration) var(--brand-motion-easing);
-    }
-
-    .slide.visible .reveal {
-      opacity: 1;
-      transform: none;
-    }
-
     /* Keep this normalization block after all component CSS. */
     .slide [data-copy-id],
     .slide [data-copy-id] * {
@@ -52,7 +39,7 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
     <main class="deck-stage" id="deckStage" aria-live="polite">
       <section class="slide active visible" data-slide="1">
         <div class="slide-content">
-          <h1 class="reveal" data-copy-id="slide-01-title" data-editable="text" data-edit-id="slide-01-title">真实演示标题</h1>
+          <h1 data-copy-id="slide-01-title" data-editable="text" data-edit-id="slide-01-title">真实演示标题</h1>
         </div>
       </section>
     </main>
@@ -74,7 +61,7 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
 - Use the inlined generated `brand-runtime.js` as the sole runtime. Do not add another stage component, router, editor, autosave layer, or print controller.
 - Toggle `.active` and `.visible` for navigation. Do not use `display: none` for slide switching.
 - Support Arrow keys, Page Up/Down, Space, Home/End, swipe/tap, and a page count outside the stage.
-- Respect `prefers-reduced-motion`.
+- Keep every authored visual state fully visible and immediate. Do not add `animation`, `@keyframes`, `transition`, delayed reveal classes, or looping effects.
 - Include an edit toggle, content editing, localStorage autosave scoped by deck ID, and a save-to-file control unless the user requests a locked deck.
 - Set a stable ASCII `frontend-slides-deck-id` meta value. Give every editable text leaf both `data-editable="text"` and a unique, stable `data-edit-id`.
 - Use local approved font assets when present. Do not add network font links.
