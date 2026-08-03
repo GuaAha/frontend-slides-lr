@@ -1,6 +1,7 @@
 .DS_Store
 .claude-design/
 .frontend-slides/
+.worktrees/
 __pycache__/
 .pytest_cache/
 node_modules/
