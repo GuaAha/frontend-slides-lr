@@ -4,7 +4,7 @@
   "template_count": 7,
   "contract": {
     "role": "Each entry is a peer design-style and narrative-structure baseline.",
-    "brand_authority": "brand/source.json and brand/generated files remain authoritative for typography, logo, assets, spacing, shape, motion timing, and canvas. They do not define palette colors.",
+    "brand_authority": "brand/source.json and brand/generated files remain authoritative for typography, logo, assets, spacing, shape, and canvas. They do not define palette colors.",
     "palette_authority": "Palette authority belongs to each template's preview.md and design.md. Use preview.md while comparing shortlisted options, then use only the selected template's design.md for the full deck.",
     "canvas": {
       "width": 750,

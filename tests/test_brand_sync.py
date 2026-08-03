@@ -116,6 +116,9 @@ class BrandSyncTests(unittest.TestCase):
         source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
         self.assertNotIn("motion", source)
 
+        template_index = json.loads((ROOT / "templates/index.json").read_text(encoding="utf-8"))
+        self.assertNotIn("motion timing", template_index["contract"]["brand_authority"].lower())
+
         impact_map = json.loads((ROOT / "brand/impact-map.json").read_text(encoding="utf-8"))
         self.assertNotIn("animation-patterns.md", impact_map["generated"])
 
