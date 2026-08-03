@@ -10,6 +10,11 @@ import re
 import sys
 from pathlib import Path
 
+try:
+    from static_contract import css_motion_violations, template_motion_violations
+except ModuleNotFoundError:  # Supports importlib-based unit loading from the repository root.
+    from scripts.static_contract import css_motion_violations, template_motion_violations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "brand" / "source.json"
@@ -50,6 +55,7 @@ MIRROR_FILES = (
     *TEMPLATE_FILES,
     "scripts/extract-pptx.py",
     "scripts/export-pdf.sh",
+    "scripts/static_contract.py",
     "scripts/validate-html.py",
     "scripts/validate-rendered.mjs",
     "scripts/validate-runtime.mjs",
@@ -85,25 +91,6 @@ DESIGN_CONTRACT_MARKER = "## Mandatory Fixed-Brand Override"
 PREVIEW_CONTRACT_MARKER = "## Fixed-Brand Preview Override"
 STATIC_DESIGN_CONTRACT_MARKER = (
     "The generated presentation is static. All visible states are fully composed and appear immediately."
-)
-FORBIDDEN_PRESENTATION_MOTION_GUIDANCE = (
-    "animation",
-    "animating text",
-    "### motion",
-    "prefers-reduced-motion",
-    "reduced-motion mode",
-    "animated starfield",
-    "float keyframe",
-    "motion timing",
-    "motion can reveal",
-    "motion may reveal",
-    "motion should expose",
-    "motion stops before",
-    "add minimal motion",
-    "add only reading-order motion",
-    "use restrained, evidence-preserving motion",
-    "motion behavior is inferred",
-    "motion reference",
 )
 FORBIDDEN_DESIGN_GUIDANCE = (
     "radii may appear",
@@ -500,6 +487,19 @@ def remove_managed_files(check: bool, errors: list[str]) -> None:
                 print(f"removed {label}")
 
 
+def check_generated_static_contract(outputs: dict[Path, str], errors: list[str]) -> None:
+    """Validate generator output independently from checked-in artifacts."""
+    for path, expected in outputs.items():
+        if path.suffix.lower() != ".css":
+            continue
+        violations = css_motion_violations(expected)
+        if violations:
+            errors.append(
+                "static/motion contract violation in generated CSS "
+                f"{path.relative_to(ROOT)}: {', '.join(violations)}"
+            )
+
+
 def check_invariants(errors: list[str]) -> None:
     for relative in INVARIANT_FILES:
         path = ROOT / relative
@@ -533,6 +533,11 @@ def check_templates(errors: list[str]) -> None:
     if tuple(indexed_ids) != TEMPLATE_IDS:
         errors.append("template index ids must match the canonical seven-template order")
     contract = index.get("contract", {})
+    brand_authority = contract.get("brand_authority", "")
+    if "static" not in brand_authority.lower():
+        errors.append("template index brand authority must explicitly define static presentation output")
+    if template_motion_violations(brand_authority):
+        errors.append("template index brand authority must be static and contain no motion guidance")
     if "preview.md and design.md" not in contract.get("palette_authority", ""):
         errors.append("template index must make preview.md and design.md authoritative for palette")
     workflow = index.get("selection_workflow", {})
@@ -560,6 +565,11 @@ def check_templates(errors: list[str]) -> None:
         preview_path = index_path.parent / template_id / "preview.md"
         if preview_path.exists():
             preview = preview_path.read_text(encoding="utf-8")
+            for violation in template_motion_violations(preview):
+                errors.append(
+                    f"forbidden static/motion template guidance ({violation}): "
+                    f"{preview_path.relative_to(ROOT)}"
+                )
             if PREVIEW_CONTRACT_MARKER not in preview:
                 errors.append(f"missing fixed-brand preview override: {preview_path.relative_to(ROOT)}")
             for required in (
@@ -587,11 +597,11 @@ def check_templates(errors: list[str]) -> None:
         if STATIC_DESIGN_CONTRACT_MARKER not in design:
             errors.append(f"missing static presentation contract: {design_path.relative_to(ROOT)}")
         lowered = design.lower()
-        for forbidden in FORBIDDEN_PRESENTATION_MOTION_GUIDANCE:
-            if forbidden in lowered:
-                errors.append(
-                    f"forbidden presentation-motion guidance {forbidden!r}: {design_path.relative_to(ROOT)}"
-                )
+        for violation in template_motion_violations(design):
+            errors.append(
+                f"forbidden static/motion template guidance ({violation}): "
+                f"{design_path.relative_to(ROOT)}"
+            )
         for required in (
             "The palette declared in this design is the color authority",
             "top 120px / right 60px / bottom 60px / left 60px",
@@ -647,7 +657,9 @@ def main() -> int:
         return 2
 
     errors: list[str] = []
-    for path, expected in generated_files(data).items():
+    outputs = generated_files(data)
+    check_generated_static_contract(outputs, errors)
+    for path, expected in outputs.items():
         compare_or_write(path, expected, args.check, errors)
     remove_managed_files(args.check, errors)
     check_invariants(errors)

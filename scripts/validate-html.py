@@ -10,6 +10,11 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
+try:
+    from static_contract import css_motion_violations
+except ModuleNotFoundError:  # Supports importlib-based unit loading from the repository root.
+    from scripts.static_contract import css_motion_violations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "brand" / "source.json"
@@ -112,6 +117,12 @@ def validate(path: Path, allow_draft: bool) -> tuple[list[str], list[str]]:
     # copy are opaque content and must not be classified by the shape gate.
     # A radius declared on <img> still counts as an authored image mask.
     authored_css = "\n".join(parser.css_sources)
+    motion_violations = css_motion_violations(authored_css)
+    if motion_violations:
+        errors.append(
+            "static/motion contract forbids CSS animation, transition, motion tokens, and workarounds: "
+            + ", ".join(motion_violations)
+        )
     nonzero_radii = []
     for match in re.finditer(r"border(?:-(?:top|right|bottom|left|start|end)){0,2}-radius\s*:\s*([^;{}]+)", authored_css, flags=re.I):
         value = match.group(1).strip()
