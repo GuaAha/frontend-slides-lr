@@ -1,0 +1,152 @@
+{
+  "summary": {
+    "projectName": "frontend-slides-brand-internal",
+    "locale": "zh-CN",
+    "modelId": "agent-work-loop-v4",
+    "reportContractVersion": 25,
+    "overview": "当前仓库有 7 个同级模板、两层设计权威和清晰的九步生成链。主要风险是来源与图像审批尚未进入机械验证、模板注册并非真正单源、README 对配色权威的描述冲突，以及新的根级 Agent 路由仍未纳入版本控制。",
+    "dimensions": [
+      {
+        "id": "task-understanding",
+        "label": "任务理解",
+        "score": 66,
+        "summary": "根 SKILL.md 清楚定义权威源和九步流程，但 README 与模板注册实现仍会把维护者导向冲突的所有者。",
+        "findingRefs": [
+          "template-registry-has-three-owners",
+          "readme-misroutes-palette-authority"
+        ]
+      },
+      {
+        "id": "controlled-execution",
+        "label": "可控执行",
+        "score": 72,
+        "summary": "同步、静态、运行时和渲染入口均已声明；本次实际观察到同步检查成功，但完整本地环境和权限边界未被会话证据覆盖。",
+        "findingRefs": []
+      },
+      {
+        "id": "change-validation",
+        "label": "改动验证",
+        "score": 48,
+        "summary": "几何、运行时和镜像漂移有明确检查，但来源文案、页数映射和图像授权没有进入验证器输入。",
+        "findingRefs": [
+          "content-image-gates-not-machine-enforced"
+        ]
+      },
+      {
+        "id": "reliable-delivery",
+        "label": "可靠交付",
+        "score": 44,
+        "summary": "CI 工作流存在，草稿品牌也有阻断规则；当前 Agent 路由尚未被版本控制，外部 CI 与合并接受状态未观察。",
+        "findingRefs": [
+          "agent-routing-is-untracked"
+        ]
+      },
+      {
+        "id": "learning-capture",
+        "label": "经验沉淀",
+        "score": 35,
+        "summary": "30 天窗口没有可用 Task Episode，无法判定重复工作、资产实际调用或后续效果；因此不从零资产计数推导新增 Skill。",
+        "findingRefs": []
+      }
+    ],
+    "aiAgentPractice": {
+      "inspectedSurfaces": [
+        "Rules",
+        "Workflows"
+      ],
+      "coverageRows": [
+        {
+          "surface": "Rules",
+          "scopes": [
+            "Project"
+          ],
+          "count": 1,
+          "paths": [
+            "AGENTS.md"
+          ]
+        },
+        {
+          "surface": "Workflows",
+          "scopes": [
+            "Project"
+          ],
+          "count": 1,
+          "paths": [
+            ".github/workflows/brand-sync.yml"
+          ]
+        }
+      ]
+    },
+    "assignmentSummaries": []
+  },
+  "findings": [
+    {
+      "id": "content-image-gates-not-machine-enforced",
+      "title": "技术验证通过后，来源文案与图像授权仍可能未被核验",
+      "severity": "High",
+      "reason": "根 SKILL.md 和 references/validation.md 要求无来源文案、页数映射偏差、未授权图像和不可追溯派生资产必须导致失败；但 validate-html.py 只接收 HTML 与草稿开关，运行时和渲染验证器也只接收演示文件及截图参数。当前全部技术检查可以在没有 run-manifest、来源台账或图像授权记录的情况下通过，因此九步流程最关键的内容完整性与授权边界没有被项目验证器证明。",
+      "dimensionRefs": [
+        "change-validation"
+      ],
+      "subdimensionRefs": [
+        "relevant-check"
+      ],
+      "aiFixPrompt": "/better-harness fix this issue\n\n为九步工作流增加最小的可执行内容与图像来源验证边界。让一个项目自有验证入口同时消费最终 HTML、run-manifest 和来源台账，核验页数与来源切片一一对应、逐字文案、image_mode、授权范围及派生资产追溯；保留现有静态、运行时、渲染和插件同步检查。\n\n## Validation\n\n- 增加 provided、authorized、css-visual、placeholder 四种模式的正反例\n- 证明无来源文案、页数偏差、越权图像和不可追溯派生资产都会失败\n- 运行 python scripts/sync-brand.py --check\n- 运行 python -m unittest discover -s tests -v\n- 运行 npm run validate:runtime\n- 运行 npm run validate:rendered",
+      "expectedArtifact": "内容与图像来源验证入口",
+      "expectedOutput": [
+        "让技术验证结果同时证明演示文稿的来源文案、页数映射和图像授权符合已记录的运行清单。"
+      ]
+    },
+    {
+      "id": "template-registry-has-three-owners",
+      "title": "只更新模板索引会被同步器的第二份清单拒绝",
+      "severity": "Medium",
+      "reason": "AGENTS.md 与根 SKILL.md 都把 templates/index.json 路由为七个模板的清单，但 scripts/sync-brand.py 和 tests/test_brand_sync.py 还分别硬编码同一组 TEMPLATE_IDS。同步器要求索引严格匹配脚本常量，因此新增、删除或重排模板不能只修改声明的权威索引，模板注册实际有三个维护点。",
+      "dimensionRefs": [
+        "task-understanding"
+      ],
+      "subdimensionRefs": [
+        "relevant-context"
+      ],
+      "aiFixPrompt": "/better-harness fix this issue\n\n以 templates/index.json 作为模板注册的唯一权威来源，消除 scripts/sync-brand.py 与 tests/test_brand_sync.py 中独立维护的 TEMPLATE_IDS 清单。同步器和测试应从索引派生模板路径、顺序、数量与镜像范围，同时保留对目录、preview.md、design.md、tone_mode 和静态设计合约的检查。\n\n## Validation\n\n- 增加一个证明模板注册只需修改索引的聚焦测试\n- 运行 python scripts/sync-brand.py --check\n- 运行 python -m unittest discover -s tests -v\n- 确认根模板与插件镜像仍逐项一致",
+      "expectedArtifact": "单一模板注册表",
+      "expectedOutput": [
+        "让模板的新增、删除和顺序调整只在 templates/index.json 中登记，并由同步器和测试自动消费。"
+      ]
+    },
+    {
+      "id": "readme-misroutes-palette-authority",
+      "title": "README 会把模板配色错误路由到 brand/source.json",
+      "severity": "Medium",
+      "reason": "README 把 brand/source.json 描述为 one brand source 和 only brand authority；实际合约明确规定该文件只管理非颜色品牌规则并禁止颜色令牌，预览配色来自入选模板 preview.md，完整演示配色来自所选 design.md。仅阅读 README 的维护者可能把颜色写入错误的所有者并触发同步或测试失败。",
+      "dimensionRefs": [
+        "task-understanding"
+      ],
+      "subdimensionRefs": [
+        "relevant-context"
+      ],
+      "aiFixPrompt": "/better-harness fix this issue\n\n修正根 README 的品牌权威说明，使其与根 SKILL.md 和 templates/index.json 的两层合约一致：brand/source.json 只管理非颜色品牌规则，候选 preview.md 管预览配色，用户选定模板的 design.md 管完整演示配色。保持现有开发命令与草稿品牌说明不变。\n\n## Validation\n\n- 检查 README 不再把 brand/source.json 描述为唯一的全部品牌权威\n- 确认 README 明确命名 preview.md 与 design.md 的配色责任\n- 运行 python scripts/sync-brand.py --check",
+      "expectedArtifact": "一致的 README 权威地图",
+      "expectedOutput": [
+        "让从 README 开始的维护者能直接找到非颜色品牌规则和模板配色各自的正确所有者。"
+      ]
+    },
+    {
+      "id": "agent-routing-is-untracked",
+      "title": "干净检出会丢失根级权威路由",
+      "severity": "Low",
+      "reason": "当前 7 行 AGENTS.md 已正确链接根 SKILL.md、插件镜像、模板索引、品牌源和同步脚本，且 5 个引用均可解析；但该文件仍是未跟踪文件。干净 checkout 或其他协作者不会获得这条最短路由，Agent 仍可能从 README 或插件镜像开始并错过根源优先规则。",
+      "dimensionRefs": [
+        "reliable-delivery"
+      ],
+      "subdimensionRefs": [
+        "acceptance-evidence"
+      ],
+      "aiFixPrompt": "/better-harness fix this issue\n\n将现有简短根 AGENTS.md 纳入项目的版本化源状态，不扩写九步流程，也不复制根 SKILL.md。保留当前五个项目路由和渐进式披露结构。\n\n## Validation\n\n- 运行 git ls-files --error-unmatch AGENTS.md\n- 检查 AGENTS.md 仍命名根 SKILL.md、插件镜像、templates/index.json、brand/source.json 和 scripts/sync-brand.py\n- 运行 python scripts/sync-brand.py --check",
+      "expectedArtifact": "版本化的根 AGENTS.md",
+      "expectedOutput": [
+        "让每个干净检出都能获得同一条简短、可解析且不重复长流程的 Agent 权威路由。"
+      ]
+    }
+  ]
+}

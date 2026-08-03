@@ -244,6 +244,20 @@ class BrandSyncTests(unittest.TestCase):
         self.assertNotIn("logos and font files were not present", readme.lower())
         self.assertNotIn("palette and logo approval remain draft", readme.lower())
 
+    def test_skill_defines_citation_marker_image_geometry_and_highlight_checks(self) -> None:
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        validation = (ROOT / "references/validation.md").read_text(encoding="utf-8")
+
+        self.assertIn("渲染时移除 `【` 和 `】`", skill)
+        self.assertIn("KV 区域的图片或图片占位符默认使用满版底图", skill)
+        self.assertIn("宽度固定为 `630px`，高度不得低于 `870px`", skill)
+        self.assertIn("所有高亮元素必须解析为同一个最终色值", skill)
+        self.assertNotIn("使用方形的自定义图像占位层", skill)
+        self.assertNotIn("所有内容图像位置保持为方形编写图层", skill)
+        self.assertIn("citation markers render without brackets", validation)
+        self.assertIn("single-image slide geometry", validation)
+        self.assertIn("one computed highlight color", validation)
+
     def test_static_validator_accepts_acknowledged_draft(self) -> None:
         css = (ROOT / "brand/generated/brand-tokens.css").read_text(encoding="utf-8")
         css += (ROOT / "viewport-base.css").read_text(encoding="utf-8")

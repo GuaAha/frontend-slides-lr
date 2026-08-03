@@ -28,5 +28,7 @@ jobs:
         run: npm ci
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
+      - name: Validate runtime fixture
+        run: npm run validate:runtime
       - name: Validate rendered fixture
         run: npm run validate:rendered

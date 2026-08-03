@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="better-harness codex-html">
+  <title>Harness 洞察 · frontend-slides-brand-internal</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111315; --panel:#1a1d20; --panel-2:#21252a; --line:#31363d; --text:#f5f7fa; --muted:#9aa3ad; --blue:#6cb8ff; --blue-2:#1b6ca8; --orange:#ff9a5a; --green:#53d69b; --red:#ff6b6b; }
+    * { box-sizing:border-box; }
+    html { background:var(--bg); scroll-behavior:smooth; }
+    body { margin:0; min-width:320px; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:radial-gradient(circle at 12% -10%,#22364a 0,transparent 34rem),var(--bg); line-height:1.55; }
+    .sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
+    body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.22; background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size:28px 28px; }
+    main { position:relative; width:min(1180px,calc(100% - 40px)); margin:0 auto; padding:52px 0 88px; }
+    h1,h2,h3,p { margin-top:0; }
+    .eyebrow,.label { color:var(--blue); font-size:12px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; }
+    .hero { display:grid; grid-template-columns:minmax(0,1fr) 190px; gap:36px; align-items:end; min-height:270px; padding:42px; border:1px solid var(--line); border-radius:28px; background:linear-gradient(135deg,rgba(36,43,51,.96),rgba(21,24,27,.94)); box-shadow:0 28px 70px rgba(0,0,0,.28); }
+    .hero h1 { margin:12px 0 10px; font-size:clamp(42px,7vw,82px); line-height:.96; letter-spacing:-.055em; }
+    .hero p { max-width:760px; margin-bottom:22px; color:#c9d0d8; font-size:18px; }
+    .hero-tags { display:flex; flex-wrap:wrap; gap:8px; }
+    .score-orbit { width:174px; aspect-ratio:1; display:grid; place-content:center; text-align:center; border:14px solid #343a41; border-top-color:var(--blue); border-right-color:var(--blue-2); border-radius:50%; background:#1a2026; box-shadow:inset 0 0 0 1px var(--line); }
+    .score-orbit strong { font-size:44px; line-height:1; }
+    .score-orbit span { width:110px; margin-top:7px; color:var(--muted); font-size:12px; }
+    .pill { display:inline-flex; align-items:center; min-height:26px; padding:3px 10px; border-radius:999px; color:#d4dae0; background:#30353b; font-size:12px; font-weight:700; }
+    .pill.accent { color:#c9e8ff; background:#164e75; }.pill.good { color:#c9f9e5; background:#165c43; }.pill.warning { color:#ffe1c8; background:#754322; }.pill.danger { color:#ffd4d4; background:#762e31; }.pill.muted,.pill.neutral { color:#c8cdd3; background:#34383d; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0 54px; }
+    .metric { min-height:126px; padding:22px 24px; border:1px solid var(--line); border-radius:20px; background:rgba(30,34,38,.9); }
+    .metric span,.metric small { display:block; color:var(--muted); }.metric strong { display:block; margin:5px 0 2px; font-size:34px; line-height:1.1; }.metric small { font-size:12px; }
+    .section { margin-top:64px; scroll-margin-top:24px; }.section-heading { display:flex; justify-content:space-between; gap:30px; align-items:end; margin-bottom:20px; }.section-heading h2 { margin:5px 0 0; font-size:30px; letter-spacing:-.025em; }.section-heading > p { max-width:420px; margin:0; color:var(--muted); text-align:right; font-size:14px; }
+    .dimension-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }.dimension-card { min-height:230px; padding:19px; border:1px solid var(--line); border-radius:19px; background:linear-gradient(180deg,var(--panel-2),var(--panel)); }.dimension-top { display:flex; min-height:52px; justify-content:space-between; gap:8px; align-items:flex-start; font-weight:700; }.score-line { display:flex; align-items:baseline; gap:4px; margin-top:14px; }.score-line strong { font-size:34px; }.score-line span { color:var(--muted); font-size:12px; }.track { height:8px; margin:8px 0 16px; overflow:hidden; border-radius:999px; background:#30353a; }.track i { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--blue-2),var(--blue)); }.dimension-card p { margin:0; color:var(--muted); font-size:13px; }
+    .activity-layout { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(230px,.7fr); gap:14px; }.activity-panel,.subpanel,.finding,.custom-grid article,.evidence-grid,.evidence-note { border:1px solid var(--line); border-radius:19px; background:var(--panel); }.activity-panel { padding:22px; overflow:hidden; }.heatmap { display:grid; grid-template-rows:repeat(7,13px); grid-auto-flow:column; grid-auto-columns:13px; gap:4px; min-height:115px; overflow-x:auto; padding-bottom:8px; }.heat-cell { border-radius:3px; background:#2b3035; }.heat-cell.l1{background:#174d70}.heat-cell.l2{background:#206f9e}.heat-cell.l3{background:#319bd1}.heat-cell.l4{background:#70c9ff}.heat-legend { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; }.stacked-metrics { display:grid; gap:14px; }.stacked-metrics .metric { min-height:0; }
+    .two-column { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }.subpanel { padding:22px; }.subpanel h3 { font-size:15px; }.usage-list { display:grid; gap:12px; }.usage-row { display:grid; grid-template-columns:minmax(100px,.75fr) 1fr 52px; gap:12px; align-items:center; font-size:12px; }.usage-row > span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }.usage-row i { height:7px; overflow:hidden; border-radius:999px; background:#30353a; }.usage-row b { display:block; height:100%; background:linear-gradient(90deg,var(--blue-2),var(--blue)); }.usage-row strong { text-align:right; }
+    .finding-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }.finding-card { min-width:0; min-height:220px; display:flex; flex-direction:column; padding:18px; border:1px solid var(--line); border-radius:19px; background:linear-gradient(180deg,#1c2329,var(--panel)); }.finding-card-main { display:grid; gap:10px; }.finding-meta { display:flex; flex-wrap:wrap; gap:7px; }.finding-card h3 { min-height:2.8em; margin:0; display:-webkit-box; overflow:hidden; font-size:17px; line-height:1.4; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.finding-preview { margin:0; color:#c7ced6; display:-webkit-box; overflow:hidden; font-size:13px; line-height:1.55; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.finding-actions,.dialog-actions { display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; margin-top:auto; padding-top:16px; }.action-button { min-height:38px; padding:8px 13px; border:1px solid transparent; border-radius:10px; color:var(--text); background:#30363d; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }.action-button:hover { filter:brightness(1.12); }.action-button:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }.action-button.secondary { color:#cceaff; border-color:#286d9b; background:#164e75; }.action-button.ghost { color:#d4dae0; border-color:var(--line); background:transparent; }.finding-dialog,.manual-copy-dialog { width:min(880px,calc(100vw - 32px)); max-height:calc(100vh - 32px); overflow:auto; padding:24px; border:1px solid var(--line); border-radius:20px; color:var(--text); background:var(--panel); box-shadow:0 30px 90px rgba(0,0,0,.55); }.finding-dialog::backdrop,.manual-copy-dialog::backdrop { background:rgba(4,8,12,.72); }.dialog-heading { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }.dialog-heading h3 { margin:6px 0 0; font-size:24px; }.dialog-section { margin-top:18px; }.dialog-section p { margin:7px 0 0; color:#d1d7de; }.dialog-section ol,.dialog-section ul { margin:8px 0 0; padding-left:22px; color:#d1d7de; }.manual-copy-dialog textarea { width:100%; min-height:260px; margin-top:14px; padding:14px; resize:vertical; border:1px solid var(--line); border-radius:12px; color:var(--text); background:#11161b; font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }.no-js .finding-actions,.no-js .manual-copy-dialog { display:none!important; }.no-js .finding-dialog:not([open]) { display:block; position:static; width:auto; max-height:none; margin-top:16px; box-shadow:none; }
+    .suggestion-block { margin-top:28px; padding-top:24px; border-top:1px solid var(--line); }.suggestion-heading { display:flex; justify-content:space-between; gap:20px; align-items:end; margin-bottom:14px; }.suggestion-heading h3 { margin:4px 0 0; font-size:20px; }.suggestion-heading p { margin:0; color:var(--muted); font-size:12px; }.suggestion-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }.suggestion { padding:18px; border:1px solid var(--line); border-radius:17px; background:linear-gradient(180deg,#1b252d,var(--panel)); }.suggestion-top { display:flex; justify-content:space-between; gap:8px; }.suggestion h3 { margin:13px 0 7px; font-size:16px; }.suggestion > p { color:#c7ced6; font-size:13px; }.suggestion dl { display:grid; gap:9px; margin:14px 0 0; }.suggestion dl div { display:grid; gap:2px; }.suggestion dt { color:var(--muted); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }.suggestion dd { margin:0; color:#d7dde4; font-size:12px; }
+    .custom-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }.custom-grid article { display:flex; gap:14px; align-items:center; padding:18px; }.custom-grid h3 { margin:0; font-size:15px; }.custom-grid p { margin:3px 0 0; color:var(--muted); font-size:12px; }.custom-mark { display:grid; flex:0 0 38px; aspect-ratio:1; place-content:center; border-radius:12px; color:#d9efff; background:#164e75; font-weight:800; }
+    .evidence-grid { display:grid; grid-template-columns:repeat(3,1fr); overflow:hidden; }.evidence-grid div { padding:20px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }.evidence-grid span,.evidence-grid strong { display:block; }.evidence-grid span { color:var(--muted); font-size:12px; }.evidence-grid strong { margin-top:4px; }.evidence-note { margin-top:14px; padding:20px; }.method-note,.empty { color:var(--muted); }.method-note { max-width:800px; margin:18px 0 0; font-size:13px; }
+    footer { margin-top:64px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    @media (max-width:1000px) { .finding-list{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    @media (max-width:900px) { .metrics,.dimension-grid{grid-template-columns:repeat(2,1fr)}.activity-layout,.two-column{grid-template-columns:1fr}.evidence-grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:680px) { .finding-list{grid-template-columns:1fr}.finding-card{min-height:0} }
+    @media (max-width:620px) { main{width:min(100% - 24px,1180px);padding-top:18px}.hero{grid-template-columns:1fr;min-height:0;padding:25px;border-radius:22px}.hero h1{font-size:44px}.hero p{font-size:15px}.score-orbit{width:126px}.score-orbit strong{font-size:34px}.metrics{grid-template-columns:1fr;margin-bottom:42px}.metric{min-height:0}.section{margin-top:46px}.section-heading,.suggestion-heading{display:block}.section-heading > p,.suggestion-heading > p{text-align:left;margin-top:8px}.dimension-grid{grid-template-columns:1fr}.dimension-card{min-height:0}.evidence-grid{grid-template-columns:1fr}.usage-row{grid-template-columns:minmax(92px,.7fr) 1fr 44px}.finding-dialog{padding:18px}.dialog-heading{display:grid} }
+    @media print { :root{color-scheme:light;--bg:#fff;--panel:#fff;--panel-2:#f6f8fa;--line:#d8dee4;--text:#111;--muted:#59636e}body{background:#fff}body::before{display:none}.hero{box-shadow:none}.section{break-inside:avoid}.finding-list{display:block}.finding-card{margin-bottom:16px;break-inside:avoid}.finding-actions,.dialog-actions,.manual-copy-dialog{display:none!important}.finding-dialog:not([open]){display:block!important;position:static;width:auto;max-height:none;margin-top:16px;box-shadow:none} }
+  </style>
+</head>
+<body>
+<div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
+<main id="harness-report" data-report-mode="codex-html">
+<header class="hero" data-section="overview">
+    <div class="hero-copy">
+      <span class="eyebrow">Harness 洞察 · Codex HTML</span>
+      <h1>frontend-slides-brand-internal</h1>
+      <p>项目当前有 7 种同级模板：8-Bit Orbit、Clearproof Green、Noir Amber Clinical、Aqua Mint Proof、Magnetic Gold Engineering、Monochrome Scent Lab、Blue Clay Clean。统一设计规范包括固定 750×1320 舞台、上 120px／左右 60px／下 60px 安全区、中文 75／45／45／30／15px 五级字号、100% 行高、-5% 字距、0 圆角、模板自带配色与默认 light 色调。Skill 采用九步流程：导入内容、选择用途与密度、应用品牌规范、确认大纲、展示三个预览、记录选择、生成完整演示、验证修复、编辑导出。本次保留 3 项 Harness 发现；近 30 天没有可用的 Codex 会话样本，因此真实调用效果保持未观测。</p>
+      <div class="hero-tags"><span class="pill accent">agent-work-loop-v4</span><span class="pill muted">证据有界</span></div>
+    </div>
+    <div class="score-orbit"><strong>5</strong><span>独立复核维度</span></div>
+  </header>
+  <div class="metrics">
+    <div class="metric">
+    <span>循环有效性</span>
+    <strong>55 / 100</strong>
+    <small>等待后续任务结果后更新</small>
+  </div>
+    <div class="metric">
+    <span>资产健康 / 修复进度</span>
+    <strong>0 / 100</strong>
+    <small>0 项已验证 · 0 项部分完成 · 3 项待处理</small>
+  </div>
+    <div class="metric">
+    <span>会话样本</span>
+    <strong>0 / 0</strong>
+    
+  </div>
+    <div class="metric">
+    <span>待处理 Finding</span>
+    <strong>3</strong>
+    <small>0 High · 3 Medium</small>
+  </div>
+  </div>
+  <section class="section" data-section="fluency" aria-labelledby="section-fluency">
+    <div class="section-heading">
+      <div><span class="eyebrow">01 · 就绪度</span><h2 id="section-fluency">五维流畅度</h2></div>
+      <p>分数与状态来自已复核 source。</p>
+    </div>
+    <div class="dimension-grid">
+    <article class="dimension-card" data-dimension-id="task-understanding">
+        <div class="dimension-top"><span>任务理解</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>68</strong><span>/ 100</span></div>
+        <div class="track" aria-label="任务理解 68 of 100"><i style="width:68%"></i></div>
+        <p>根 Skill 清楚定义了模板、设计约束与九步流程，但无动画目标与动效规则互相冲突。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="controlled-execution">
+        <div class="dimension-top"><span>可控执行</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>64</strong><span>/ 100</span></div>
+        <div class="track" aria-label="可控执行 64 of 100"><i style="width:64%"></i></div>
+        <p>项目有可执行脚本与验证命令，但 Codex 项目入口没有暴露权威 Skill 路由。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="change-validation">
+        <div class="dimension-top"><span>改动验证</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>58</strong><span>/ 100</span></div>
+        <div class="track" aria-label="改动验证 58 of 100"><i style="width:58%"></i></div>
+        <p>同步、单元和渲染检查已配置，CI 却缺少文档要求的运行时验证。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="reliable-delivery">
+        <div class="dimension-top"><span>可靠交付</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>48</strong><span>/ 100</span></div>
+        <div class="track" aria-label="可靠交付 48 of 100"><i style="width:48%"></i></div>
+        <p>存在 CI 工作流，但本次只读审查没有当前修订的 CI、合并或发布验收结果。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="learning-capture">
+        <div class="dimension-top"><span>经验沉淀</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>35</strong><span>/ 100</span></div>
+        <div class="track" aria-label="经验沉淀 35 of 100"><i style="width:35%"></i></div>
+        <p>审查窗口没有可用 Task Episode，无法判断 Skill 是否被真实调用或持续改善结果。</p>
+      </article>
+  </div>
+  </section>
+  
+  <section class="section" data-section="findings" aria-labelledby="section-findings">
+    <div class="section-heading">
+      <div><span class="eyebrow">03 · 行动</span><h2 id="section-findings">Finding 与建议</h2></div>
+      <p>3 条 finding · 0 条建议</p>
+    </div>
+    <div class="finding-list"><article class="finding-card" data-finding-id="animation-contract-conflict">
+      <div class="finding-card-main">
+        <div class="finding-meta">
+          <span class="pill warning">Medium</span>
+          <span class="pill neutral">任务理解</span>
+        </div>
+        <h3>“无动画”目标仍会加载并应用动效规则</h3>
+        <p class="finding-preview">根 SKILL.md 的目的明确要求创建无动画 HTML 演示文稿，但加载合约仍要求读取 animation-patterns.md，brand/source.json 仍定义 motion，工作流还要求改变动效重点并保留减少动效行为。同一任务因此存在两套互斥的设计指令，执行者可能生成不符合开头目标的动画输出。</p>
+      </div>
+      <div class="finding-actions">
+        <button type="button" class="action-button secondary" data-copy-finding="animation-contract-conflict" aria-label="复制 AI 修复: “无动画”目标仍会加载并应用动效规则">复制 AI 修复</button>
+        <button type="button" class="action-button ghost" data-view-finding-dialog="finding-dialog-1" aria-label="查看详情: “无动画”目标仍会加载并应用动效规则">查看详情</button>
+      </div>
+      <dialog class="finding-dialog" id="finding-dialog-1" data-finding-dialog-id="animation-contract-conflict" aria-labelledby="finding-dialog-1-title">
+        <div class="dialog-heading">
+          <div><span class="label">Finding 详情</span><h3 id="finding-dialog-1-title">“无动画”目标仍会加载并应用动效规则</h3></div>
+          <span class="pill warning">Medium</span>
+        </div>
+        <div class="dialog-section"><span class="label">原因</span><p>根 SKILL.md 的目的明确要求创建无动画 HTML 演示文稿，但加载合约仍要求读取 animation-patterns.md，brand/source.json 仍定义 motion，工作流还要求改变动效重点并保留减少动效行为。同一任务因此存在两套互斥的设计指令，执行者可能生成不符合开头目标的动画输出。</p></div>
+        <div class="dialog-section"><span class="label">预期结果</span><ol><li>开头目标、加载合约、品牌源、生成规则和模板执行说明对动画政策只有一种解释。</li></ol></div>
+        <div class="dialog-section"><span class="label">验收检查</span><ul><li>Run `python scripts/sync-brand.py --check`</li><li>Run `python -m unittest discover -s tests -v`</li></ul></div>
+        <div class="dialog-actions">
+          <button type="button" class="action-button secondary" data-copy-finding="animation-contract-conflict" aria-label="复制 AI 修复: “无动画”目标仍会加载并应用动效规则">复制 AI 修复</button>
+          <button type="button" class="action-button ghost" data-close-finding-dialog="finding-dialog-1">关闭</button>
+        </div>
+      </dialog>
+    </article>
+<article class="finding-card" data-finding-id="runtime-validation-ci-gap">
+      <div class="finding-card-main">
+        <div class="finding-meta">
+          <span class="pill warning">Medium</span>
+          <span class="pill neutral">改动验证</span>
+        </div>
+        <h3>CI 跳过了 Skill 要求的运行时验证</h3>
+        <p class="finding-preview">SKILL.md 的第 8 步和规则变更清单都要求运行 npm run validate:runtime，但 .github/workflows/brand-sync.yml 只执行同步检查、Skill 元数据、单元测试和 rendered 验证。导航、触摸、页码、编辑、自动保存、HTML 保存与打印的回归因此可能通过当前 CI。</p>
+      </div>
+      <div class="finding-actions">
+        <button type="button" class="action-button secondary" data-copy-finding="runtime-validation-ci-gap" aria-label="复制 AI 修复: CI 跳过了 Skill 要求的运行时验证">复制 AI 修复</button>
+        <button type="button" class="action-button ghost" data-view-finding-dialog="finding-dialog-2" aria-label="查看详情: CI 跳过了 Skill 要求的运行时验证">查看详情</button>
+      </div>
+      <dialog class="finding-dialog" id="finding-dialog-2" data-finding-dialog-id="runtime-validation-ci-gap" aria-labelledby="finding-dialog-2-title">
+        <div class="dialog-heading">
+          <div><span class="label">Finding 详情</span><h3 id="finding-dialog-2-title">CI 跳过了 Skill 要求的运行时验证</h3></div>
+          <span class="pill warning">Medium</span>
+        </div>
+        <div class="dialog-section"><span class="label">原因</span><p>SKILL.md 的第 8 步和规则变更清单都要求运行 npm run validate:runtime，但 .github/workflows/brand-sync.yml 只执行同步检查、Skill 元数据、单元测试和 rendered 验证。导航、触摸、页码、编辑、自动保存、HTML 保存与打印的回归因此可能通过当前 CI。</p></div>
+        <div class="dialog-section"><span class="label">预期结果</span><ol><li>每次 push 和 pull request 都会验证唯一品牌运行时的七项交互能力。</li></ol></div>
+        <div class="dialog-section"><span class="label">验收检查</span><ul><li>Run `npm run validate:runtime`</li><li>Confirm the workflow contains the same runtime validation command required by SKILL.md</li></ul></div>
+        <div class="dialog-actions">
+          <button type="button" class="action-button secondary" data-copy-finding="runtime-validation-ci-gap" aria-label="复制 AI 修复: CI 跳过了 Skill 要求的运行时验证">复制 AI 修复</button>
+          <button type="button" class="action-button ghost" data-close-finding-dialog="finding-dialog-2">关闭</button>
+        </div>
+      </dialog>
+    </article>
+<article class="finding-card" data-finding-id="codex-guidance-route-missing">
+      <div class="finding-card-main">
+        <div class="finding-meta">
+          <span class="pill warning">Medium</span>
+          <span class="pill neutral">可控执行</span>
+        </div>
+        <h3>Codex 无法从项目入口发现权威 Skill</h3>
+        <p class="finding-preview">Codex 项目资产清单中 Rules 与 Skills 均为 0，仓库也没有根 AGENTS.md；实际权威流程位于根 SKILL.md，并同步到插件镜像。没有一个 Codex 会自动读取的简短项目入口说明根文件是源、插件文件是镜像以及何时读取 templates/index.json，执行者必须依赖人工指路才能找到正确 owner。</p>
+      </div>
+      <div class="finding-actions">
+        <button type="button" class="action-button secondary" data-copy-finding="codex-guidance-route-missing" aria-label="复制 AI 修复: Codex 无法从项目入口发现权威 Skill">复制 AI 修复</button>
+        <button type="button" class="action-button ghost" data-view-finding-dialog="finding-dialog-3" aria-label="查看详情: Codex 无法从项目入口发现权威 Skill">查看详情</button>
+      </div>
+      <dialog class="finding-dialog" id="finding-dialog-3" data-finding-dialog-id="codex-guidance-route-missing" aria-labelledby="finding-dialog-3-title">
+        <div class="dialog-heading">
+          <div><span class="label">Finding 详情</span><h3 id="finding-dialog-3-title">Codex 无法从项目入口发现权威 Skill</h3></div>
+          <span class="pill warning">Medium</span>
+        </div>
+        <div class="dialog-section"><span class="label">原因</span><p>Codex 项目资产清单中 Rules 与 Skills 均为 0，仓库也没有根 AGENTS.md；实际权威流程位于根 SKILL.md，并同步到插件镜像。没有一个 Codex 会自动读取的简短项目入口说明根文件是源、插件文件是镜像以及何时读取 templates/index.json，执行者必须依赖人工指路才能找到正确 owner。</p></div>
+        <div class="dialog-section"><span class="label">预期结果</span><ol><li>Codex 进入仓库后能以渐进式披露方式定位权威 Skill、模板索引和同步边界。</li></ol></div>
+        <div class="dialog-section"><span class="label">验收检查</span><ul><li>Inspect AGENTS.md and confirm it names the canonical source, mirror, template index, and sync command</li><li>Run `python scripts/sync-brand.py --check`</li></ul></div>
+        <div class="dialog-actions">
+          <button type="button" class="action-button secondary" data-copy-finding="codex-guidance-route-missing" aria-label="复制 AI 修复: Codex 无法从项目入口发现权威 Skill">复制 AI 修复</button>
+          <button type="button" class="action-button ghost" data-close-finding-dialog="finding-dialog-3">关闭</button>
+        </div>
+      </dialog>
+    </article></div>
+  </section>
+  <section class="section" data-section="customize" aria-labelledby="section-customize">
+    <div class="section-heading">
+      <div><span class="eyebrow">04 · 能力</span><h2 id="section-customize">Agent 自定义</h2></div>
+      <p>已检查的项目与授权宿主能力面。</p>
+    </div>
+    <div class="custom-grid"><article><span class="custom-mark">W</span><div><h3>Workflows</h3><p>Project · 1</p></div></article></div>
+  </section>
+  <section class="section" data-section="methodology" aria-labelledby="section-methodology">
+    <div class="section-heading">
+      <div><span class="eyebrow">05 · 边界</span><h2 id="section-methodology">证据与方法</h2></div>
+      <p>仅使用读者安全证据。</p>
+    </div>
+    <div class="evidence-grid"><div><span>证据模式</span><strong>—</strong></div><div><span>任务 Episode</span><strong>0</strong></div><div><span>含编辑 Episode</span><strong>0</strong></div><div><span>抽样</span><strong>0 / 0</strong></div><div><span>可信度</span><strong>—</strong></div><div><span>学习状态</span><strong>—</strong></div></div>
+    
+    <p class="method-note">活动总量只描述用量，不直接代表质量、效率或节省。流畅度结论来自已复核任务样本，并受已保留证据边界约束。</p>
+  </section>
+<footer>由同一份已复核 Harness source 生成 · 自包含 Codex HTML</footer>
+</main>
+<dialog id="manual-copy-dialog" class="manual-copy-dialog" aria-labelledby="manual-copy-title" aria-describedby="manual-copy-description">
+  <div class="dialog-heading">
+    <div>
+      <span class="label">手动复制</span>
+      <h3 id="manual-copy-title">复制 AI 修复提示词</h3>
+    </div>
+  </div>
+  <p id="manual-copy-description">自动复制被阻止，下面已选中完整提示词。</p>
+  <textarea id="manual-copy-text" readonly aria-label="AI 修复提示词"></textarea>
+  <div class="dialog-actions">
+    <button type="button" class="action-button ghost" data-close-finding-dialog="manual-copy-dialog">关闭</button>
+  </div>
+</dialog>
+<script id="harness-report-data" type="application/json">{"mode":"html","language":"zh-CN","dataPath":"C:\\Users\\Admin\\Documents\\harness_learning\\frontend-slides-brand-internal\\.codex\\better-harness\\2026-08-03-template-workflow-review\\findings.json","target":{"name":"frontend-slides-brand-internal","path":"C:\\Users\\Admin\\Documents\\harness_learning\\frontend-slides-brand-internal"},"summary":{"projectName":"frontend-slides-brand-internal","locale":"zh-CN","modelId":"agent-work-loop-v4","reportContractVersion":25,"overview":"项目当前有 7 种同级模板：8-Bit Orbit、Clearproof Green、Noir Amber Clinical、Aqua Mint Proof、Magnetic Gold Engineering、Monochrome Scent Lab、Blue Clay Clean。统一设计规范包括固定 750×1320 舞台、上 120px／左右 60px／下 60px 安全区、中文 75／45／45／30／15px 五级字号、100% 行高、-5% 字距、0 圆角、模板自带配色与默认 light 色调。Skill 采用九步流程：导入内容、选择用途与密度、应用品牌规范、确认大纲、展示三个预览、记录选择、生成完整演示、验证修复、编辑导出。本次保留 3 项 Harness 发现；近 30 天没有可用的 Codex 会话样本，因此真实调用效果保持未观测。","dimensions":[{"id":"task-understanding","label":"任务理解","score":68,"summary":"根 Skill 清楚定义了模板、设计约束与九步流程，但无动画目标与动效规则互相冲突。","findingRefs":["animation-contract-conflict"]},{"id":"controlled-execution","label":"可控执行","score":64,"summary":"项目有可执行脚本与验证命令，但 Codex 项目入口没有暴露权威 Skill 路由。","findingRefs":["codex-guidance-route-missing"]},{"id":"change-validation","label":"改动验证","score":58,"summary":"同步、单元和渲染检查已配置，CI 却缺少文档要求的运行时验证。","findingRefs":["runtime-validation-ci-gap"]},{"id":"reliable-delivery","label":"可靠交付","score":48,"summary":"存在 CI 工作流，但本次只读审查没有当前修订的 CI、合并或发布验收结果。","findingRefs":[]},{"id":"learning-capture","label":"经验沉淀","score":35,"summary":"审查窗口没有可用 Task Episode，无法判断 Skill 是否被真实调用或持续改善结果。","findingRefs":[]}],"aiAgentPractice":{"inspectedSurfaces":["Workflows"],"coverageRows":[{"surface":"Workflows","scopes":["Project"],"count":1,"paths":[".github/workflows/brand-sync.yml"]}]},"assignmentSummaries":[]},"findings":[{"id":"animation-contract-conflict","title":"“无动画”目标仍会加载并应用动效规则","severity":"Medium","reason":"根 SKILL.md 的目的明确要求创建无动画 HTML 演示文稿，但加载合约仍要求读取 animation-patterns.md，brand/source.json 仍定义 motion，工作流还要求改变动效重点并保留减少动效行为。同一任务因此存在两套互斥的设计指令，执行者可能生成不符合开头目标的动画输出。","dimensionRefs":["task-understanding"],"aiFixPrompt":"/better-harness fix this issue\n\n以根 SKILL.md 的“无动画 HTML 演示文稿”为权威目标，统一删除或禁用生成流程中的动效规则，同时保留导航、编辑、保存和打印等非装饰性交互。同步更新 brand/source.json、生成器、生成文件和插件镜像，不要只改其中一个副本。\n\n## Validation\n\n- Run `python scripts/sync-brand.py --check`\n- Run `python -m unittest discover -s tests -v`","expectedArtifact":"统一的无动画生成契约","expectedOutput":["开头目标、加载合约、品牌源、生成规则和模板执行说明对动画政策只有一种解释。"]},{"id":"runtime-validation-ci-gap","title":"CI 跳过了 Skill 要求的运行时验证","severity":"Medium","reason":"SKILL.md 的第 8 步和规则变更清单都要求运行 npm run validate:runtime，但 .github/workflows/brand-sync.yml 只执行同步检查、Skill 元数据、单元测试和 rendered 验证。导航、触摸、页码、编辑、自动保存、HTML 保存与打印的回归因此可能通过当前 CI。","dimensionRefs":["change-validation"],"aiFixPrompt":"/better-harness fix this issue\n\n在 .github/workflows/brand-sync.yml 中加入项目已经声明的 `npm run validate:runtime`，保持现有同步、单元和 rendered 检查不变，并把运行时验证放在依赖与 Chromium 已就绪的位置。\n\n## Validation\n\n- Run `npm run validate:runtime`\n- Confirm the workflow contains the same runtime validation command required by SKILL.md","expectedArtifact":"CI 运行时验证门禁","expectedOutput":["每次 push 和 pull request 都会验证唯一品牌运行时的七项交互能力。"]},{"id":"codex-guidance-route-missing","title":"Codex 无法从项目入口发现权威 Skill","severity":"Medium","reason":"Codex 项目资产清单中 Rules 与 Skills 均为 0，仓库也没有根 AGENTS.md；实际权威流程位于根 SKILL.md，并同步到插件镜像。没有一个 Codex 会自动读取的简短项目入口说明根文件是源、插件文件是镜像以及何时读取 templates/index.json，执行者必须依赖人工指路才能找到正确 owner。","dimensionRefs":["controlled-execution"],"aiFixPrompt":"/better-harness fix this issue\n\n新增一个简短的根 AGENTS.md，只记录 Codex 无法安全推断的项目路由：根 SKILL.md 是权威流程，plugins/frontend-slides/skills/frontend-slides/SKILL.md 是同步镜像，模板清单由 templates/index.json 管理，非颜色品牌规则由 brand/source.json 管理，所有同步变更通过 scripts/sync-brand.py。链接长流程，不要复制整份 SKILL.md。\n\n## Validation\n\n- Inspect AGENTS.md and confirm it names the canonical source, mirror, template index, and sync command\n- Run `python scripts/sync-brand.py --check`","expectedArtifact":"项目级 AGENTS.md 路由","expectedOutput":["Codex 进入仓库后能以渐进式披露方式定位权威 Skill、模板索引和同步边界。"]}]}</script>
+<script id="harness-report-interactions">(function installHtmlReportInteractions({
+  document,
+  navigator,
+  labels,
+  schedule = (callback, delay) => globalThis.setTimeout(callback, delay),
+}) {
+  document.documentElement.classList.remove("no-js");
+
+  const reportDataElement = document.getElementById("harness-report-data");
+  const reportData = reportDataElement
+    ? JSON.parse(reportDataElement.textContent || "{}")
+    : {};
+  const findings = new Map(
+    (Array.isArray(reportData.findings) ? reportData.findings : [])
+      .map((finding) => [String(finding?.id ?? ""), finding]),
+  );
+  const status = document.getElementById("copy-status");
+  const manualDialog = document.getElementById("manual-copy-dialog");
+  const manualText = document.getElementById("manual-copy-text");
+  const dialogTriggers = new Map();
+
+  function report(message, state) {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.state = state;
+  }
+
+  function legacyCopy(prompt) {
+    const textarea = document.createElement("textarea");
+    textarea.value = prompt;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.append(textarea);
+    try {
+      textarea.select();
+      return document.execCommand("copy") === true;
+    } catch {
+      return false;
+    } finally {
+      textarea.remove();
+    }
+  }
+
+  function copied(trigger) {
+    report(labels.copySuccess, "success");
+    if (trigger) {
+      const originalLabel = trigger.textContent;
+      trigger.textContent = labels.copied;
+      schedule(() => {
+        trigger.textContent = originalLabel || labels.copy;
+      }, 1800);
+    }
+    return true;
+  }
+
+  async function copyFinding(findingId, trigger) {
+    const prompt = findings.get(String(findingId))?.aiFixPrompt;
+    if (typeof prompt !== "string" || prompt.length === 0) {
+      report(labels.missingPrompt, "error");
+      return false;
+    }
+
+    try {
+      if (!navigator?.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+      await navigator.clipboard.writeText(prompt);
+      return copied(trigger);
+    } catch {
+      if (legacyCopy(prompt)) return copied(trigger);
+    }
+
+    if (manualDialog && typeof manualDialog.showModal === "function") {
+      dialogTriggers.set(manualDialog.id, trigger);
+      if (!manualDialog.open) manualDialog.showModal();
+    }
+    if (manualText) {
+      manualText.value = prompt;
+      manualText.focus();
+      manualText.select();
+    }
+    report(labels.manualCopy, "error");
+    return false;
+  }
+
+  function openDialog(dialogId, trigger) {
+    const dialog = document.getElementById(dialogId);
+    if (!dialog || typeof dialog.showModal !== "function") return false;
+    dialogTriggers.set(dialogId, trigger);
+    dialog.showModal();
+    return true;
+  }
+
+  function closeDialog(dialogId) {
+    const dialog = document.getElementById(dialogId);
+    if (!dialog || !dialog.open || typeof dialog.close !== "function") return false;
+    dialog.close();
+    return true;
+  }
+
+  for (const trigger of document.querySelectorAll("[data-copy-finding]")) {
+    trigger.addEventListener("click", () => copyFinding(trigger.dataset.copyFinding, trigger));
+  }
+  for (const trigger of document.querySelectorAll("[data-view-finding-dialog]")) {
+    trigger.addEventListener("click", () => openDialog(trigger.dataset.viewFindingDialog, trigger));
+  }
+  for (const trigger of document.querySelectorAll("[data-close-finding-dialog]")) {
+    trigger.addEventListener("click", () => closeDialog(trigger.dataset.closeFindingDialog));
+  }
+  const interactiveDialogs = [
+    ...document.querySelectorAll("dialog[data-finding-dialog-id]"),
+    manualDialog,
+  ].filter(Boolean);
+  for (const dialog of interactiveDialogs) {
+    dialog.addEventListener("close", () => {
+      const trigger = dialogTriggers.get(dialog.id);
+      dialogTriggers.delete(dialog.id);
+      trigger?.focus();
+    });
+    dialog.addEventListener("click", (event) => {
+      if (event.target !== dialog) return;
+      const rect = dialog.getBoundingClientRect();
+      const outside = event.clientX < rect.left
+        || event.clientX > rect.right
+        || event.clientY < rect.top
+        || event.clientY > rect.bottom;
+      if (outside) closeDialog(dialog.id);
+    });
+  }
+
+  return { copyFinding, openDialog, closeDialog };
+})({document,navigator,labels:{"copy":"复制 AI 修复","copied":"已复制","copySuccess":"已复制，请粘贴到 Codex 输入框。","manualCopy":"自动复制被阻止，请手动复制已选中的提示词。","missingPrompt":"这个问题没有可用的 AI 修复提示词。"}});</script>
+</body>
+</html>

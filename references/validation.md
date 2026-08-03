@@ -11,7 +11,7 @@ Complete this gate before previews or full-deck generation:
 3. In provided mode, use only user-supplied image files. In authorized mode, record and stay inside the exact user-approved source scope.
 4. When no content images were supplied or authorized, do not browse the web, search local drives, scan unrelated repository folders, inspect previous runs, or substitute discovered imagery. Ask whether the user will provide/authorize images, wants CSS visuals, or wants placeholders.
 5. In CSS-visual mode, use only self-contained CSS/SVG atmosphere, geometry, diagrams, textures, and abstract material cues. Do not fabricate product photography, portraits, certificates, test evidence, or other source-dependent imagery.
-6. In placeholder mode, use square authored placeholder layers and no content images. Keep placeholders free of invented visible labels unless the approved content source contains the exact label.
+6. In placeholder mode, use authored placeholder layers that match the final image-frame geometry and no content images. KV placeholders default to a full-bleed `750 × 1320` background. For single-image slides, use either full bleed or a `630px`-wide frame at least `870px` high. Keep placeholders free of invented visible labels unless the approved content source contains the exact label.
 7. In provided or authorized mode, resizing, color adjustment, background cleanup, and rectangular cropping are allowed. Preserve the original, save a derived asset, record the transformation and source path, and never add a rounded mask or wrapper.
 8. Fail the run when image provenance is missing, when an image falls outside the recorded source scope, or when placeholder/CSS-visual mode contains undeclared content imagery. Fixed brand fonts and declared brand assets are exempt.
 
@@ -22,9 +22,10 @@ When Markdown is the declared content source, complete this gate before static o
 1. Record the source slice count from explicit author-defined page/slide separators or top-level numbered content units. When boundaries are ambiguous, obtain user confirmation before generation.
 2. Maintain a one-to-one source-slice-to-slide copy ledger. Subordinate headings, bullets, tables, captions, and footnotes remain attached to their parent slice unless the user explicitly defined another boundary.
 3. Require the final `.slide` count to equal the approved Markdown slice count.
-4. Verify every authored slide string—including headlines, body copy, labels, data annotations, image captions, footnotes, and calls to action—against the source ledger. Styling and line breaks may change; source wording may not.
+4. Verify every authored slide string—including headlines, body copy, labels, data annotations, image captions, footnotes, and calls to action—against the source ledger. Styling and line breaks may change; source wording may not, except that citation markers render without brackets while the ledger retains the original bracketed source.
 5. Fail the run for invented, paraphrased, summarized, expanded, silently corrected, or otherwise unsupported copy; for an unapproved omission; or for a merged/split source slice.
 6. If an additional slide is needed, stop before changing the deck. Report the affected slice, reason, proposed added count, and exact remapping action, then wait for explicit user approval.
+7. Verify citation markers use the locale disclaimer size, contain the original number, and render without `【` or `】`.
 
 Runtime controls outside the authored slide canvas are product UI, not slide copy, but they must not introduce visible deck content.
 
@@ -79,6 +80,9 @@ The rendered validator checks every slide at `750 × 1320`. Review its failures 
 9. Every authored text leaf uses one of the five type sizes defined for its locale. Large metrics and proof numerals do not receive an exception above the locale headline size.
 10. Every authored text leaf resolves to exactly 100% line height and the locale letter spacing from `brand/source.json`; browser `normal`, positive utility-label tracking, and component-specific overrides fail validation.
 11. Pure non-Chinese runs declare `lang` so the validator can select the correct locale contract. Mixed Chinese/Latin text defaults to the Chinese contract.
+12. Verify KV media or placeholders use a full-bleed `750 × 1320` background by default while authored text remains inside the safe area.
+13. Verify single-image slide geometry: the only allowed forms are full bleed or exactly `630px` wide and at least `870px` high.
+14. Inventory every authored highlight role and verify one computed highlight color across highlighted text, numerals, rules, borders, and blocks. A second highlight value, alpha variant, or local override fails the gate.
 
 Use `data-allow-bleed` only for decorative elements intentionally extending beyond the slide. Use `data-allow-overlap` only for intentional text or panel overlaps. Never add these attributes merely to silence an unexplained failure.
 

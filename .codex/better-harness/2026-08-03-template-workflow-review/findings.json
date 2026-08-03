@@ -1,0 +1,114 @@
+{
+  "summary": {
+    "projectName": "frontend-slides-brand-internal",
+    "locale": "zh-CN",
+    "modelId": "agent-work-loop-v4",
+    "reportContractVersion": 25,
+    "overview": "项目当前有 7 种同级模板：8-Bit Orbit、Clearproof Green、Noir Amber Clinical、Aqua Mint Proof、Magnetic Gold Engineering、Monochrome Scent Lab、Blue Clay Clean。统一设计规范包括固定 750×1320 舞台、上 120px／左右 60px／下 60px 安全区、中文 75／45／45／30／15px 五级字号、100% 行高、-5% 字距、0 圆角、模板自带配色与默认 light 色调。Skill 采用九步流程：导入内容、选择用途与密度、应用品牌规范、确认大纲、展示三个预览、记录选择、生成完整演示、验证修复、编辑导出。本次保留 3 项 Harness 发现；近 30 天没有可用的 Codex 会话样本，因此真实调用效果保持未观测。",
+    "dimensions": [
+      {
+        "id": "task-understanding",
+        "label": "任务理解",
+        "score": 68,
+        "summary": "根 Skill 清楚定义了模板、设计约束与九步流程，但无动画目标与动效规则互相冲突。",
+        "findingRefs": [
+          "animation-contract-conflict"
+        ]
+      },
+      {
+        "id": "controlled-execution",
+        "label": "可控执行",
+        "score": 64,
+        "summary": "项目有可执行脚本与验证命令，但 Codex 项目入口没有暴露权威 Skill 路由。",
+        "findingRefs": [
+          "codex-guidance-route-missing"
+        ]
+      },
+      {
+        "id": "change-validation",
+        "label": "改动验证",
+        "score": 58,
+        "summary": "同步、单元和渲染检查已配置，CI 却缺少文档要求的运行时验证。",
+        "findingRefs": [
+          "runtime-validation-ci-gap"
+        ]
+      },
+      {
+        "id": "reliable-delivery",
+        "label": "可靠交付",
+        "score": 48,
+        "summary": "存在 CI 工作流，但本次只读审查没有当前修订的 CI、合并或发布验收结果。",
+        "findingRefs": []
+      },
+      {
+        "id": "learning-capture",
+        "label": "经验沉淀",
+        "score": 35,
+        "summary": "审查窗口没有可用 Task Episode，无法判断 Skill 是否被真实调用或持续改善结果。",
+        "findingRefs": []
+      }
+    ],
+    "aiAgentPractice": {
+      "inspectedSurfaces": [
+        "Workflows"
+      ],
+      "coverageRows": [
+        {
+          "surface": "Workflows",
+          "scopes": [
+            "Project"
+          ],
+          "count": 1,
+          "paths": [
+            ".github/workflows/brand-sync.yml"
+          ]
+        }
+      ]
+    },
+    "assignmentSummaries": []
+  },
+  "findings": [
+    {
+      "id": "animation-contract-conflict",
+      "title": "“无动画”目标仍会加载并应用动效规则",
+      "severity": "Medium",
+      "reason": "根 SKILL.md 的目的明确要求创建无动画 HTML 演示文稿，但加载合约仍要求读取 animation-patterns.md，brand/source.json 仍定义 motion，工作流还要求改变动效重点并保留减少动效行为。同一任务因此存在两套互斥的设计指令，执行者可能生成不符合开头目标的动画输出。",
+      "dimensionRefs": [
+        "task-understanding"
+      ],
+      "aiFixPrompt": "/better-harness fix this issue\n\n以根 SKILL.md 的“无动画 HTML 演示文稿”为权威目标，统一删除或禁用生成流程中的动效规则，同时保留导航、编辑、保存和打印等非装饰性交互。同步更新 brand/source.json、生成器、生成文件和插件镜像，不要只改其中一个副本。\n\n## Validation\n\n- Run `python scripts/sync-brand.py --check`\n- Run `python -m unittest discover -s tests -v`",
+      "expectedArtifact": "统一的无动画生成契约",
+      "expectedOutput": [
+        "开头目标、加载合约、品牌源、生成规则和模板执行说明对动画政策只有一种解释。"
+      ]
+    },
+    {
+      "id": "runtime-validation-ci-gap",
+      "title": "CI 跳过了 Skill 要求的运行时验证",
+      "severity": "Medium",
+      "reason": "SKILL.md 的第 8 步和规则变更清单都要求运行 npm run validate:runtime，但 .github/workflows/brand-sync.yml 只执行同步检查、Skill 元数据、单元测试和 rendered 验证。导航、触摸、页码、编辑、自动保存、HTML 保存与打印的回归因此可能通过当前 CI。",
+      "dimensionRefs": [
+        "change-validation"
+      ],
+      "aiFixPrompt": "/better-harness fix this issue\n\n在 .github/workflows/brand-sync.yml 中加入项目已经声明的 `npm run validate:runtime`，保持现有同步、单元和 rendered 检查不变，并把运行时验证放在依赖与 Chromium 已就绪的位置。\n\n## Validation\n\n- Run `npm run validate:runtime`\n- Confirm the workflow contains the same runtime validation command required by SKILL.md",
+      "expectedArtifact": "CI 运行时验证门禁",
+      "expectedOutput": [
+        "每次 push 和 pull request 都会验证唯一品牌运行时的七项交互能力。"
+      ]
+    },
+    {
+      "id": "codex-guidance-route-missing",
+      "title": "Codex 无法从项目入口发现权威 Skill",
+      "severity": "Medium",
+      "reason": "Codex 项目资产清单中 Rules 与 Skills 均为 0，仓库也没有根 AGENTS.md；实际权威流程位于根 SKILL.md，并同步到插件镜像。没有一个 Codex 会自动读取的简短项目入口说明根文件是源、插件文件是镜像以及何时读取 templates/index.json，执行者必须依赖人工指路才能找到正确 owner。",
+      "dimensionRefs": [
+        "controlled-execution"
+      ],
+      "aiFixPrompt": "/better-harness fix this issue\n\n新增一个简短的根 AGENTS.md，只记录 Codex 无法安全推断的项目路由：根 SKILL.md 是权威流程，plugins/frontend-slides/skills/frontend-slides/SKILL.md 是同步镜像，模板清单由 templates/index.json 管理，非颜色品牌规则由 brand/source.json 管理，所有同步变更通过 scripts/sync-brand.py。链接长流程，不要复制整份 SKILL.md。\n\n## Validation\n\n- Inspect AGENTS.md and confirm it names the canonical source, mirror, template index, and sync command\n- Run `python scripts/sync-brand.py --check`",
+      "expectedArtifact": "项目级 AGENTS.md 路由",
+      "expectedOutput": [
+        "Codex 进入仓库后能以渐进式披露方式定位权威 Skill、模板索引和同步边界。"
+      ]
+    }
+  ]
+}

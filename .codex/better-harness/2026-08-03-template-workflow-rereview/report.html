@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="zh-CN" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="better-harness codex-html">
+  <title>Harness 洞察 · frontend-slides-brand-internal</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111315; --panel:#1a1d20; --panel-2:#21252a; --line:#31363d; --text:#f5f7fa; --muted:#9aa3ad; --blue:#6cb8ff; --blue-2:#1b6ca8; --orange:#ff9a5a; --green:#53d69b; --red:#ff6b6b; }
+    * { box-sizing:border-box; }
+    html { background:var(--bg); scroll-behavior:smooth; }
+    body { margin:0; min-width:320px; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:radial-gradient(circle at 12% -10%,#22364a 0,transparent 34rem),var(--bg); line-height:1.55; }
+    .sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
+    body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.22; background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size:28px 28px; }
+    main { position:relative; width:min(1180px,calc(100% - 40px)); margin:0 auto; padding:52px 0 88px; }
+    h1,h2,h3,p { margin-top:0; }
+    .eyebrow,.label { color:var(--blue); font-size:12px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; }
+    .hero { display:grid; grid-template-columns:minmax(0,1fr) 190px; gap:36px; align-items:end; min-height:270px; padding:42px; border:1px solid var(--line); border-radius:28px; background:linear-gradient(135deg,rgba(36,43,51,.96),rgba(21,24,27,.94)); box-shadow:0 28px 70px rgba(0,0,0,.28); }
+    .hero h1 { margin:12px 0 10px; font-size:clamp(42px,7vw,82px); line-height:.96; letter-spacing:-.055em; }
+    .hero p { max-width:760px; margin-bottom:22px; color:#c9d0d8; font-size:18px; }
+    .hero-tags { display:flex; flex-wrap:wrap; gap:8px; }
+    .score-orbit { width:174px; aspect-ratio:1; display:grid; place-content:center; text-align:center; border:14px solid #343a41; border-top-color:var(--blue); border-right-color:var(--blue-2); border-radius:50%; background:#1a2026; box-shadow:inset 0 0 0 1px var(--line); }
+    .score-orbit strong { font-size:44px; line-height:1; }
+    .score-orbit span { width:110px; margin-top:7px; color:var(--muted); font-size:12px; }
+    .pill { display:inline-flex; align-items:center; min-height:26px; padding:3px 10px; border-radius:999px; color:#d4dae0; background:#30353b; font-size:12px; font-weight:700; }
+    .pill.accent { color:#c9e8ff; background:#164e75; }.pill.good { color:#c9f9e5; background:#165c43; }.pill.warning { color:#ffe1c8; background:#754322; }.pill.danger { color:#ffd4d4; background:#762e31; }.pill.muted,.pill.neutral { color:#c8cdd3; background:#34383d; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0 54px; }
+    .metric { min-height:126px; padding:22px 24px; border:1px solid var(--line); border-radius:20px; background:rgba(30,34,38,.9); }
+    .metric span,.metric small { display:block; color:var(--muted); }.metric strong { display:block; margin:5px 0 2px; font-size:34px; line-height:1.1; }.metric small { font-size:12px; }
+    .section { margin-top:64px; scroll-margin-top:24px; }.section-heading { display:flex; justify-content:space-between; gap:30px; align-items:end; margin-bottom:20px; }.section-heading h2 { margin:5px 0 0; font-size:30px; letter-spacing:-.025em; }.section-heading > p { max-width:420px; margin:0; color:var(--muted); text-align:right; font-size:14px; }
+    .dimension-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }.dimension-card { min-height:230px; padding:19px; border:1px solid var(--line); border-radius:19px; background:linear-gradient(180deg,var(--panel-2),var(--panel)); }.dimension-top { display:flex; min-height:52px; justify-content:space-between; gap:8px; align-items:flex-start; font-weight:700; }.score-line { display:flex; align-items:baseline; gap:4px; margin-top:14px; }.score-line strong { font-size:34px; }.score-line span { color:var(--muted); font-size:12px; }.track { height:8px; margin:8px 0 16px; overflow:hidden; border-radius:999px; background:#30353a; }.track i { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--blue-2),var(--blue)); }.dimension-card p { margin:0; color:var(--muted); font-size:13px; }
+    .activity-layout { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(230px,.7fr); gap:14px; }.activity-panel,.subpanel,.finding,.custom-grid article,.evidence-grid,.evidence-note { border:1px solid var(--line); border-radius:19px; background:var(--panel); }.activity-panel { padding:22px; overflow:hidden; }.heatmap { display:grid; grid-template-rows:repeat(7,13px); grid-auto-flow:column; grid-auto-columns:13px; gap:4px; min-height:115px; overflow-x:auto; padding-bottom:8px; }.heat-cell { border-radius:3px; background:#2b3035; }.heat-cell.l1{background:#174d70}.heat-cell.l2{background:#206f9e}.heat-cell.l3{background:#319bd1}.heat-cell.l4{background:#70c9ff}.heat-legend { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; }.stacked-metrics { display:grid; gap:14px; }.stacked-metrics .metric { min-height:0; }
+    .two-column { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }.subpanel { padding:22px; }.subpanel h3 { font-size:15px; }.usage-list { display:grid; gap:12px; }.usage-row { display:grid; grid-template-columns:minmax(100px,.75fr) 1fr 52px; gap:12px; align-items:center; font-size:12px; }.usage-row > span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }.usage-row i { height:7px; overflow:hidden; border-radius:999px; background:#30353a; }.usage-row b { display:block; height:100%; background:linear-gradient(90deg,var(--blue-2),var(--blue)); }.usage-row strong { text-align:right; }
+    .finding-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }.finding-card { min-width:0; min-height:220px; display:flex; flex-direction:column; padding:18px; border:1px solid var(--line); border-radius:19px; background:linear-gradient(180deg,#1c2329,var(--panel)); }.finding-card-main { display:grid; gap:10px; }.finding-meta { display:flex; flex-wrap:wrap; gap:7px; }.finding-card h3 { min-height:2.8em; margin:0; display:-webkit-box; overflow:hidden; font-size:17px; line-height:1.4; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.finding-preview { margin:0; color:#c7ced6; display:-webkit-box; overflow:hidden; font-size:13px; line-height:1.55; -webkit-box-orient:vertical; -webkit-line-clamp:2; }.finding-actions,.dialog-actions { display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; margin-top:auto; padding-top:16px; }.action-button { min-height:38px; padding:8px 13px; border:1px solid transparent; border-radius:10px; color:var(--text); background:#30363d; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }.action-button:hover { filter:brightness(1.12); }.action-button:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }.action-button.secondary { color:#cceaff; border-color:#286d9b; background:#164e75; }.action-button.ghost { color:#d4dae0; border-color:var(--line); background:transparent; }.finding-dialog,.manual-copy-dialog { width:min(880px,calc(100vw - 32px)); max-height:calc(100vh - 32px); overflow:auto; padding:24px; border:1px solid var(--line); border-radius:20px; color:var(--text); background:var(--panel); box-shadow:0 30px 90px rgba(0,0,0,.55); }.finding-dialog::backdrop,.manual-copy-dialog::backdrop { background:rgba(4,8,12,.72); }.dialog-heading { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }.dialog-heading h3 { margin:6px 0 0; font-size:24px; }.dialog-section { margin-top:18px; }.dialog-section p { margin:7px 0 0; color:#d1d7de; }.dialog-section ol,.dialog-section ul { margin:8px 0 0; padding-left:22px; color:#d1d7de; }.manual-copy-dialog textarea { width:100%; min-height:260px; margin-top:14px; padding:14px; resize:vertical; border:1px solid var(--line); border-radius:12px; color:var(--text); background:#11161b; font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }.no-js .finding-actions,.no-js .manual-copy-dialog { display:none!important; }.no-js .finding-dialog:not([open]) { display:block; position:static; width:auto; max-height:none; margin-top:16px; box-shadow:none; }
+    .suggestion-block { margin-top:28px; padding-top:24px; border-top:1px solid var(--line); }.suggestion-heading { display:flex; justify-content:space-between; gap:20px; align-items:end; margin-bottom:14px; }.suggestion-heading h3 { margin:4px 0 0; font-size:20px; }.suggestion-heading p { margin:0; color:var(--muted); font-size:12px; }.suggestion-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }.suggestion { padding:18px; border:1px solid var(--line); border-radius:17px; background:linear-gradient(180deg,#1b252d,var(--panel)); }.suggestion-top { display:flex; justify-content:space-between; gap:8px; }.suggestion h3 { margin:13px 0 7px; font-size:16px; }.suggestion > p { color:#c7ced6; font-size:13px; }.suggestion dl { display:grid; gap:9px; margin:14px 0 0; }.suggestion dl div { display:grid; gap:2px; }.suggestion dt { color:var(--muted); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }.suggestion dd { margin:0; color:#d7dde4; font-size:12px; }
+    .custom-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }.custom-grid article { display:flex; gap:14px; align-items:center; padding:18px; }.custom-grid h3 { margin:0; font-size:15px; }.custom-grid p { margin:3px 0 0; color:var(--muted); font-size:12px; }.custom-mark { display:grid; flex:0 0 38px; aspect-ratio:1; place-content:center; border-radius:12px; color:#d9efff; background:#164e75; font-weight:800; }
+    .evidence-grid { display:grid; grid-template-columns:repeat(3,1fr); overflow:hidden; }.evidence-grid div { padding:20px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }.evidence-grid span,.evidence-grid strong { display:block; }.evidence-grid span { color:var(--muted); font-size:12px; }.evidence-grid strong { margin-top:4px; }.evidence-note { margin-top:14px; padding:20px; }.method-note,.empty { color:var(--muted); }.method-note { max-width:800px; margin:18px 0 0; font-size:13px; }
+    footer { margin-top:64px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    @media (max-width:1000px) { .finding-list{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    @media (max-width:900px) { .metrics,.dimension-grid{grid-template-columns:repeat(2,1fr)}.activity-layout,.two-column{grid-template-columns:1fr}.evidence-grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:680px) { .finding-list{grid-template-columns:1fr}.finding-card{min-height:0} }
+    @media (max-width:620px) { main{width:min(100% - 24px,1180px);padding-top:18px}.hero{grid-template-columns:1fr;min-height:0;padding:25px;border-radius:22px}.hero h1{font-size:44px}.hero p{font-size:15px}.score-orbit{width:126px}.score-orbit strong{font-size:34px}.metrics{grid-template-columns:1fr;margin-bottom:42px}.metric{min-height:0}.section{margin-top:46px}.section-heading,.suggestion-heading{display:block}.section-heading > p,.suggestion-heading > p{text-align:left;margin-top:8px}.dimension-grid{grid-template-columns:1fr}.dimension-card{min-height:0}.evidence-grid{grid-template-columns:1fr}.usage-row{grid-template-columns:minmax(92px,.7fr) 1fr 44px}.finding-dialog{padding:18px}.dialog-heading{display:grid} }
+    @media print { :root{color-scheme:light;--bg:#fff;--panel:#fff;--panel-2:#f6f8fa;--line:#d8dee4;--text:#111;--muted:#59636e}body{background:#fff}body::before{display:none}.hero{box-shadow:none}.section{break-inside:avoid}.finding-list{display:block}.finding-card{margin-bottom:16px;break-inside:avoid}.finding-actions,.dialog-actions,.manual-copy-dialog{display:none!important}.finding-dialog:not([open]){display:block!important;position:static;width:auto;max-height:none;margin-top:16px;box-shadow:none} }
+  </style>
+</head>
+<body>
+<div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
+<main id="harness-report" data-report-mode="codex-html">
+<header class="hero" data-section="overview">
+    <div class="hero-copy">
+      <span class="eyebrow">Harness 洞察 · Codex HTML</span>
+      <h1>frontend-slides-brand-internal</h1>
+      <p>当前仓库有 7 个同级模板、两层设计权威和清晰的九步生成链。主要风险是来源与图像审批尚未进入机械验证、模板注册并非真正单源、README 对配色权威的描述冲突，以及新的根级 Agent 路由仍未纳入版本控制。</p>
+      <div class="hero-tags"><span class="pill accent">agent-work-loop-v4</span><span class="pill muted">证据有界</span></div>
+    </div>
+    <div class="score-orbit"><strong>5</strong><span>独立复核维度</span></div>
+  </header>
+  <div class="metrics">
+    <div class="metric">
+    <span>循环有效性</span>
+    <strong>53 / 100</strong>
+    <small>等待后续任务结果后更新</small>
+  </div>
+    <div class="metric">
+    <span>资产健康 / 修复进度</span>
+    <strong>0 / 100</strong>
+    <small>0 项已验证 · 0 项部分完成 · 4 项待处理</small>
+  </div>
+    <div class="metric">
+    <span>会话样本</span>
+    <strong>0 / 0</strong>
+    
+  </div>
+    <div class="metric">
+    <span>待处理 Finding</span>
+    <strong>4</strong>
+    <small>1 High · 2 Medium</small>
+  </div>
+  </div>
+  <section class="section" data-section="fluency" aria-labelledby="section-fluency">
+    <div class="section-heading">
+      <div><span class="eyebrow">01 · 就绪度</span><h2 id="section-fluency">五维流畅度</h2></div>
+      <p>分数与状态来自已复核 source。</p>
+    </div>
+    <div class="dimension-grid">
+    <article class="dimension-card" data-dimension-id="task-understanding">
+        <div class="dimension-top"><span>任务理解</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>66</strong><span>/ 100</span></div>
+        <div class="track" aria-label="任务理解 66 of 100"><i style="width:66%"></i></div>
+        <p>根 SKILL.md 清楚定义权威源和九步流程，但 README 与模板注册实现仍会把维护者导向冲突的所有者。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="controlled-execution">
+        <div class="dimension-top"><span>可控执行</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>72</strong><span>/ 100</span></div>
+        <div class="track" aria-label="可控执行 72 of 100"><i style="width:72%"></i></div>
+        <p>同步、静态、运行时和渲染入口均已声明；本次实际观察到同步检查成功，但完整本地环境和权限边界未被会话证据覆盖。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="change-validation">
+        <div class="dimension-top"><span>改动验证</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>48</strong><span>/ 100</span></div>
+        <div class="track" aria-label="改动验证 48 of 100"><i style="width:48%"></i></div>
+        <p>几何、运行时和镜像漂移有明确检查，但来源文案、页数映射和图像授权没有进入验证器输入。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="reliable-delivery">
+        <div class="dimension-top"><span>可靠交付</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>44</strong><span>/ 100</span></div>
+        <div class="track" aria-label="可靠交付 44 of 100"><i style="width:44%"></i></div>
+        <p>CI 工作流存在，草稿品牌也有阻断规则；当前 Agent 路由尚未被版本控制，外部 CI 与合并接受状态未观察。</p>
+      </article>
+<article class="dimension-card" data-dimension-id="learning-capture">
+        <div class="dimension-top"><span>经验沉淀</span><span class="pill muted">已复核</span></div>
+        <div class="score-line"><strong>35</strong><span>/ 100</span></div>
+        <div class="track" aria-label="经验沉淀 35 of 100"><i style="width:35%"></i></div>
+        <p>30 天窗口没有可用 Task Episode，无法判定重复工作、资产实际调用或后续效果；因此不从零资产计数推导新增 Skill。</p>
+      </article>
+  </div>
+  </section>
+  
+  <section class="section" data-section="findings" aria-labelledby="section-findings">
+    <div class="section-heading">
+      <div><span class="eyebrow">03 · 行动</span><h2 id="section-findings">Finding 与建议</h2></div>
+      <p>4 条 finding · 0 条建议</p>
+    </div>
+    <div class="finding-list"><article class="finding-card" data-finding-id="content-image-gates-not-machine-enforced">
+      <div class="finding-card-main">
+        <div class="finding-meta">
+          <span class="pill danger">High</span>
+          <span class="pill neutral">改动验证</span>
+        </div>
+        <h3>技术验证通过后，来源文案与图像授权仍可能未被核验</h3>
+        <p class="finding-preview">根 SKILL.md 和 references/validation.md 要求无来源文案、页数映射偏差、未授权图像和不可追溯派生资产必须导致失败；但 validate-html.py 只接收 HTML 与草稿开关，运行时和渲染验证器也只接收演示文件及截图参数。当前全部技术检查可以在没有 run-manifest、来源台账或图像授权记录的情况下通过，因此九步流程最关键的内容完整性与授权边界没有被项目验证器证明。</p>
+      </div>
+      <div class="finding-actions">
+        <button type="button" class="action-button secondary" data-copy-finding="content-image-gates-not-machine-enforced" aria-label="复制 AI 修复: 技术验证通过后，来源文案与图像授权仍可能未被核验">复制 AI 修复</button>
+        <button type="button" class="action-button ghost" data-view-finding-dialog="finding-dialog-1" aria-label="查看详情: 技术验证通过后，来源文案与图像授权仍可能未被核验">查看详情</button>
+      </div>
+      <dialog class="finding-dialog" id="finding-dialog-1" data-finding-dialog-id="content-image-gates-not-machine-enforced" aria-labelledby="finding-dialog-1-title">
+        <div class="dialog-heading">
+          <div><span class="label">Finding 详情</span><h3 id="finding-dialog-1-title">技术验证通过后，来源文案与图像授权仍可能未被核验</h3></div>
+          <span class="pill danger">High</span>
+        </div>
+        <div class="dialog-section"><span class="label">原因</span><p>根 SKILL.md 和 references/validation.md 要求无来源文案、页数映射偏差、未授权图像和不可追溯派生资产必须导致失败；但 validate-html.py 只接收 HTML 与草稿开关，运行时和渲染验证器也只接收演示文件及截图参数。当前全部技术检查可以在没有 run-manifest、来源台账或图像授权记录的情况下通过，因此九步流程最关键的内容完整性与授权边界没有被项目验证器证明。</p></div>
+        <div class="dialog-section"><span class="label">预期结果</span><ol><li>让技术验证结果同时证明演示文稿的来源文案、页数映射和图像授权符合已记录的运行清单。</li></ol></div>
+        <div class="dialog-section"><span class="label">验收检查</span><ul><li>增加 provided、authorized、css-visual、placeholder 四种模式的正反例</li><li>证明无来源文案、页数偏差、越权图像和不可追溯派生资产都会失败</li><li>运行 python scripts/sync-brand.py --check</li><li>运行 python -m unittest discover -s tests -v</li><li>运行 npm run validate:runtime</li><li>运行 npm run validate:rendered</li></ul></div>
+        <div class="dialog-actions">
+          <button type="button" class="action-button secondary" data-copy-finding="content-image-gates-not-machine-enforced" aria-label="复制 AI 修复: 技术验证通过后，来源文案与图像授权仍可能未被核验">复制 AI 修复</button>
+          <button type="button" class="action-button ghost" data-close-finding-dialog="finding-dialog-1">关闭</button>
+        </div>
+      </dialog>
+    </article>
+<article class="finding-card" data-finding-id="template-registry-has-three-owners">
+      <div class="finding-card-main">
+        <div class="finding-meta">
+          <span class="pill warning">Medium</span>
+          <span class="pill neutral">任务理解</span>
+        </div>
+        <h3>只更新模板索引会被同步器的第二份清单拒绝</h3>
+        <p class="finding-preview">AGENTS.md 与根 SKILL.md 都把 templates/index.json 路由为七个模板的清单，但 scripts/sync-brand.py 和 tests/test_brand_sync.py 还分别硬编码同一组 TEMPLATE_IDS。同步器要求索引严格匹配脚本常量，因此新增、删除或重排模板不能只修改声明的权威索引，模板注册实际有三个维护点。</p>
+      </div>
+      <div class="finding-actions">
+        <button type="button" class="action-button secondary" data-copy-finding="template-registry-has-three-owners" aria-label="复制 AI 修复: 只更新模板索引会被同步器的第二份清单拒绝">复制 AI 修复</button>
+        <button type="button" class="action-button ghost" data-view-finding-dialog="finding-dialog-2" aria-label="查看详情: 只更新模板索引会被同步器的第二份清单拒绝">查看详情</button>
+      </div>
+      <dialog class="finding-dialog" id="finding-dialog-2" data-finding-dialog-id="template-registry-has-three-owners" aria-labelledby="finding-dialog-2-title">
+        <div class="dialog-heading">
+          <div><span class="label">Finding 详情</span><h3 id="finding-dialog-2-title">只更新模板索引会被同步器的第二份清单拒绝</h3></div>
+          <span class="pill warning">Medium</span>
+        </div>
+        <div class="dialog-section"><span class="label">原因</span><p>AGENTS.md 与根 SKILL.md 都把 templates/index.json 路由为七个模板的清单，但 scripts/sync-brand.py 和 tests/test_brand_sync.py 还分别硬编码同一组 TEMPLATE_IDS。同步器要求索引严格匹配脚本常量，因此新增、删除或重排模板不能只修改声明的权威索引，模板注册实际有三个维护点。</p></div>
+        <div class="dialog-section"><span class="label">预期结果</span><ol><li>让模板的新增、删除和顺序调整只在 templates/index.json 中登记，并由同步器和测试自动消费。</li></ol></div>
+        <div class="dialog-section"><span class="label">验收检查</span><ul><li>增加一个证明模板注册只需修改索引的聚焦测试</li><li>运行 python scripts/sync-brand.py --check</li><li>运行 python -m unittest discover -s tests -v</li><li>确认根模板与插件镜像仍逐项一致</li></ul></div>
+        <div class="dialog-actions">
+          <button type="button" class="action-button secondary" data-copy-finding="template-registry-has-three-owners" aria-label="复制 AI 修复: 只更新模板索引会被同步器的第二份清单拒绝">复制 AI 修复</button>
+          <button type="button" class="action-button ghost" data-close-finding-dialog="finding-dialog-2">关闭</button>
+        </div>
+      </dialog>
+    </article>
+<article class="finding-card" data-finding-id="readme-misroutes-palette-authority">
+      <div class="finding-card-main">
+        <div class="finding-meta">
+          <span class="pill warning">Medium</span>
+          <span class="pill neutral">任务理解</span>
+        </div>
+        <h3>README 会把模板配色错误路由到 brand/source.json</h3>
+        <p class="finding-preview">README 把 brand/source.json 描述为 one brand source 和 only brand authority；实际合约明确规定该文件只管理非颜色品牌规则并禁止颜色令牌，预览配色来自入选模板 preview.md，完整演示配色来自所选 design.md。仅阅读 README 的维护者可能把颜色写入错误的所有者并触发同步或测试失败。</p>
+      </div>
+      <div class="finding-actions">
+        <button type="button" class="action-button secondary" data-copy-finding="readme-misroutes-palette-authority" aria-label="复制 AI 修复: README 会把模板配色错误路由到 brand/source.json">复制 AI 修复</button>
+        <button type="button" class="action-button ghost" data-view-finding-dialog="finding-dialog-3" aria-label="查看详情: README 会把模板配色错误路由到 brand/source.json">查看详情</button>
+      </div>
+      <dialog class="finding-dialog" id="finding-dialog-3" data-finding-dialog-id="readme-misroutes-palette-authority" aria-labelledby="finding-dialog-3-title">
+        <div class="dialog-heading">
+          <div><span class="label">Finding 详情</span><h3 id="finding-dialog-3-title">README 会把模板配色错误路由到 brand/source.json</h3></div>
+          <span class="pill warning">Medium</span>
+        </div>
+        <div class="dialog-section"><span class="label">原因</span><p>README 把 brand/source.json 描述为 one brand source 和 only brand authority；实际合约明确规定该文件只管理非颜色品牌规则并禁止颜色令牌，预览配色来自入选模板 preview.md，完整演示配色来自所选 design.md。仅阅读 README 的维护者可能把颜色写入错误的所有者并触发同步或测试失败。</p></div>
+        <div class="dialog-section"><span class="label">预期结果</span><ol><li>让从 README 开始的维护者能直接找到非颜色品牌规则和模板配色各自的正确所有者。</li></ol></div>
+        <div class="dialog-section"><span class="label">验收检查</span><ul><li>检查 README 不再把 brand/source.json 描述为唯一的全部品牌权威</li><li>确认 README 明确命名 preview.md 与 design.md 的配色责任</li><li>运行 python scripts/sync-brand.py --check</li></ul></div>
+        <div class="dialog-actions">
+          <button type="button" class="action-button secondary" data-copy-finding="readme-misroutes-palette-authority" aria-label="复制 AI 修复: README 会把模板配色错误路由到 brand/source.json">复制 AI 修复</button>
+          <button type="button" class="action-button ghost" data-close-finding-dialog="finding-dialog-3">关闭</button>
+        </div>
+      </dialog>
+    </article>
+<article class="finding-card" data-finding-id="agent-routing-is-untracked">
+      <div class="finding-card-main">
+        <div class="finding-meta">
+          <span class="pill neutral">Low</span>
+          <span class="pill neutral">可靠交付</span>
+        </div>
+        <h3>干净检出会丢失根级权威路由</h3>
+        <p class="finding-preview">当前 7 行 AGENTS.md 已正确链接根 SKILL.md、插件镜像、模板索引、品牌源和同步脚本，且 5 个引用均可解析；但该文件仍是未跟踪文件。干净 checkout 或其他协作者不会获得这条最短路由，Agent 仍可能从 README 或插件镜像开始并错过根源优先规则。</p>
+      </div>
+      <div class="finding-actions">
+        <button type="button" class="action-button secondary" data-copy-finding="agent-routing-is-untracked" aria-label="复制 AI 修复: 干净检出会丢失根级权威路由">复制 AI 修复</button>
+        <button type="button" class="action-button ghost" data-view-finding-dialog="finding-dialog-4" aria-label="查看详情: 干净检出会丢失根级权威路由">查看详情</button>
+      </div>
+      <dialog class="finding-dialog" id="finding-dialog-4" data-finding-dialog-id="agent-routing-is-untracked" aria-labelledby="finding-dialog-4-title">
+        <div class="dialog-heading">
+          <div><span class="label">Finding 详情</span><h3 id="finding-dialog-4-title">干净检出会丢失根级权威路由</h3></div>
+          <span class="pill neutral">Low</span>
+        </div>
+        <div class="dialog-section"><span class="label">原因</span><p>当前 7 行 AGENTS.md 已正确链接根 SKILL.md、插件镜像、模板索引、品牌源和同步脚本，且 5 个引用均可解析；但该文件仍是未跟踪文件。干净 checkout 或其他协作者不会获得这条最短路由，Agent 仍可能从 README 或插件镜像开始并错过根源优先规则。</p></div>
+        <div class="dialog-section"><span class="label">预期结果</span><ol><li>让每个干净检出都能获得同一条简短、可解析且不重复长流程的 Agent 权威路由。</li></ol></div>
+        <div class="dialog-section"><span class="label">验收检查</span><ul><li>运行 git ls-files --error-unmatch AGENTS.md</li><li>检查 AGENTS.md 仍命名根 SKILL.md、插件镜像、templates/index.json、brand/source.json 和 scripts/sync-brand.py</li><li>运行 python scripts/sync-brand.py --check</li></ul></div>
+        <div class="dialog-actions">
+          <button type="button" class="action-button secondary" data-copy-finding="agent-routing-is-untracked" aria-label="复制 AI 修复: 干净检出会丢失根级权威路由">复制 AI 修复</button>
+          <button type="button" class="action-button ghost" data-close-finding-dialog="finding-dialog-4">关闭</button>
+        </div>
+      </dialog>
+    </article></div>
+  </section>
+  <section class="section" data-section="customize" aria-labelledby="section-customize">
+    <div class="section-heading">
+      <div><span class="eyebrow">04 · 能力</span><h2 id="section-customize">Agent 自定义</h2></div>
+      <p>已检查的项目与授权宿主能力面。</p>
+    </div>
+    <div class="custom-grid"><article><span class="custom-mark">R</span><div><h3>Rules</h3><p>Project · 1</p></div></article><article><span class="custom-mark">W</span><div><h3>Workflows</h3><p>Project · 1</p></div></article></div>
+  </section>
+  <section class="section" data-section="methodology" aria-labelledby="section-methodology">
+    <div class="section-heading">
+      <div><span class="eyebrow">05 · 边界</span><h2 id="section-methodology">证据与方法</h2></div>
+      <p>仅使用读者安全证据。</p>
+    </div>
+    <div class="evidence-grid"><div><span>证据模式</span><strong>—</strong></div><div><span>任务 Episode</span><strong>0</strong></div><div><span>含编辑 Episode</span><strong>0</strong></div><div><span>抽样</span><strong>0 / 0</strong></div><div><span>可信度</span><strong>—</strong></div><div><span>学习状态</span><strong>—</strong></div></div>
+    
+    <p class="method-note">活动总量只描述用量，不直接代表质量、效率或节省。流畅度结论来自已复核任务样本，并受已保留证据边界约束。</p>
+  </section>
+<footer>由同一份已复核 Harness source 生成 · 自包含 Codex HTML</footer>
+</main>
+<dialog id="manual-copy-dialog" class="manual-copy-dialog" aria-labelledby="manual-copy-title" aria-describedby="manual-copy-description">
+  <div class="dialog-heading">
+    <div>
+      <span class="label">手动复制</span>
+      <h3 id="manual-copy-title">复制 AI 修复提示词</h3>
+    </div>
+  </div>
+  <p id="manual-copy-description">自动复制被阻止，下面已选中完整提示词。</p>
+  <textarea id="manual-copy-text" readonly aria-label="AI 修复提示词"></textarea>
+  <div class="dialog-actions">
+    <button type="button" class="action-button ghost" data-close-finding-dialog="manual-copy-dialog">关闭</button>
+  </div>
+</dialog>
+<script id="harness-report-data" type="application/json">{"mode":"html","language":"zh-CN","dataPath":"C:\\Users\\Admin\\Documents\\harness_learning\\frontend-slides-brand-internal\\.codex\\better-harness\\2026-08-03-template-workflow-rereview\\findings.json","target":{"name":"frontend-slides-brand-internal","path":"C:\\Users\\Admin\\Documents\\harness_learning\\frontend-slides-brand-internal"},"summary":{"projectName":"frontend-slides-brand-internal","locale":"zh-CN","modelId":"agent-work-loop-v4","reportContractVersion":25,"overview":"当前仓库有 7 个同级模板、两层设计权威和清晰的九步生成链。主要风险是来源与图像审批尚未进入机械验证、模板注册并非真正单源、README 对配色权威的描述冲突，以及新的根级 Agent 路由仍未纳入版本控制。","dimensions":[{"id":"task-understanding","label":"任务理解","score":66,"summary":"根 SKILL.md 清楚定义权威源和九步流程，但 README 与模板注册实现仍会把维护者导向冲突的所有者。","findingRefs":["template-registry-has-three-owners","readme-misroutes-palette-authority"]},{"id":"controlled-execution","label":"可控执行","score":72,"summary":"同步、静态、运行时和渲染入口均已声明；本次实际观察到同步检查成功，但完整本地环境和权限边界未被会话证据覆盖。","findingRefs":[]},{"id":"change-validation","label":"改动验证","score":48,"summary":"几何、运行时和镜像漂移有明确检查，但来源文案、页数映射和图像授权没有进入验证器输入。","findingRefs":["content-image-gates-not-machine-enforced"]},{"id":"reliable-delivery","label":"可靠交付","score":44,"summary":"CI 工作流存在，草稿品牌也有阻断规则；当前 Agent 路由尚未被版本控制，外部 CI 与合并接受状态未观察。","findingRefs":["agent-routing-is-untracked"]},{"id":"learning-capture","label":"经验沉淀","score":35,"summary":"30 天窗口没有可用 Task Episode，无法判定重复工作、资产实际调用或后续效果；因此不从零资产计数推导新增 Skill。","findingRefs":[]}],"aiAgentPractice":{"inspectedSurfaces":["Rules","Workflows"],"coverageRows":[{"surface":"Rules","scopes":["Project"],"count":1,"paths":["AGENTS.md"]},{"surface":"Workflows","scopes":["Project"],"count":1,"paths":[".github/workflows/brand-sync.yml"]}]},"assignmentSummaries":[]},"findings":[{"id":"content-image-gates-not-machine-enforced","title":"技术验证通过后，来源文案与图像授权仍可能未被核验","severity":"High","reason":"根 SKILL.md 和 references/validation.md 要求无来源文案、页数映射偏差、未授权图像和不可追溯派生资产必须导致失败；但 validate-html.py 只接收 HTML 与草稿开关，运行时和渲染验证器也只接收演示文件及截图参数。当前全部技术检查可以在没有 run-manifest、来源台账或图像授权记录的情况下通过，因此九步流程最关键的内容完整性与授权边界没有被项目验证器证明。","dimensionRefs":["change-validation"],"subdimensionRefs":["relevant-check"],"aiFixPrompt":"/better-harness fix this issue\n\n为九步工作流增加最小的可执行内容与图像来源验证边界。让一个项目自有验证入口同时消费最终 HTML、run-manifest 和来源台账，核验页数与来源切片一一对应、逐字文案、image_mode、授权范围及派生资产追溯；保留现有静态、运行时、渲染和插件同步检查。\n\n## Validation\n\n- 增加 provided、authorized、css-visual、placeholder 四种模式的正反例\n- 证明无来源文案、页数偏差、越权图像和不可追溯派生资产都会失败\n- 运行 python scripts/sync-brand.py --check\n- 运行 python -m unittest discover -s tests -v\n- 运行 npm run validate:runtime\n- 运行 npm run validate:rendered","expectedArtifact":"内容与图像来源验证入口","expectedOutput":["让技术验证结果同时证明演示文稿的来源文案、页数映射和图像授权符合已记录的运行清单。"]},{"id":"template-registry-has-three-owners","title":"只更新模板索引会被同步器的第二份清单拒绝","severity":"Medium","reason":"AGENTS.md 与根 SKILL.md 都把 templates/index.json 路由为七个模板的清单，但 scripts/sync-brand.py 和 tests/test_brand_sync.py 还分别硬编码同一组 TEMPLATE_IDS。同步器要求索引严格匹配脚本常量，因此新增、删除或重排模板不能只修改声明的权威索引，模板注册实际有三个维护点。","dimensionRefs":["task-understanding"],"subdimensionRefs":["relevant-context"],"aiFixPrompt":"/better-harness fix this issue\n\n以 templates/index.json 作为模板注册的唯一权威来源，消除 scripts/sync-brand.py 与 tests/test_brand_sync.py 中独立维护的 TEMPLATE_IDS 清单。同步器和测试应从索引派生模板路径、顺序、数量与镜像范围，同时保留对目录、preview.md、design.md、tone_mode 和静态设计合约的检查。\n\n## Validation\n\n- 增加一个证明模板注册只需修改索引的聚焦测试\n- 运行 python scripts/sync-brand.py --check\n- 运行 python -m unittest discover -s tests -v\n- 确认根模板与插件镜像仍逐项一致","expectedArtifact":"单一模板注册表","expectedOutput":["让模板的新增、删除和顺序调整只在 templates/index.json 中登记，并由同步器和测试自动消费。"]},{"id":"readme-misroutes-palette-authority","title":"README 会把模板配色错误路由到 brand/source.json","severity":"Medium","reason":"README 把 brand/source.json 描述为 one brand source 和 only brand authority；实际合约明确规定该文件只管理非颜色品牌规则并禁止颜色令牌，预览配色来自入选模板 preview.md，完整演示配色来自所选 design.md。仅阅读 README 的维护者可能把颜色写入错误的所有者并触发同步或测试失败。","dimensionRefs":["task-understanding"],"subdimensionRefs":["relevant-context"],"aiFixPrompt":"/better-harness fix this issue\n\n修正根 README 的品牌权威说明，使其与根 SKILL.md 和 templates/index.json 的两层合约一致：brand/source.json 只管理非颜色品牌规则，候选 preview.md 管预览配色，用户选定模板的 design.md 管完整演示配色。保持现有开发命令与草稿品牌说明不变。\n\n## Validation\n\n- 检查 README 不再把 brand/source.json 描述为唯一的全部品牌权威\n- 确认 README 明确命名 preview.md 与 design.md 的配色责任\n- 运行 python scripts/sync-brand.py --check","expectedArtifact":"一致的 README 权威地图","expectedOutput":["让从 README 开始的维护者能直接找到非颜色品牌规则和模板配色各自的正确所有者。"]},{"id":"agent-routing-is-untracked","title":"干净检出会丢失根级权威路由","severity":"Low","reason":"当前 7 行 AGENTS.md 已正确链接根 SKILL.md、插件镜像、模板索引、品牌源和同步脚本，且 5 个引用均可解析；但该文件仍是未跟踪文件。干净 checkout 或其他协作者不会获得这条最短路由，Agent 仍可能从 README 或插件镜像开始并错过根源优先规则。","dimensionRefs":["reliable-delivery"],"subdimensionRefs":["acceptance-evidence"],"aiFixPrompt":"/better-harness fix this issue\n\n将现有简短根 AGENTS.md 纳入项目的版本化源状态，不扩写九步流程，也不复制根 SKILL.md。保留当前五个项目路由和渐进式披露结构。\n\n## Validation\n\n- 运行 git ls-files --error-unmatch AGENTS.md\n- 检查 AGENTS.md 仍命名根 SKILL.md、插件镜像、templates/index.json、brand/source.json 和 scripts/sync-brand.py\n- 运行 python scripts/sync-brand.py --check","expectedArtifact":"版本化的根 AGENTS.md","expectedOutput":["让每个干净检出都能获得同一条简短、可解析且不重复长流程的 Agent 权威路由。"]}]}</script>
+<script id="harness-report-interactions">(function installHtmlReportInteractions({
+  document,
+  navigator,
+  labels,
+  schedule = (callback, delay) => globalThis.setTimeout(callback, delay),
+}) {
+  document.documentElement.classList.remove("no-js");
+
+  const reportDataElement = document.getElementById("harness-report-data");
+  const reportData = reportDataElement
+    ? JSON.parse(reportDataElement.textContent || "{}")
+    : {};
+  const findings = new Map(
+    (Array.isArray(reportData.findings) ? reportData.findings : [])
+      .map((finding) => [String(finding?.id ?? ""), finding]),
+  );
+  const status = document.getElementById("copy-status");
+  const manualDialog = document.getElementById("manual-copy-dialog");
+  const manualText = document.getElementById("manual-copy-text");
+  const dialogTriggers = new Map();
+
+  function report(message, state) {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.state = state;
+  }
+
+  function legacyCopy(prompt) {
+    const textarea = document.createElement("textarea");
+    textarea.value = prompt;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.append(textarea);
+    try {
+      textarea.select();
+      return document.execCommand("copy") === true;
+    } catch {
+      return false;
+    } finally {
+      textarea.remove();
+    }
+  }
+
+  function copied(trigger) {
+    report(labels.copySuccess, "success");
+    if (trigger) {
+      const originalLabel = trigger.textContent;
+      trigger.textContent = labels.copied;
+      schedule(() => {
+        trigger.textContent = originalLabel || labels.copy;
+      }, 1800);
+    }
+    return true;
+  }
+
+  async function copyFinding(findingId, trigger) {
+    const prompt = findings.get(String(findingId))?.aiFixPrompt;
+    if (typeof prompt !== "string" || prompt.length === 0) {
+      report(labels.missingPrompt, "error");
+      return false;
+    }
+
+    try {
+      if (!navigator?.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+      await navigator.clipboard.writeText(prompt);
+      return copied(trigger);
+    } catch {
+      if (legacyCopy(prompt)) return copied(trigger);
+    }
+
+    if (manualDialog && typeof manualDialog.showModal === "function") {
+      dialogTriggers.set(manualDialog.id, trigger);
+      if (!manualDialog.open) manualDialog.showModal();
+    }
+    if (manualText) {
+      manualText.value = prompt;
+      manualText.focus();
+      manualText.select();
+    }
+    report(labels.manualCopy, "error");
+    return false;
+  }
+
+  function openDialog(dialogId, trigger) {
+    const dialog = document.getElementById(dialogId);
+    if (!dialog || typeof dialog.showModal !== "function") return false;
+    dialogTriggers.set(dialogId, trigger);
+    dialog.showModal();
+    return true;
+  }
+
+  function closeDialog(dialogId) {
+    const dialog = document.getElementById(dialogId);
+    if (!dialog || !dialog.open || typeof dialog.close !== "function") return false;
+    dialog.close();
+    return true;
+  }
+
+  for (const trigger of document.querySelectorAll("[data-copy-finding]")) {
+    trigger.addEventListener("click", () => copyFinding(trigger.dataset.copyFinding, trigger));
+  }
+  for (const trigger of document.querySelectorAll("[data-view-finding-dialog]")) {
+    trigger.addEventListener("click", () => openDialog(trigger.dataset.viewFindingDialog, trigger));
+  }
+  for (const trigger of document.querySelectorAll("[data-close-finding-dialog]")) {
+    trigger.addEventListener("click", () => closeDialog(trigger.dataset.closeFindingDialog));
+  }
+  const interactiveDialogs = [
+    ...document.querySelectorAll("dialog[data-finding-dialog-id]"),
+    manualDialog,
+  ].filter(Boolean);
+  for (const dialog of interactiveDialogs) {
+    dialog.addEventListener("close", () => {
+      const trigger = dialogTriggers.get(dialog.id);
+      dialogTriggers.delete(dialog.id);
+      trigger?.focus();
+    });
+    dialog.addEventListener("click", (event) => {
+      if (event.target !== dialog) return;
+      const rect = dialog.getBoundingClientRect();
+      const outside = event.clientX < rect.left
+        || event.clientX > rect.right
+        || event.clientY < rect.top
+        || event.clientY > rect.bottom;
+      if (outside) closeDialog(dialog.id);
+    });
+  }
+
+  return { copyFinding, openDialog, closeDialog };
+})({document,navigator,labels:{"copy":"复制 AI 修复","copied":"已复制","copySuccess":"已复制，请粘贴到 Codex 输入框。","manualCopy":"自动复制被阻止，请手动复制已选中的提示词。","missingPrompt":"这个问题没有可用的 AI 修复提示词。"}});</script>
+</body>
+</html>
