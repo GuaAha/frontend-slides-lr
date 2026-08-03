@@ -59,7 +59,6 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 12px);
-  transition: opacity 160ms ease, transform 160ms ease;
 }
 
 .deck-controls.is-visible,
@@ -113,15 +112,6 @@ body.is-editing [data-editable="text"][data-edit-id] {
   outline: 2px dashed currentColor;
   outline-offset: 4px;
   cursor: text;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
-    scroll-behavior: auto !important;
-  }
 }
 
 @media print {

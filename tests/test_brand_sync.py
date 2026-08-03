@@ -78,6 +78,33 @@ class BrandSyncTests(unittest.TestCase):
         ):
             self.assertNotIn(color_token, css)
 
+    def test_motion_contract_is_absent_from_source_and_generated_assets(self) -> None:
+        source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
+        self.assertNotIn("motion", source)
+
+        impact_map = json.loads((ROOT / "brand/impact-map.json").read_text(encoding="utf-8"))
+        self.assertNotIn("animation-patterns.md", impact_map["generated"])
+
+        plugin_root = ROOT / "plugins/frontend-slides/skills/frontend-slides"
+        self.assertFalse((ROOT / "animation-patterns.md").exists())
+        self.assertFalse((plugin_root / "animation-patterns.md").exists())
+
+        motion_css = re.compile(
+            r"--brand-motion-|@keyframes|^\s*(?:animation|transition)(?:-[\w-]+)?\s*:",
+            flags=re.I | re.M,
+        )
+        for relative in ("brand/generated/brand-tokens.css", "viewport-base.css"):
+            css = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIsNone(motion_css.search(css), relative)
+
+        rules = (ROOT / "brand/generated/brand-rules.md").read_text(encoding="utf-8")
+        self.assertNotIn("motion timing", rules.lower())
+
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        for stale in ("animation-patterns.md", "动效时序", "动效值", "动效重点", "减少动效行为"):
+            self.assertNotIn(stale, skill)
+        self.assertIn("所有幻灯片、内容元素和控件状态均即时呈现", skill)
+
     def test_templates_are_one_peer_collection(self) -> None:
         index = json.loads((ROOT / "templates/index.json").read_text(encoding="utf-8"))
         self.assertEqual(index["template_count"], len(TEMPLATE_IDS))

@@ -4,8 +4,7 @@
     "brand/generated/brand-rules.md",
     "brand/generated/brand-tokens.css",
     "brand/generated/brand-runtime.js",
-    "viewport-base.css",
-    "animation-patterns.md"
+    "viewport-base.css"
   ],
   "checked_for_invariants": [
     "SKILL.md",

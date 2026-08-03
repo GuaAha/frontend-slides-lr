@@ -47,6 +47,6 @@
 - Read `templates/index.json` when preparing the three real branded previews.
 - Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.
 - Use baseline composition, component grammar, and the palette declared by that baseline without overriding non-color brand rules.
-- Keep typography, shape tokens, motion timing, and the 750 × 1320 canvas fixed across all previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.
+- Keep typography, shape tokens, static visual states, and the 750 × 1320 canvas fixed across all previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.
 
 > Source note: Confirmed non-color brand rules include multilingual typography, fixed safe area, square corners, and the product-detail no-logo policy. Palette information is defined by each template's preview.md and design.md. Tone defaults to light unless the user explicitly selects dark.
