@@ -19,6 +19,11 @@ _CSS_MOTION_RULES = (
     ("reduced-motion workaround", re.compile(r"prefers-reduced-motion\b", re.I)),
 )
 
+_CSS_AUTO_SPACING_RULES = (
+    ("auto-spacing margin", re.compile(r"margin(?:-top|-bottom)?\s*:\s*auto\b", re.I)),
+    ("auto-spacing distribution", re.compile(r"justify-content\s*:\s*space-between\b", re.I)),
+)
+
 _ANIMATION_GUIDANCE = re.compile(r"\banimat(?:e|es|ed|ing|ion|ions)\b", re.I)
 _CROSSFADE_GUIDANCE = re.compile(r"\bcross[- ]?fade(?:s|d|ing)?\b", re.I)
 _FADE_GUIDANCE = re.compile(r"\bfade(?:s|d|ing)?\s+(?:in|out|between)\b", re.I)
@@ -85,6 +90,12 @@ def _find_css_motion_violations(text: str, *, strip_opaque_css: bool) -> list[st
 def css_motion_violations(css: str) -> list[str]:
     """Return distinct motion constructs found anywhere in authored CSS."""
     return _find_css_motion_violations(css, strip_opaque_css=True)
+
+
+def css_auto_spacing_violations(css: str) -> list[str]:
+    """Reject layout rules that absorb leftover canvas height with auto spacing."""
+    inspectable = _strip_css_comments_and_strings(css)
+    return [label for label, pattern in _CSS_AUTO_SPACING_RULES if pattern.search(inspectable)]
 
 
 def template_motion_violations(text: str) -> list[str]:

@@ -1,0 +1,136 @@
+{
+  "schema_version": 3,
+  "approval_status": "draft",
+  "source_note": "Confirmed non-color brand rules include multilingual typography, fixed safe area, square corners, and the product-detail no-logo policy. Palette information is defined by each template's preview.md and design.md. Tone defaults to light unless the user explicitly selects dark.",
+  "brand": {
+    "name": "LR Internal",
+    "short_name": "LR",
+    "language": "zh-CN"
+  },
+  "canvas": {
+    "width": 750,
+    "kv_height": 1320,
+    "non_kv_height": "content"
+  },
+  "typography": {
+    "display": {
+      "family": "MAKE SENSE",
+      "fallbacks": ["Microsoft YaHei", "sans-serif"],
+      "asset": "brand/assets/MAKESENSE-70S.ttf",
+      "style": "70S"
+    },
+    "body": {
+      "family": "MAKE SENSE",
+      "fallbacks": ["Microsoft YaHei", "sans-serif"],
+      "asset": "brand/assets/MAKESENSE-70S.ttf",
+      "style": "70S"
+    },
+    "minimum_body_px": 30,
+    "minimum_caption_px": 15,
+    "line_height_percent": 100,
+    "annotation_line_height_px": 0,
+    "locale_rules": {
+      "zh": {
+        "family": "MAKE SENSE",
+        "styles": {
+          "headline": "70S",
+          "subheadline": "70S",
+          "label": "70S",
+          "description": "70S",
+          "disclaimer": "70S"
+        },
+        "sizes_px": {
+          "headline": 75,
+          "subheadline": 45,
+          "label": 45,
+          "description": 30,
+          "disclaimer": 15
+        },
+        "letter_spacing_percent": -5
+      },
+      "en": {
+        "family": "Helvetica Now Text",
+        "styles": {
+          "headline": "Bold",
+          "subheadline": "Regular",
+          "label": "Regular",
+          "description": "Light",
+          "disclaimer": "Light"
+        },
+        "sizes_px": {
+          "headline": 60,
+          "subheadline": 30,
+          "label": 30,
+          "description": 20,
+          "disclaimer": 15
+        },
+        "letter_spacing_percent": -3
+      },
+      "vi": {
+        "family": "Noto Sans",
+        "styles": {
+          "headline": "SemiBold",
+          "subheadline": "Medium",
+          "label": "Medium",
+          "description": "Regular",
+          "disclaimer": "Regular"
+        },
+        "sizes_px": {
+          "headline": 60,
+          "subheadline": 30,
+          "label": 25,
+          "description": 15,
+          "disclaimer": 9
+        },
+        "letter_spacing_percent": -6
+      },
+      "th": {
+        "family": "Noto Sans Thai",
+        "styles": {
+          "headline": "SemiBold",
+          "subheadline": "Medium",
+          "label": "Medium",
+          "description": "Regular",
+          "disclaimer": "Regular"
+        },
+        "sizes_px": {
+          "headline": 60,
+          "subheadline": 30,
+          "label": 25,
+          "description": 15,
+          "disclaimer": 10
+        },
+        "letter_spacing_percent": -3
+      }
+    }
+  },
+  "logo": {
+    "primary_asset": null,
+    "inverse_asset": null,
+    "minimum_width_px": 72,
+    "clear_space_px": 20
+  },
+  "shape": {
+    "corner_radius_px": 0,
+    "stroke_width_px": 2
+  },
+  "spacing": {
+    "slide_padding_px": 60,
+    "safe_top_px": 120,
+    "safe_bottom_px": 60,
+    "content_gap_px": 40,
+    "item_gap_px": 10,
+    "disclaimer_gap_px": 40,
+    "qa_group_gap_px": 60
+  },
+  "density": {
+    "speaker_led": {
+      "max_bullets": 3,
+      "max_cards": 3
+    },
+    "reading_first": {
+      "max_bullets": 6,
+      "max_cards": 5
+    }
+  }
+}

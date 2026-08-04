@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Rendered geometry validation for fixed-brand 750 × 1320 decks. */
+/** Rendered geometry validation for 750px-wide decks with per-slide heights. */
 
 import { mkdirSync, readFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
@@ -10,6 +10,8 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const brandSource = JSON.parse(readFileSync(resolve(repoRoot, 'brand/source.json'), 'utf8'));
 const typographyContract = {
   lineHeightPercent: brandSource.typography.line_height_percent,
+  annotationTextLineHeightPercent: brandSource.typography.annotation_line_height_percent,
+  largeEvidenceSecondaryPx: brandSource.typography.large_evidence_secondary_px,
   localeRules: brandSource.typography.locale_rules,
 };
 const safeAreaContract = {
@@ -23,9 +25,11 @@ const args = process.argv.slice(2);
 const inputArg = args.find((arg) => !arg.startsWith('--'));
 const screenshotFlag = args.indexOf('--screenshots');
 const screenshotDir = screenshotFlag >= 0 ? resolve(args[screenshotFlag + 1] || '') : null;
+const slideFlag = args.indexOf('--slide');
+const requestedSlide = slideFlag >= 0 ? Number.parseInt(args[slideFlag + 1] || '', 10) : null;
 
 if (!inputArg) {
-  console.error('Usage: node scripts/validate-rendered.mjs <deck.html> [--screenshots <directory>]');
+  console.error('Usage: node scripts/validate-rendered.mjs <deck.html> [--slide <number>] [--screenshots <directory>]');
   process.exit(2);
 }
 
@@ -35,10 +39,15 @@ if (screenshotFlag >= 0 && !args[screenshotFlag + 1]) {
   process.exit(2);
 }
 if (screenshotDir) mkdirSync(screenshotDir, { recursive: true });
+if (slideFlag >= 0 && (!Number.isInteger(requestedSlide) || requestedSlide < 1)) {
+  console.error('ERROR: --slide requires a positive slide number');
+  process.exit(2);
+}
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 750, height: 1320 }, deviceScaleFactor: 1 });
 const errors = [];
+let validatedSlides = [];
 
 page.on('console', (message) => {
   if (message.type() === 'error') errors.push({ slide: null, kind: 'console', message: message.text() });
@@ -55,25 +64,63 @@ try {
   await page.evaluate(() => document.fonts.ready);
   const slideCount = await page.locator('.slide').count();
   if (!slideCount) errors.push({ slide: null, kind: 'structure', message: 'No .slide elements found' });
+  if (requestedSlide && requestedSlide > slideCount) {
+    errors.push({ slide: requestedSlide, kind: 'structure', message: `Slide ${requestedSlide} does not exist` });
+  }
+  const selectedIndexes = requestedSlide ? [requestedSlide - 1] : Array.from({ length: slideCount }, (_, index) => index);
+  validatedSlides = selectedIndexes.filter((index) => index >= 0 && index < slideCount).map((index) => index + 1);
+  const slideContracts = await page.locator('.slide').evaluateAll((slides) => slides.map((slide) => ({
+    kind: slide.getAttribute('data-slide-kind'),
+    height: Number.parseInt(slide.getAttribute('data-slide-height') || '', 10),
+  })));
 
-  for (let index = 0; index < slideCount; index += 1) {
-    await page.evaluate((activeIndex) => {
+  for (const index of selectedIndexes) {
+    if (index < 0 || index >= slideCount) continue;
+    const contract = slideContracts[index];
+    if (!['kv', 'content'].includes(contract.kind)) {
+      errors.push({ slide: index + 1, kind: 'canvas', message: 'data-slide-kind must be kv or content' });
+    }
+    if (!Number.isInteger(contract.height) || contract.height <= 0) {
+      errors.push({ slide: index + 1, kind: 'canvas', message: 'data-slide-height must be a positive integer' });
+    }
+    if (contract.kind === 'kv' && contract.height !== brandSource.canvas.kv_height) {
+      errors.push({ slide: index + 1, kind: 'canvas', message: 'KV slide height must be 1320px' });
+    }
+    const expectedHeight = Number.isInteger(contract.height) && contract.height > 0
+      ? contract.height
+      : brandSource.canvas.kv_height;
+    await page.setViewportSize({ width: brandSource.canvas.width, height: expectedHeight });
+    await page.evaluate(({ activeIndex, expectedHeight }) => {
+      if (window.presentation?.show) {
+        window.presentation.show(activeIndex, { updateHash: false });
+        return;
+      }
+      const stage = document.querySelector('.deck-stage');
+      if (stage) {
+        stage.style.setProperty('--active-slide-height', `${expectedHeight}px`);
+        stage.style.height = `${expectedHeight}px`;
+      }
       document.querySelectorAll('.slide').forEach((slide, slideIndex) => {
+        const declaredHeight = Number.parseInt(slide.getAttribute('data-slide-height') || '', 10);
+        if (Number.isInteger(declaredHeight) && declaredHeight > 0) {
+          slide.style.setProperty('--slide-height', `${declaredHeight}px`);
+          slide.style.height = `${declaredHeight}px`;
+        }
         slide.classList.toggle('active', slideIndex === activeIndex);
         slide.classList.toggle('visible', slideIndex === activeIndex);
         slide.style.visibility = slideIndex === activeIndex ? 'visible' : 'hidden';
         slide.style.opacity = slideIndex === activeIndex ? '1' : '0';
       });
-    }, index);
+    }, { activeIndex: index, expectedHeight });
     await page.waitForTimeout(80);
 
-    const diagnostics = await page.evaluate(({ activeIndex, typographyContract, safeAreaContract }) => {
+    const diagnostics = await page.evaluate(({ activeIndex, expectedHeight, typographyContract, safeAreaContract }) => {
       const slide = document.querySelectorAll('.slide')[activeIndex];
       if (!slide) return [{ kind: 'structure', message: 'Active slide missing' }];
       const issues = [];
       const slideRect = slide.getBoundingClientRect();
       const close = (left, right) => Math.abs(left - right) <= 1;
-      if (!close(slideRect.width, 750) || !close(slideRect.height, 1320)) {
+      if (!close(slideRect.width, 750) || !close(slideRect.height, expectedHeight)) {
         issues.push({ kind: 'canvas', message: `Slide is ${slideRect.width} × ${slideRect.height}` });
       }
 
@@ -150,7 +197,13 @@ try {
         const locale = localeFor(element);
         const localeRule = typographyContract.localeRules[locale];
         const fontSize = Number.parseFloat(style.fontSize);
+        const isLargeEvidence = element.matches('.metric') || Boolean(element.closest('.metric'));
         const allowedSizes = new Set(Object.values(localeRule.sizes_px).map(Number));
+        if (isLargeEvidence) allowedSizes.add(Number(typographyContract.largeEvidenceSecondaryPx));
+        const isCitationMarker = element.matches('[data-citation-marker]')
+          || Boolean(element.closest('[data-citation-marker]'));
+        const isAnnotationText = !isCitationMarker && (element.matches('[data-annotation-text]')
+          || Boolean(element.closest('[data-annotation-text]')));
         const label = element.closest('[data-copy-id]')?.getAttribute('data-copy-id')
           || element.tagName.toLowerCase();
 
@@ -162,7 +215,7 @@ try {
           || rect.top < safeTop - 1 || rect.bottom > safeBottom + 1) {
           issues.push({
             kind: 'safe-area',
-            message: `${label} falls outside x=${safeAreaContract.left}–${750 - safeAreaContract.right}, y=${safeAreaContract.top}–${1320 - safeAreaContract.bottom}`,
+            message: `${label} falls outside x=${safeAreaContract.left}–${750 - safeAreaContract.right}, y=${safeAreaContract.top}–${expectedHeight - safeAreaContract.bottom}`,
           });
         }
 
@@ -176,12 +229,14 @@ try {
         if (style.lineHeight === 'normal') {
           issues.push({ kind: 'line-height', message: `${label} uses browser-normal line height` });
         } else {
-          const expectedLineHeight = fontSize * typographyContract.lineHeightPercent / 100;
+          const expectedLineHeight = isAnnotationText
+            ? fontSize * typographyContract.annotationTextLineHeightPercent / 100
+            : fontSize * typographyContract.lineHeightPercent / 100;
           const actualLineHeight = Number.parseFloat(style.lineHeight);
           if (!closeTypography(actualLineHeight, expectedLineHeight)) {
             issues.push({
               kind: 'line-height',
-              message: `${label} resolves to ${style.lineHeight}; expected ${expectedLineHeight}px`,
+              message: `${label} resolves to ${style.lineHeight}; expected ${expectedLineHeight}px${isAnnotationText ? ' (annotation text)' : ''}`,
             });
           }
         }
@@ -194,6 +249,56 @@ try {
           issues.push({
             kind: 'letter-spacing',
             message: `${label} resolves to ${style.letterSpacing}; expected ${expectedLetterSpacing}px for ${locale}`,
+          });
+        }
+
+        const lineText = new Map();
+        Array.from(element.childNodes)
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .forEach((node) => {
+            for (let offset = 0; offset < node.textContent.length; offset += 1) {
+              const character = node.textContent[offset];
+              if (/\s/u.test(character)) continue;
+              const range = document.createRange();
+              range.setStart(node, offset);
+              range.setEnd(node, offset + 1);
+              const characterRect = range.getBoundingClientRect();
+              if (!characterRect.width && !characterRect.height) continue;
+              const lineKey = Math.round(characterRect.top * 2) / 2;
+              lineText.set(lineKey, `${lineText.get(lineKey) || ''}${character}`);
+            }
+          });
+        for (const visibleLine of lineText.values()) {
+          if (/^\p{Script=Han}(?:\p{P})?$/u.test(visibleLine)) {
+            issues.push({
+              kind: 'orphan-line',
+              message: `${label} has a visible line containing only one Han character${visibleLine.length > 1 ? ' plus punctuation' : ''}`,
+            });
+          }
+        }
+      }
+
+      for (const marker of slide.querySelectorAll('[data-citation-marker]')) {
+        const siblings = marker.parentElement ? Array.from(marker.parentElement.childNodes) : [];
+        const markerIndex = siblings.indexOf(marker);
+        const previousText = siblings.slice(0, markerIndex).map((node) => node.textContent || '').join('').trim();
+        const nextText = siblings.slice(markerIndex + 1).map((node) => node.textContent || '').join('').trim();
+        if (!previousText && !nextText) {
+          issues.push({
+            kind: 'citation-line',
+            message: 'citation marker digits must follow corresponding copy at the upper-right and may not form a line by themselves',
+          });
+        }
+      }
+
+      const evidenceMetrics = Array.from(slide.querySelectorAll('.metric[data-copy-id]'));
+      if (evidenceMetrics.length >= 2) {
+        const preferredMetricSize = evidenceMetrics.length === 2 ? 75 : typographyContract.largeEvidenceSecondaryPx;
+        const metricSizes = evidenceMetrics.map((metric) => Number.parseFloat(getComputedStyle(metric).fontSize));
+        if (metricSizes.some((size) => Math.abs(size - preferredMetricSize) > 0.15)) {
+          issues.push({
+            kind: 'large-evidence-size',
+            message: `${evidenceMetrics.length} large-evidence groups must use one unified ${preferredMetricSize}px size; found ${metricSizes.join(', ')}px`,
           });
         }
       }
@@ -216,7 +321,7 @@ try {
         }
       }
       return issues;
-    }, { activeIndex: index, typographyContract, safeAreaContract });
+    }, { activeIndex: index, expectedHeight, typographyContract, safeAreaContract });
 
     diagnostics.forEach((issue) => errors.push({ slide: index + 1, ...issue }));
     if (screenshotDir) {
@@ -231,4 +336,8 @@ if (errors.length) {
   console.error(JSON.stringify({ pass: false, errors }, null, 2));
   process.exit(1);
 }
-console.log(JSON.stringify({ pass: true, canvas: { width: 750, height: 1320 } }, null, 2));
+console.log(JSON.stringify({
+  pass: true,
+  canvas: { width: 750, kvHeight: 1320, nonKvHeight: 'content' },
+  slides: validatedSlides,
+}, null, 2));

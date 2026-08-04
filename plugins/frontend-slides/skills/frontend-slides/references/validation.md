@@ -25,7 +25,7 @@ When Markdown is the declared content source, complete this gate before static o
 4. Verify every authored slide string—including headlines, body copy, labels, data annotations, image captions, footnotes, and calls to action—against the source ledger. Styling and line breaks may change; source wording may not, except that citation markers render without brackets while the ledger retains the original bracketed source.
 5. Fail the run for invented, paraphrased, summarized, expanded, silently corrected, or otherwise unsupported copy; for an unapproved omission; or for a merged/split source slice.
 6. If an additional slide is needed, stop before changing the deck. Report the affected slice, reason, proposed added count, and exact remapping action, then wait for explicit user approval.
-7. Verify citation markers use the locale disclaimer size, contain the original number, and render without `【` or `】`.
+7. Verify citation markers use the locale disclaimer size, contain the original number, render without `【` or `】`, keep ordinary `100%` line height, and follow their corresponding copy at the upper-right rather than form a line by themselves.
 
 Runtime controls outside the authored slide canvas are product UI, not slide copy, but they must not introduce visible deck content.
 
@@ -37,7 +37,9 @@ Require:
 
 - exactly one `.deck-viewport` and one `.deck-stage`;
 - at least one `.slide`;
-- literal `750px` width and `1320px` height in the inlined stage rules;
+- literal `750px` width in the inlined stage rules;
+- exactly one main title per slide, expressed as an `h1` or `data-type-level="headline"` text role;
+- `data-slide-kind="kv|content"` and a positive integer `data-slide-height` on every slide; KV height is exactly `1320`, while non-KV height is content-driven and must leave the 120px top and 60px bottom safe margins;
 - embedded brand status matching `brand/source.json`;
 - one stable ASCII `frontend-slides-deck-id` meta value for deck-scoped autosave;
 - no stale landscape-canvas, aspect-ratio, or alternative-stage language;
@@ -48,6 +50,7 @@ Require:
 - treat `border-radius` applied to `<img>`, `<picture>`, or an image-cropping wrapper as an authored image mask, not as exempt image content.
 - a recorded `tone_mode` of exactly `light` or `dark` before preview generation;
 - no separately authored brand-logo layer when the run purpose is a product-detail page.
+- no authored `margin-top: auto`, `margin-bottom: auto`, or `justify-content: space-between` rule that distributes leftover height inside slide content; content flow uses the 40px content gap and non-KV height ends at the lowest non-bleed content plus 60px.
 
 ## Runtime gate
 
@@ -57,7 +60,7 @@ Run the browser interaction validator against the completed self-contained HTML:
 node scripts/validate-runtime.mjs path/to/deck.html
 ```
 
-It verifies that the sole generated runtime owns the fixed-stage scaler, keyboard/click/touch navigation, page counter, declared text editing, deck-scoped localStorage autosave, sanitized HTML file save, and print action. An unlocked deck must declare at least one `[data-editable="text"][data-edit-id]` layer. Do not satisfy this gate by adding a second runtime or a separate stage component.
+It verifies that the sole generated runtime owns the fixed-width, active-height stage scaler, keyboard/click/touch navigation, page counter, declared text editing, deck-scoped localStorage autosave, sanitized HTML file save, and print action. An unlocked deck must declare at least one `[data-editable="text"][data-edit-id]` layer. Do not satisfy this gate by adding a second runtime or a separate stage component.
 
 ## Rendered gate
 
@@ -67,23 +70,30 @@ Install Playwright and Chromium once if they are unavailable, then run:
 node scripts/validate-rendered.mjs path/to/deck.html --screenshots .frontend-slides/validation
 ```
 
-The rendered validator checks every slide at `750 × 1320`. Review its failures and screenshots:
+The rendered validator checks every slide at a fixed `750px` width and its declared per-slide height. KV slides are `1320px` high; non-KV slides use content-driven heights. To rerun only the slide changed by a minimal fix, use:
 
-1. Every slide bounding box is exactly the authored canvas.
-2. Every authored text leaf stays inside x=60–690 and y=120–1260; media stays inside the slide or carries an intentional bleed marker.
+```bash
+node scripts/validate-rendered.mjs path/to/deck.html --slide <one-based-number> --screenshots .frontend-slides/validation
+```
+
+Review failures and screenshots:
+
+1. Every slide bounding box is exactly its authored width and declared height. KV means a cover, key visual, or source-declared KV slide and is exactly 1320px high. A non-KV height ends 60px below its lowest non-bleed content and does not add unexplained empty height.
+2. Every authored text leaf stays inside x=60–690, below y=120, and above `slide height - 60px`; media stays inside the slide or carries an intentional bleed marker.
 3. Text blocks do not overlap unless the composition explicitly marks the overlap decorative.
 4. No content is hidden only because an ancestor uses `overflow: hidden`.
 5. Approved fonts load; fallback use is a warning for prototypes and a failure for final delivery.
 6. Local images and logos resolve without network access.
 7. Require the separate runtime gate to pass; the geometry validator alone does not exercise interaction controls.
 8. Computed border radii remain zero on authored slide elements. The rendered gate does not inspect curves contained inside image pixels.
-9. Every authored text leaf uses one of the five type sizes defined for its locale. Large metrics and proof numerals do not receive an exception above the locale headline size.
-10. Every authored text leaf resolves to exactly 100% line height and the locale letter spacing from `brand/source.json`; browser `normal`, positive utility-label tracking, and component-specific overrides fail validation.
+9. Every authored text leaf uses one of the five type sizes defined for its locale. The large-evidence count rule applies: large metrics and proof numerals use the locale headline or approved secondary evidence level; two groups use headline, three or more groups use 60px, and all large metrics on one slide use one unified size.
+10. Every ordinary authored text leaf and annotation prose leaf resolves to exactly 100% line height and the locale letter spacing from `brand/source.json`. Annotation rows may use the approved 0px inter-row gap; applying 0px directly to annotation text leaves is invalid because it causes glyph overlap. Citation marker digits retain disclaimer size and 100% line height. Browser `normal`, positive utility-label tracking, and other component-specific overrides fail validation.
 11. Pure non-Chinese runs declare `lang` so the validator can select the correct locale contract. Mixed Chinese/Latin text defaults to the Chinese contract.
 12. Verify KV media or placeholders use a full-bleed `750 × 1320` background by default while authored text remains inside the safe area.
 13. Verify single-image slide geometry: the only allowed forms are full bleed or exactly `630px` wide and at least `870px` high.
 14. Inventory every authored highlight role and verify one computed highlight color across highlighted text, numerals, rules, borders, and blocks. A second highlight value, alpha variant, or local override fails the gate.
+15. No visible line may contain only one Han character or one Han character followed by a punctuation mark. Citation marker digits must follow their corresponding copy at the upper-right and may not be alone on a line. Combinations such as `xx%用户认可` are structured atomic evidence units: metric, label, benefit, and citation remain adjacent. Card padding is 20px and card content-group gap is 10px. Fix the semantic break, text width, or layout without shrinking the type.
 
 Use `data-allow-bleed` only for decorative elements intentionally extending beyond the slide. Use `data-allow-overlap` only for intentional text or panel overlaps. Never add these attributes merely to silence an unexplained failure.
 
-Fix all failures, rerun both gates, and keep screenshots or logs with the run when the task is long-lived.
+Any failed item fails validation. Find the matching rule, make the smallest possible change, and rerun the affected slide with `--slide` until it passes. After all focused fixes pass, rerun the full static, runtime, and rendered gates and keep screenshots or logs with the run when the task is long-lived.

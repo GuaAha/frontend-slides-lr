@@ -32,7 +32,7 @@ def deck_html(css: str, body: str = "Static evidence slide") -> str:
     <meta name="frontend-slides-deck-id" content="static-contract-test">
     <style>.deck-stage{{width:750px;height:1320px}}{css}</style>
     </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
-    <section class="slide active visible">{body}</section>
+    <section class="slide active visible" data-slide-kind="kv" data-slide-height="1320"><h1>{body}</h1></section>
     </main></div></body></html>"""
 
 
@@ -65,6 +65,17 @@ class StaticCssContractTests(unittest.TestCase):
                 result = self.run_validator(deck_html(css))
                 self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
                 self.assertIn("static/motion contract", result.stderr.lower())
+
+    def test_validate_html_rejects_auto_spacing_layout(self) -> None:
+        forbidden_css = {
+            "auto margin": ".content { margin-top: auto; }",
+            "space-between": ".content { justify-content: space-between; }",
+        }
+        for label, css in forbidden_css.items():
+            with self.subTest(label=label):
+                result = self.run_validator(deck_html(css))
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn("auto-spacing contract", result.stderr.lower())
 
     def test_validate_html_accepts_static_css_and_physical_semantics(self) -> None:
         body = (

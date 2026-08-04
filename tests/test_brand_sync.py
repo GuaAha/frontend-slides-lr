@@ -72,6 +72,7 @@ class BrandSyncTests(unittest.TestCase):
 
     def test_brand_source_has_confirmed_type_and_square_corners(self) -> None:
         source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
+        self.assertEqual(source["schema_version"], 3)
         self.assertNotIn("colors", source)
         self.assertEqual(source["shape"]["corner_radius_px"], 0)
         self.assertEqual(source["spacing"]["safe_top_px"], 120)
@@ -94,6 +95,8 @@ class BrandSyncTests(unittest.TestCase):
         self.assertTrue((ROOT / source["typography"]["display"]["asset"]).is_file())
 
         css = (ROOT / "brand/generated/brand-tokens.css").read_text(encoding="utf-8")
+        self.assertIn("--brand-kv-height: 1320px;", css)
+        self.assertNotIn("--brand-canvas-height:", css)
         self.assertIn("--brand-letter-spacing: -0.05em;", css)
         self.assertIn("--brand-letter-spacing-en: -0.03em;", css)
         self.assertIn("--brand-line-height: 100%;", css)
@@ -111,6 +114,40 @@ class BrandSyncTests(unittest.TestCase):
             "--brand-danger:",
         ):
             self.assertNotIn(color_token, css)
+
+    def test_brand_source_defines_annotation_and_qa_spacing_tokens(self) -> None:
+        source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
+        self.assertEqual(source["typography"]["annotation_line_height_percent"], 100)
+        self.assertEqual(source["typography"]["large_evidence_secondary_px"], 60)
+        self.assertEqual(source["spacing"]["qa_group_gap_px"], 60)
+        self.assertEqual(source["spacing"]["annotation_gap_px"], 0)
+        self.assertEqual(source["spacing"]["card_padding_px"], 20)
+        self.assertEqual(source["spacing"]["card_content_gap_px"], 10)
+
+        css = (ROOT / "brand/generated/brand-tokens.css").read_text(encoding="utf-8")
+        self.assertIn("--brand-annotation-text-line-height: 100%;", css)
+        self.assertIn("--brand-large-evidence-secondary: 60px;", css)
+        self.assertIn("--brand-annotation-gap: 0px;", css)
+        self.assertIn("--brand-card-padding: 20px;", css)
+        self.assertIn("--brand-card-content-gap: 10px;", css)
+        self.assertIn("--brand-qa-group-gap: 60px;", css)
+
+    def test_skill_and_validation_define_annotation_atomic_and_evidence_rules(self) -> None:
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        validation = (ROOT / "references/validation.md").read_text(encoding="utf-8")
+        self.assertIn("注释条目之间使用 `0px` 额外间距", skill)
+        self.assertIn("注释说明文字和注释指引数字仍保留 `100%` 行高", skill)
+        self.assertIn("xx%用户认可", skill)
+        self.assertIn("2 组使用 `75px`", skill)
+        self.assertIn("3 组及以上使用 `60px`", skill)
+        self.assertIn("卡片内文字与卡片边缘保持 `20px` 内边距", skill)
+        self.assertIn("内容组之间使用 `10px` 间距", skill)
+        self.assertIn("Q&A 组间距为 `60px`", skill)
+        self.assertIn("禁止用 `margin-top:auto`", skill)
+        self.assertIn("annotation prose leaf", validation)
+        self.assertIn("atomic", validation.lower())
+        self.assertIn("large-evidence count", validation.lower())
+        self.assertIn("60px", validation)
 
     def test_motion_contract_is_absent_from_source_and_generated_assets(self) -> None:
         source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
@@ -196,7 +233,9 @@ class BrandSyncTests(unittest.TestCase):
                 mirror = plugin_root / "templates" / template_id / filename
                 self.assertTrue(canonical.is_file(), canonical)
                 self.assertEqual(canonical.read_bytes(), mirror.read_bytes(), mirror)
-                self.assertIn("750×1320", canonical.read_text(encoding="utf-8"))
+                template_text = canonical.read_text(encoding="utf-8")
+                self.assertIn("750px width", template_text)
+                self.assertIn("KV slides use 1320px height", template_text)
 
             design = (ROOT / "templates" / template_id / "design.md").read_text(encoding="utf-8")
             preview = (ROOT / "templates" / template_id / "preview.md").read_text(encoding="utf-8")
@@ -226,7 +265,7 @@ class BrandSyncTests(unittest.TestCase):
         self.assertNotIn("scripts/extract-pptx.py", skill)
         self.assertIn("色调：`light`（明亮）或 `dark`（暗黑）", skill)
         self.assertIn("用户未指定时，先将 `tone_mode` 记录为 `light`", skill)
-        self.assertIn("大型证据数字直接归入主标题层级", skill)
+        self.assertIn("大型证据数字归入主标题层级/副标题层级", skill)
         self.assertIn("文字叶节点是直接承载可见文字", skill)
         self.assertIn("默认使用 `light` 色调并设置语义主题 `clean`", skill)
         self.assertIn("不生成颜色令牌", skill)
@@ -258,6 +297,40 @@ class BrandSyncTests(unittest.TestCase):
         self.assertIn("single-image slide geometry", validation)
         self.assertIn("one computed highlight color", validation)
 
+    def test_variable_height_slice_contract_is_defined_end_to_end(self) -> None:
+        source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        validation = (ROOT / "references/validation.md").read_text(encoding="utf-8")
+        html_template = (ROOT / "html-template.md").read_text(encoding="utf-8")
+        runtime = (ROOT / "runtime/brand-runtime.template.js").read_text(encoding="utf-8")
+        rendered_validator = (ROOT / "scripts/validate-rendered.mjs").read_text(encoding="utf-8")
+
+        self.assertEqual(
+            source["canvas"],
+            {"width": 750, "kv_height": 1320, "non_kv_height": "content"},
+        )
+        self.assertIn("每张幻灯片只承载一个主标题。", skill)
+        self.assertIn("KV 页固定为 `1320px` 高", skill)
+        self.assertIn("非 KV 切片根据内容高度灵活设定", skill)
+        self.assertIn("大型证据数字归入主标题层级/副标题层级，中文最大 `75px`/`60px`", skill)
+        self.assertIn("一个汉字或一个汉字加一个标点符号", skill)
+        self.assertIn("最小单位的修改", skill)
+        self.assertIn("单独对对应切片进行校验", skill)
+        self.assertIn("per-slide height", validation)
+        self.assertIn("--slide", validation)
+        self.assertIn('data-slide-kind="kv"', html_template)
+        self.assertIn('data-slide-height="1320"', html_template)
+        self.assertIn("activeSlideHeight", runtime)
+        self.assertIn("--slide", rendered_validator)
+
+        for stale in (
+            "每张幻灯片只分配一个主要信息",
+            "每个 `.slide` 固定为 `750px × 1320px`",
+            "大型证据数字直接归入主标题层级",
+            "任何可见行不得只剩一个汉字",
+        ):
+            self.assertNotIn(stale, skill)
+
     def test_static_validator_accepts_acknowledged_draft(self) -> None:
         css = (ROOT / "brand/generated/brand-tokens.css").read_text(encoding="utf-8")
         css += (ROOT / "viewport-base.css").read_text(encoding="utf-8")
@@ -266,7 +339,7 @@ class BrandSyncTests(unittest.TestCase):
         <meta name="frontend-slides-deck-id" content="test-deck">
         <style>{css}</style></head><body data-tone-mode="light">
         <div class="deck-viewport"><main class="deck-stage">
-        <section class="slide active visible"><h1>真实标题</h1></section>
+        <section class="slide active visible" data-slide-kind="kv" data-slide-height="1320"><h1>真实标题</h1></section>
         </main></div></body></html>"""
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "deck.html"
@@ -280,7 +353,7 @@ class BrandSyncTests(unittest.TestCase):
         <meta name="frontend-slides-deck-id" content="test-deck">
         <style>.deck-stage{width:750px;height:1320px}.legacy{width:1920x1080}</style>
         </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
-        <section class="slide">真实标题</section></main></div></body></html>"""
+        <section class="slide" data-slide-kind="kv" data-slide-height="1320"><h1>真实标题</h1></section></main></div></body></html>"""
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "deck.html"
             path.write_text(html, encoding="utf-8")
@@ -294,13 +367,42 @@ class BrandSyncTests(unittest.TestCase):
         <meta name="frontend-slides-deck-id" content="test-deck">
         <style>.deck-stage{width:750px;height:1320px}.card{border-radius:8px}</style>
         </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
-        <section class="slide"><div class="card">真实标题</div></section></main></div></body></html>"""
+        <section class="slide" data-slide-kind="kv" data-slide-height="1320"><div class="card"><h1>真实标题</h1></div></section></main></div></body></html>"""
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "deck.html"
             path.write_text(html, encoding="utf-8")
             result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("non-zero CSS border-radius", result.stderr)
+
+    def test_static_validator_accepts_content_driven_non_kv_height(self) -> None:
+        html = """<!doctype html><html><head>
+        <meta name="frontend-slides-brand-status" content="draft">
+        <meta name="frontend-slides-deck-id" content="variable-height-deck">
+        <style>.deck-stage{width:750px;height:var(--active-slide-height,1320px)}</style>
+        </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
+        <section class="slide" data-slide-kind="content" data-slide-height="1680"><h1>内容页标题</h1></section>
+        </main></div></body></html>"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "deck.html"
+            path.write_text(html, encoding="utf-8")
+            result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_static_validator_rejects_non_1320_kv_height(self) -> None:
+        html = """<!doctype html><html><head>
+        <meta name="frontend-slides-brand-status" content="draft">
+        <meta name="frontend-slides-deck-id" content="invalid-kv-height">
+        <style>.deck-stage{width:750px;height:var(--active-slide-height,1320px)}</style>
+        </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
+        <section class="slide" data-slide-kind="kv" data-slide-height="1680"><h1>KV 标题</h1></section>
+        </main></div></body></html>"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "deck.html"
+            path.write_text(html, encoding="utf-8")
+            result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("KV and must have data-slide-height=1320", result.stderr)
 
     def test_packaged_runtime_controls_are_square(self) -> None:
         runtime_css = (ROOT / "viewport-base.css").read_text(encoding="utf-8")
@@ -311,7 +413,7 @@ class BrandSyncTests(unittest.TestCase):
     def test_canonical_runtime_has_no_deck_stage_dual_track(self) -> None:
         self.assertFalse((ROOT / "runtime/deck-stage.js").exists())
         generated = (ROOT / "brand/generated/brand-runtime.js").read_text(encoding="utf-8")
-        self.assertIn("runtime: 'brand-runtime-v1'", generated)
+        self.assertIn("runtime: 'brand-runtime-v2'", generated)
         self.assertIn("toggleEdit", generated)
         self.assertIn("saveFile", generated)
 
@@ -321,7 +423,7 @@ class BrandSyncTests(unittest.TestCase):
         <meta name="frontend-slides-deck-id" content="test-deck">
         <style>.deck-stage{width:750px;height:1320px}</style>
         </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
-        <section class="slide"><img src="data:image/png;base64,AA=="
+        <section class="slide" data-slide-kind="kv" data-slide-height="1320"><h1>真实标题</h1><img src="data:image/png;base64,AA=="
         alt="approved source artwork includes border-radius: 24px in its metadata"></section>
         </main></div></body></html>"""
         with tempfile.TemporaryDirectory() as directory:
@@ -336,7 +438,7 @@ class BrandSyncTests(unittest.TestCase):
         <meta name="frontend-slides-deck-id" content="test-deck">
         <style>.deck-stage{width:750px;height:1320px}img{border-radius:24px}</style>
         </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
-        <section class="slide"><img src="data:image/png;base64,AA==" alt="approved image"></section>
+        <section class="slide" data-slide-kind="kv" data-slide-height="1320"><h1>真实标题</h1><img src="data:image/png;base64,AA==" alt="approved image"></section>
         </main></div></body></html>"""
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "deck.html"

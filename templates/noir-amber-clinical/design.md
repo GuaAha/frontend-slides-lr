@@ -186,9 +186,11 @@ This block overrides every conflicting reference value later in this file.
 
 The generated presentation is static. All visible states are fully composed and appear immediately.
 
-- Canvas: fixed `750×1320`, uniformly scaled without internal reflow.
+- Canvas: 750px width; KV slides use 1320px height; non-KV slides use explicit content-driven heights and preserve the top 120px / bottom 60px safe margins. Scale the active stage uniformly without internal reflow.
+- Slide mapping: every slide carries exactly one main title.
+- Precedence: later references to a universally fixed `750×1320` stage are historical source guidance and are superseded by this override.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
-- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Metrics and proof numerals use the same five levels.
+- Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Large metrics and proof numerals use the headline or subheadline level, with Chinese maxima of 75px / 45px.
 - Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
 - The palette declared in this design is the color authority for the selected template. Use its declared `light` or `dark` tone and do not introduce colors outside this palette unless the user explicitly approves a palette change.
 - Product-detail logo: do not add a separately authored brand-logo layer.

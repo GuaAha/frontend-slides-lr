@@ -4,7 +4,7 @@
 
 - Brand: **LR Internal**
 - Approval status: **draft**
-- Canvas: **750 × 1320 CSS pixels only**
+- Canvas: **750 CSS pixels wide; KV slides are 1320px high; non-KV slides use explicit content-driven heights**
 - Display font: **MAKE SENSE**
 - Body font: **MAKE SENSE**
 - Minimum body text: **30px**
@@ -19,6 +19,7 @@
 
 - Speaker-led: at most 3 bullets or 3 cards per slide.
 - Reading-first: at most 6 bullets or 5 cards per slide.
+- Every slide carries exactly one main title, represented by one `h1` or one `data-type-level="headline"` node.
 - Split content instead of reducing type below the minimum sizes.
 
 ## Locale typography
@@ -29,10 +30,13 @@
 | en | Helvetica Now Text | 60 | 30 | 30 | 20 | 15 | -3% |
 | vi | Noto Sans | 60 | 30 | 25 | 15 | 9 | -6% |
 | th | Noto Sans Thai | 60 | 30 | 25 | 15 | 10 | -3% |
-- All locale levels use **100%** line height.
-- Every authored text run maps to one of the five locale levels; large proof numerals map directly to the headline level and do not create a sixth level.
-- A text leaf is an element that directly carries visible text and has no descendant that carries another text role. Locale letter spacing and line height apply to every text leaf, including metrics, superscripts, utility labels, and dense answers.
+- All ordinary authored text leaves use **100%** line height. Annotation rows use **0px** inter-row gap, while annotation prose leaves retain **100%** line height so glyphs do not overlap.
+- Every authored text run maps to one of the five locale levels; large evidence numerals use headline or the approved secondary evidence size and remain one unified size on the same slide: 2 groups use 75px, 3 or more groups use **60px**.
+- A text leaf is an element that directly carries visible text and has no descendant that carries another text role. Locale letter spacing and the ordinary 100% line height apply to every text leaf, including metrics, superscripts, utility labels, and dense answers.
+- Citation marker digits keep disclaimer size and ordinary 100% line height; brackets are removed for display, and each marker must follow its corresponding copy at the upper-right rather than form a line by itself.
+- Content blocks use **40px** flow gaps. Cards use **20px** inner padding and **10px** between content groups. Q&A groups use **60px** from the end of one answer to the next question. Do not use `margin-top: auto`, `justify-content: space-between`, or equivalent empty-space distribution for authored content.
 - Pure non-Chinese runs declare `lang`; mixed Chinese/Latin copy follows the Chinese contract unless explicitly separated by the source.
+- A visible Chinese line may not contain only one Han character or one Han character plus punctuation; fix the semantic break, text width, or layout without shrinking type.
 - Chinese output embeds the approved local MAKE SENSE 70S font asset.
 
 ## Shape
@@ -47,6 +51,6 @@
 - Read `templates/index.json` when preparing the three real branded previews.
 - Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.
 - Use baseline composition, component grammar, and the palette declared by that baseline without overriding non-color brand rules.
-- Keep typography, shape tokens, static visual states, and the 750 × 1320 canvas fixed across all previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.
+- Keep typography, shape tokens, static visual states, the 750px width, the 1320px KV height, and content-driven non-KV heights consistent across previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.
 
 > Source note: Confirmed non-color brand rules include multilingual typography, fixed safe area, square corners, and the product-detail no-logo policy. Palette information is defined by each template's preview.md and design.md. Tone defaults to light unless the user explicitly selects dark.

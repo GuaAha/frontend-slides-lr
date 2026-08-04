@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static validation for fixed-brand 750 × 1320 HTML decks."""
+"""Static validation for 750px-wide fixed-brand HTML decks with per-slide heights."""
 
 from __future__ import annotations
 
@@ -11,14 +11,15 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 try:
-    from static_contract import css_motion_violations
+    from static_contract import css_auto_spacing_violations, css_motion_violations
 except ModuleNotFoundError:  # Supports importlib-based unit loading from the repository root.
-    from scripts.static_contract import css_motion_violations
+    from scripts.static_contract import css_auto_spacing_violations, css_motion_violations
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "brand" / "source.json"
 RESOURCE_TAGS = {"script", "link", "img", "source", "video", "audio", "iframe"}
+VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
 INTERNAL_LABELS = (
     "option a",
     "option b",
@@ -47,13 +48,27 @@ class DeckParser(HTMLParser):
         self.external_resources: list[str] = []
         self.visible_text: list[str] = []
         self.css_sources: list[str] = []
+        self.slides: list[dict[str, str | None]] = []
+        self.slide_headline_counts: list[int] = []
+        self._slide_depth = 0
         self._hidden_depth = 0
         self._style_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr_map = dict(attrs)
-        for class_name in (attr_map.get("class") or "").split():
+        classes = (attr_map.get("class") or "").split()
+        for class_name in classes:
             self.class_counts[class_name] = self.class_counts.get(class_name, 0) + 1
+        if "slide" in classes:
+            self.slides.append(attr_map)
+            self.slide_headline_counts.append(0)
+            self._slide_depth = 1
+        elif self._slide_depth and tag not in VOID_TAGS:
+            self._slide_depth += 1
+        if self._slide_depth and (
+            tag == "h1" or attr_map.get("data-type-level") == "headline"
+        ):
+            self.slide_headline_counts[-1] += 1
         if tag == "meta" and attr_map.get("name") == "frontend-slides-brand-status":
             self.brand_status = attr_map.get("content")
         if tag == "meta" and attr_map.get("name") == "frontend-slides-deck-id":
@@ -77,6 +92,8 @@ class DeckParser(HTMLParser):
             self._style_depth -= 1
         if tag in {"script", "style", "template", "svg"} and self._hidden_depth:
             self._hidden_depth -= 1
+        if self._slide_depth:
+            self._slide_depth -= 1
 
     def handle_data(self, data: str) -> None:
         if self._style_depth and data.strip():
@@ -101,8 +118,27 @@ def validate(path: Path, allow_draft: bool) -> tuple[list[str], list[str]]:
         errors.append("require at least one .slide")
     if not re.search(r"width\s*:\s*750px", raw, flags=re.I):
         errors.append("missing literal width: 750px")
-    if not re.search(r"height\s*:\s*1320px", raw, flags=re.I):
-        errors.append("missing literal height: 1320px")
+
+    safe_vertical = source["spacing"]["safe_top_px"] + source["spacing"]["safe_bottom_px"]
+    for index, slide in enumerate(parser.slides, start=1):
+        kind = slide.get("data-slide-kind")
+        if kind not in {"kv", "content"}:
+            errors.append(f"slide {index} data-slide-kind must be exactly 'kv' or 'content'")
+        raw_height = slide.get("data-slide-height") or ""
+        if not re.fullmatch(r"[1-9]\d*", raw_height):
+            errors.append(f"slide {index} requires a positive integer data-slide-height")
+            continue
+        height = int(raw_height)
+        if kind == "kv" and height != source["canvas"]["kv_height"]:
+            errors.append(f"slide {index} is KV and must have data-slide-height=1320")
+        if kind == "content" and height <= safe_vertical:
+            errors.append(
+                f"slide {index} content height must exceed the {safe_vertical}px vertical safe margins"
+            )
+        if parser.slide_headline_counts[index - 1] != 1:
+            errors.append(
+                f"slide {index} must contain exactly one main title (h1 or data-type-level='headline')"
+            )
 
     stale_patterns = (
         r"1920\s*[×x]\s*1080",
@@ -122,6 +158,12 @@ def validate(path: Path, allow_draft: bool) -> tuple[list[str], list[str]]:
         errors.append(
             "static/motion contract forbids CSS animation, transition, motion tokens, and workarounds: "
             + ", ".join(motion_violations)
+        )
+    auto_spacing_violations = css_auto_spacing_violations(authored_css)
+    if auto_spacing_violations:
+        errors.append(
+            "auto-spacing contract forbids leftover-height distribution in authored content: "
+            + ", ".join(auto_spacing_violations)
         )
     nonzero_radii = []
     for match in re.finditer(r"border(?:-(?:top|right|bottom|left|start|end)){0,2}-radius\s*:\s*([^;{}]+)", authored_css, flags=re.I):

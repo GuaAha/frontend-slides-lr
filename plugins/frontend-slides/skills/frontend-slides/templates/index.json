@@ -8,7 +8,8 @@
     "palette_authority": "Palette authority belongs to each template's preview.md and design.md. Use preview.md while comparing shortlisted options, then use only the selected template's design.md for the full deck.",
     "canvas": {
       "width": 750,
-      "height": 1320,
+      "kv_height": 1320,
+      "non_kv_height": "content",
       "scaling": "uniform-stage-only"
     },
     "safe_area": {
@@ -44,7 +45,7 @@
         "source": "GuaAha/frontend-slides-lr"
       },
       "tone_mode": "dark",
-      "canvas": "750×1320",
+      "canvas": "750px wide; KV 1320px; non-KV content-driven",
       "strengths": [
         "high-energy title and section rhythm",
         "pixel-grid hierarchy",
@@ -65,7 +66,7 @@
         "node_id": "1:5803"
       },
       "tone_mode": "light",
-      "canvas": "750×1320",
+      "canvas": "750px wide; KV 1320px; non-KV content-driven",
       "strengths": [
         "white editorial proof pages",
         "restrained green evidence accents",
@@ -86,7 +87,7 @@
         "node_id": "1:5461"
       },
       "tone_mode": "dark",
-      "canvas": "750×1320",
+      "canvas": "750px wide; KV 1320px; non-KV content-driven",
       "strengths": [
         "black evidence field with controlled amber emphasis",
         "measurable progression and specialist proof",
@@ -107,7 +108,7 @@
         "node_id": "1:3010"
       },
       "tone_mode": "light",
-      "canvas": "750×1320",
+      "canvas": "750px wide; KV 1320px; non-KV content-driven",
       "strengths": [
         "icy white space and aquatic mint accents",
         "fresh sensation separated from measured proof",
@@ -128,7 +129,7 @@
         "node_id": "1:2263"
       },
       "tone_mode": "dark",
-      "canvas": "750×1320",
+      "canvas": "750px wide; KV 1320px; non-KV content-driven",
       "strengths": [
         "black glass and controlled gold product theater",
         "white exploded-package engineering",
@@ -149,7 +150,7 @@
         "node_id": "1:1920"
       },
       "tone_mode": "dark",
-      "canvas": "750×1320",
+      "canvas": "750px wide; KV 1320px; non-KV content-driven",
       "strengths": [
         "black and white editorial planes",
         "paired cool and warm scent worlds",
@@ -170,7 +171,7 @@
         "node_id": "1:1238"
       },
       "tone_mode": "light",
-      "canvas": "750×1320",
+      "canvas": "750px wide; KV 1320px; non-KV content-driven",
       "strengths": [
         "mineral-blue cleansing narrative",
         "white editorial explanation and benefit bands",

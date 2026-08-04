@@ -10,7 +10,7 @@
 #
 # What this does:
 #   1. Starts a local server to serve the HTML (fonts and assets need HTTP)
-#   2. Uses Playwright to screenshot each slide at the fixed 750x1320 canvas
+#   2. Uses Playwright to screenshot each slide at 750px width and its declared height
 #   3. Combines all screenshots into a single PDF
 #   4. Cleans up the server and temp files
 #
@@ -31,14 +31,14 @@ ok()    { echo -e "${GREEN}✓${NC} $*"; }
 warn()  { echo -e "${YELLOW}⚠${NC} $*"; }
 err()   { echo -e "${RED}✗${NC} $*" >&2; }
 
-# ─── Fixed export canvas ──────────────────────────────────
+# ─── Fixed export width and KV fallback ───────────────────
 
 VIEWPORT_W=750
 VIEWPORT_H=1320
 
 for arg in "$@"; do
     if [[ "$arg" == --* ]]; then
-        err "Unsupported option: $arg. This internal edition exports only at 750x1320."
+        err "Unsupported option: $arg. This internal edition exports only at 750px width."
         exit 1
     fi
 done
@@ -101,7 +101,7 @@ ok "Node.js found"
 # We use a temporary Node.js script with Playwright to:
 # 1. Start a local server (so fonts load correctly)
 # 2. Navigate to each slide
-# 3. Screenshot each slide at the fixed 750x1320 portrait canvas
+# 3. Screenshot each slide at 750px width and its declared per-slide height
 # 4. Combine into a single PDF
 
 TEMP_DIR=$(mktemp -d)
@@ -116,10 +116,10 @@ cat > "$TEMP_SCRIPT" << 'EXPORT_SCRIPT'
 //
 // How it works:
 // 1. Starts a local HTTP server (needed for fonts/assets to load)
-// 2. Opens the presentation in a headless browser at 750x1320
+// 2. Opens the presentation in a headless browser at 750px width
 // 3. Counts the total number of slides
 // 4. Screenshots each slide one by one
-// 5. Generates a PDF with one fixed portrait page per slide
+// 5. Generates a PDF with one declared-height page per slide
 
 import { chromium } from 'playwright';
 import { createServer } from 'http';
@@ -215,6 +215,14 @@ mkdirSync(SCREENSHOT_DIR, { recursive: true });
 const screenshotPaths = [];
 
 for (let i = 0; i < slideCount; i++) {
+  const slideHeight = await page.locator('.slide').nth(i).evaluate((slide, index) => {
+    const value = Number.parseInt(slide.getAttribute('data-slide-height') || '', 10);
+    if (!Number.isInteger(value) || value <= 0) {
+      throw new Error(`Slide ${i + 1} requires a positive integer data-slide-height`);
+    }
+    return value;
+  }, i);
+  await page.setViewportSize({ width: VP_WIDTH, height: slideHeight });
   // Navigate to slide by simulating the presentation's navigation
   // Most frontend-slides presentations use a currentSlide index and show/hide
   await page.evaluate((index) => {
@@ -238,8 +246,8 @@ for (let i = 0; i < slideCount; i++) {
     });
 
     // Strategy 2: If there's a SlidePresentation class instance, use it
-    if (window.presentation && typeof window.presentation.goToSlide === 'function') {
-      window.presentation.goToSlide(index);
+    if (window.presentation && typeof window.presentation.goTo === 'function') {
+      window.presentation.goTo(index, { updateHash: false });
     }
 
     // Strategy 3: Scroll-based (some decks use scroll snapping)
@@ -263,7 +271,7 @@ for (let i = 0; i < slideCount; i++) {
 
   const screenshotPath = join(SCREENSHOT_DIR, `slide-${String(i + 1).padStart(3, '0')}.png`);
   await page.screenshot({ path: screenshotPath, fullPage: false });
-  screenshotPaths.push(screenshotPath);
+  screenshotPaths.push({ path: screenshotPath, height: slideHeight });
   console.log(`  Captured slide ${i + 1}/${slideCount}`);
 }
 
@@ -279,27 +287,30 @@ const browser2 = await chromium.launch();
 const pdfPage = await browser2.newPage();
 
 // Build an HTML page with all screenshots, one per page
-const imagesHtml = screenshotPaths.map((p) => {
-  const imgData = readFileSync(p).toString('base64');
-  return `<div class="page"><img src="data:image/png;base64,${imgData}" /></div>`;
+const imagesHtml = screenshotPaths.map(({ path, height }, index) => {
+  const imgData = readFileSync(path).toString('base64');
+  return `<div class="page page-${index}" style="height:${height}px"><img style="height:${height}px" src="data:image/png;base64,${imgData}" /></div>`;
 }).join('\n');
+
+const pageRules = screenshotPaths.map(({ height }, index) => (
+  `@page slide-${index} { size: ${VP_WIDTH}px ${height}px; margin: 0; }\n`
+  + `.page-${index} { page: slide-${index}; }`
+)).join('\n');
 
 const pdfHtml = `<!DOCTYPE html>
 <html>
 <head>
 <style>
   * { margin: 0; padding: 0; }
-  @page { size: ${VP_WIDTH}px ${VP_HEIGHT}px; margin: 0; }
+  ${pageRules}
   .page {
     width: ${VP_WIDTH}px;
-    height: ${VP_HEIGHT}px;
     page-break-after: always;
     overflow: hidden;
   }
   .page:last-child { page-break-after: auto; }
   img {
     width: ${VP_WIDTH}px;
-    height: ${VP_HEIGHT}px;
     display: block;
     object-fit: contain;
   }
@@ -311,8 +322,7 @@ const pdfHtml = `<!DOCTYPE html>
 await pdfPage.setContent(pdfHtml, { waitUntil: 'load' });
 await pdfPage.pdf({
   path: OUTPUT_PDF,
-  width: `${VP_WIDTH}px`,
-  height: `${VP_HEIGHT}px`,
+  preferCSSPageSize: true,
   printBackground: true,
   margin: { top: 0, right: 0, bottom: 0, left: 0 },
 });
@@ -320,7 +330,7 @@ await pdfPage.pdf({
 await browser2.close();
 
 // Clean up screenshots
-screenshotPaths.forEach(p => unlinkSync(p));
+screenshotPaths.forEach(({ path }) => unlinkSync(path));
 
 console.log(`  ✓ PDF saved to: ${OUTPUT_PDF}`);
 EXPORT_SCRIPT

@@ -17,7 +17,7 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   left: 0;
   top: 0;
   width: 750px;
-  height: 1320px;
+  height: var(--active-slide-height, var(--brand-kv-height));
   transform-origin: 0 0;
   overflow: hidden;
   background: var(--brand-background);
@@ -27,7 +27,7 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   position: absolute;
   inset: 0;
   width: 750px;
-  height: 1320px;
+  height: var(--slide-height, var(--brand-kv-height));
   overflow: hidden;
   visibility: hidden;
   opacity: 0;
@@ -115,11 +115,11 @@ body.is-editing [data-editable="text"][data-edit-id] {
 }
 
 @media print {
-  @page { size: 750px 1320px; margin: 0; }
+  @page { margin: 0; }
   html, body { width: 750px; height: auto; overflow: visible; background: white; }
   .deck-viewport { position: static; display: block; overflow: visible; }
   .deck-stage { position: static; width: 750px; height: auto; transform: none !important; overflow: visible; }
-  .slide { position: relative; width: 750px; height: 1320px; visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
+  .slide { position: relative; width: 750px; height: var(--slide-height, var(--brand-kv-height)); visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
   .slide:last-child { break-after: auto; }
   .deck-controls { display: none !important; }
 }

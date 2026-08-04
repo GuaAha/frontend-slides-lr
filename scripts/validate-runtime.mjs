@@ -24,7 +24,7 @@ page.on('console', (message) => {
 
 try {
   await page.goto(pathToFileURL(input).href, { waitUntil: 'load' });
-  if (!await page.evaluate(() => window.FRONTEND_SLIDES_BRAND?.runtime === 'brand-runtime-v1')) {
+  if (!await page.evaluate(() => window.FRONTEND_SLIDES_BRAND?.runtime === 'brand-runtime-v2')) {
     await page.addScriptTag({ path: runtime });
   }
   await page.waitForFunction(() => window.presentation?.slides?.length > 0);
@@ -41,17 +41,39 @@ try {
     requestedFilename: document.body.dataset.exportFilename,
     locked: document.body.dataset.deckLocked === 'true',
     editableCount: document.querySelectorAll('[data-editable="text"][data-edit-id]').length,
+    activeHeight: Number.parseInt(document.getElementById('deckStage')?.style.height || '', 10),
+    firstKind: document.querySelector('.slide')?.dataset.slideKind,
+    firstDeclaredHeight: Number.parseInt(document.querySelector('.slide')?.dataset.slideHeight || '', 10),
   }));
   check(initial.index === 0, 'runtime must start on the first slide');
   check(initial.total === initial.slideCount, 'runtime must discover every slide');
   check(initial.counter === `1 / ${initial.slideCount}`, 'page counter must start at 1 / total');
-  check(initial.transform?.includes('scale(1)'), 'fixed 750 × 1320 stage must fit at scale(1)');
-  check(initial.canvas?.width === 750 && initial.canvas?.height === 1320, 'runtime canvas contract must be 750 × 1320');
-  check(initial.runtime === 'brand-runtime-v1', 'canonical runtime version marker is missing');
+  check(initial.transform?.includes('scale(1)'), '750 × 1320 KV stage must fit at scale(1)');
+  check(initial.activeHeight === initial.firstDeclaredHeight, 'stage height must match the active slide height');
+  check(initial.firstKind !== 'kv' || initial.firstDeclaredHeight === 1320, 'KV slide height must be 1320');
+  check(
+    initial.canvas?.width === 750
+      && initial.canvas?.kvHeight === 1320
+      && initial.canvas?.nonKvHeight === 'content',
+    'runtime canvas contract must use fixed width, fixed KV height, and content-driven non-KV height',
+  );
+  check(initial.runtime === 'brand-runtime-v2', 'canonical runtime version marker is missing');
 
   await page.keyboard.press('ArrowRight');
   const expectedNextIndex = initial.slideCount > 1 ? 1 : 0;
   check(await page.evaluate(() => window.presentation.index) === expectedNextIndex, 'ArrowRight must advance or clamp at the final slide');
+  if (initial.slideCount > 1) {
+    const second = await page.evaluate(() => {
+      const slide = document.querySelectorAll('.slide')[1];
+      return {
+        declaredHeight: Number.parseInt(slide.dataset.slideHeight || '', 10),
+        stageHeight: Number.parseInt(document.getElementById('deckStage')?.style.height || '', 10),
+        transform: document.getElementById('deckStage')?.style.transform,
+      };
+    });
+    check(second.stageHeight === second.declaredHeight, 'navigation must resize the stage to the active slide');
+    check(Boolean(second.transform?.includes('scale(')), 'navigation must refit the active slide');
+  }
   await page.keyboard.press('Home');
   check(await page.evaluate(() => window.presentation.index === 0), 'Home must return to the first slide');
   if (initial.slideCount > 1) {
@@ -112,13 +134,21 @@ try {
     : '';
   check(!savedEditableTag.includes('contenteditable='), 'saved HTML must not preserve active editing state');
 
-  const printCalled = await page.evaluate(() => {
+  const printResult = await page.evaluate(() => {
     let called = false;
     window.print = () => { called = true; };
     window.presentation.print();
-    return called;
+    return {
+      called,
+      pageSizes: document.getElementById('brand-print-page-sizes')?.textContent || '',
+    };
   });
-  check(printCalled, 'print API must call window.print');
+  check(printResult.called, 'print API must call window.print');
+  check(printResult.pageSizes.includes('750px 1320px'), 'print CSS must preserve the KV page height');
+  if (initial.slideCount > 1) {
+    const secondHeight = await page.locator('.slide').nth(1).getAttribute('data-slide-height');
+    check(printResult.pageSizes.includes(`750px ${secondHeight}px`), 'print CSS must preserve non-KV page heights');
+  }
 } finally {
   await browser.close();
 }
@@ -130,6 +160,6 @@ if (errors.length) {
 
 console.log(JSON.stringify({
   pass: true,
-  runtime: 'brand-runtime-v1',
+  runtime: 'brand-runtime-v2',
   capabilities: ['navigation', 'touch', 'counter', 'editing', 'autosave', 'save-html', 'print'],
 }, null, 2));

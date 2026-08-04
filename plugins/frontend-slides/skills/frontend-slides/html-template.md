@@ -32,12 +32,27 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
     .slide [lang|="en"] * {
       letter-spacing: var(--brand-letter-spacing-en);
     }
+
+    /* Approved component exception: annotation rows have 0px extra gap; their text keeps 100% line height. */
+    .slide [data-annotation-text] {
+      row-gap: var(--brand-annotation-gap);
+      line-height: var(--brand-line-height);
+    }
+
+    .slide [data-annotation-text] [data-copy-id],
+    .slide [data-annotation-text] [data-copy-id] * {
+      line-height: var(--brand-annotation-text-line-height);
+    }
+
+    .slide [data-citation-marker] {
+      line-height: var(--brand-line-height);
+    }
   </style>
 </head>
 <body data-tone-mode="light" data-export-filename="presentation-slug.html">
   <div class="deck-viewport">
     <main class="deck-stage" id="deckStage" aria-live="polite">
-      <section class="slide active visible" data-slide="1">
+      <section class="slide active visible" data-slide="1" data-slide-kind="kv" data-slide-height="1320">
         <div class="slide-content">
           <h1 data-copy-id="slide-01-title" data-editable="text" data-edit-id="slide-01-title">真实演示标题</h1>
         </div>
@@ -55,9 +70,11 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
 
 ## Required behavior
 
-- Author every `.slide` directly at `750px × 1320px`.
-- Keep authored text inside x=60–690 and y=120–1260: top 120px, right 60px, bottom 60px, left 60px.
-- Scale only `.deck-stage`; do not calculate or expose another canvas size.
+- Author every `.slide` at exactly `750px` width. Set `data-slide-kind="kv"` and `data-slide-height="1320"` on covers, key visuals, or source-declared KV slides. Set `data-slide-kind="content"` on all other slides and derive its integer `data-slide-height` from the bottom edge of the lowest non-bleed content plus the 60px bottom safe margin; do not add unexplained empty height.
+- Use a 40px gap between authored content blocks; do not use `margin-top: auto`, `margin-bottom: auto`, `justify-content: space-between`, or equivalent leftover-space distribution. Cards use 20px inner padding and 10px between content groups. Q&A groups use a 60px gap from the end of one answer to the next question.
+- Give every slide exactly one main-title node: use one `h1`, or one `data-type-level="headline"` node when an `h1` cannot be used.
+- Keep authored text inside x=60–690, below the 120px top safe margin, and above the 60px bottom safe margin for that slide's declared height.
+- Scale only `.deck-stage`; fit it against the active slide's declared height without reflowing internal content.
 - Use the inlined generated `brand-runtime.js` as the sole runtime. Do not add another stage component, router, editor, autosave layer, or print controller.
 - Toggle `.active` and `.visible` for navigation. Do not use `display: none` for slide switching.
 - Support Arrow keys, Page Up/Down, Space, Home/End, swipe/tap, and a page count outside the stage.
@@ -69,7 +86,7 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
 - Set `frontend-slides-brand-status` to the exact value in `brand/source.json`.
 - Set `data-tone-mode` to the user-approved `light` or `dark` value and keep it unchanged across all previews and slides.
 - Do not add a separately authored brand logo to product-detail pages.
-- Map every authored text leaf to a locale type level and keep the final normalization block after component CSS. Do not introduce display-number exceptions, browser-default line height, or local tracking overrides.
+- Map every authored text leaf to a locale type level and keep the final normalization block after component CSS. Ordinary text leaves and annotation prose use 100% line height; annotation rows may use only the approved `data-annotation-text` 0px extra-gap exception, while citation markers keep disclaimer size and 100% line height and must follow their corresponding copy at the upper-right. Do not introduce display-number exceptions, browser-default line height, or local tracking overrides.
 - Add `lang="en"`, `lang="vi"`, or `lang="th"` to pure non-Chinese runs. Mixed Chinese/Latin copy remains `zh-CN` unless the source explicitly separates the run.
 
 ## Inline editing safety
@@ -79,5 +96,5 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
 - Do not make scripts, styles, brand tokens, canvas dimensions, or validation metadata editable.
 - Use a stable deck-specific localStorage key.
 - Escape edited text when serializing the saved HTML.
-- Preserve the fixed stage and brand metadata in exported files.
+- Preserve the fixed 750px width, each slide's declared height, and brand metadata in exported files.
 - When supplied or authorized images need processing, keep the original, save a derived asset, and use only uncropped or rectangularly cropped output. CSS/SVG wrappers and masks remain zero-radius.

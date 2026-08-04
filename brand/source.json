@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "approval_status": "draft",
   "source_note": "Confirmed non-color brand rules include multilingual typography, fixed safe area, square corners, and the product-detail no-logo policy. Palette information is defined by each template's preview.md and design.md. Tone defaults to light unless the user explicitly selects dark.",
   "brand": {
@@ -9,7 +9,8 @@
   },
   "canvas": {
     "width": 750,
-    "height": 1320
+    "kv_height": 1320,
+    "non_kv_height": "content"
   },
   "typography": {
     "display": {
@@ -27,6 +28,8 @@
     "minimum_body_px": 30,
     "minimum_caption_px": 15,
     "line_height_percent": 100,
+    "annotation_line_height_percent": 100,
+    "large_evidence_secondary_px": 60,
     "locale_rules": {
       "zh": {
         "family": "MAKE SENSE",
@@ -118,7 +121,11 @@
     "safe_bottom_px": 60,
     "content_gap_px": 40,
     "item_gap_px": 10,
-    "disclaimer_gap_px": 40
+    "annotation_gap_px": 0,
+    "card_padding_px": 20,
+    "card_content_gap_px": 10,
+    "disclaimer_gap_px": 40,
+    "qa_group_gap_px": 60
   },
   "density": {
     "speaker_led": {

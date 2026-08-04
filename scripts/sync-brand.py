@@ -11,9 +11,9 @@ import sys
 from pathlib import Path
 
 try:
-    from static_contract import css_motion_violations, template_motion_violations
+    from static_contract import css_auto_spacing_violations, css_motion_violations, template_motion_violations
 except ModuleNotFoundError:  # Supports importlib-based unit loading from the repository root.
-    from scripts.static_contract import css_motion_violations, template_motion_violations
+    from scripts.static_contract import css_auto_spacing_violations, css_motion_violations, template_motion_violations
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -120,8 +120,10 @@ def load_source() -> dict:
         raise ValueError("brand/source.json must not define motion for static presentations")
     if data["approval_status"] not in {"draft", "approved"}:
         raise ValueError("approval_status must be 'draft' or 'approved'")
-    if data["canvas"] != {"width": 750, "height": 1320}:
-        raise ValueError("the internal edition supports only a literal 750 × 1320 canvas")
+    if data["canvas"] != {"width": 750, "kv_height": 1320, "non_kv_height": "content"}:
+        raise ValueError(
+            "the internal edition requires width 750, KV height 1320, and content-driven non-KV height"
+        )
     if data["shape"].get("corner_radius_px") != 0:
         raise ValueError("the fixed brand requires corner_radius_px = 0")
     spacing = data["spacing"]
@@ -129,11 +131,19 @@ def load_source() -> dict:
         spacing.get("safe_top_px") != 120
         or spacing.get("safe_bottom_px") != 60
         or spacing.get("slide_padding_px") != 60
+        or spacing.get("annotation_gap_px") != 0
+        or spacing.get("card_padding_px") != 20
+        or spacing.get("card_content_gap_px") != 10
+        or spacing.get("qa_group_gap_px") != 60
     ):
-        raise ValueError("the fixed safe area must be top 120px / right 60px / bottom 60px / left 60px")
+        raise ValueError("the fixed safe area, annotation gap, card padding, card content gap, and Q&A group gap are invalid")
     typography = data["typography"]
     if typography.get("line_height_percent") != 100:
         raise ValueError("the fixed typography requires line_height_percent = 100")
+    if typography.get("annotation_line_height_percent") != 100:
+        raise ValueError("annotation_line_height_percent must be 100")
+    if typography.get("large_evidence_secondary_px") != 60:
+        raise ValueError("large_evidence_secondary_px must be 60")
     locale_rules = data["typography"].get("locale_rules", {})
     if set(locale_rules) != {"zh", "en", "vi", "th"}:
         raise ValueError("typography.locale_rules must contain exactly zh/en/vi/th")
@@ -203,7 +213,7 @@ def render_brand_tokens(data: dict) -> str:
 
 :root {{
   --brand-canvas-width: 750px;
-  --brand-canvas-height: 1320px;
+  --brand-kv-height: 1320px;
   --brand-font-display: {css_font(typography['display'])};
   --brand-font-body: {css_font(typography['body'])};
   --brand-type-headline: {zh['sizes_px']['headline']}px;
@@ -217,6 +227,8 @@ def render_brand_tokens(data: dict) -> str:
   --brand-letter-spacing-vi: {css_em_from_percent(locale_rules['vi']['letter_spacing_percent'])};
   --brand-letter-spacing-th: {css_em_from_percent(locale_rules['th']['letter_spacing_percent'])};
   --brand-line-height: {typography['line_height_percent']}%;
+  --brand-annotation-text-line-height: {typography['annotation_line_height_percent']}%;
+  --brand-large-evidence-secondary: {typography['large_evidence_secondary_px']}px;
   --brand-min-body: {typography['minimum_body_px']}px;
   --brand-min-caption: {typography['minimum_caption_px']}px;
   --brand-slide-padding: {spacing['slide_padding_px']}px;
@@ -224,7 +236,11 @@ def render_brand_tokens(data: dict) -> str:
   --brand-safe-bottom: {spacing['safe_bottom_px']}px;
   --brand-content-gap: {spacing['content_gap_px']}px;
   --brand-item-gap: {spacing['item_gap_px']}px;
+  --brand-annotation-gap: {spacing['annotation_gap_px']}px;
+  --brand-card-padding: {spacing['card_padding_px']}px;
+  --brand-card-content-gap: {spacing['card_content_gap_px']}px;
   --brand-disclaimer-gap: {spacing['disclaimer_gap_px']}px;
+  --brand-qa-group-gap: {spacing['qa_group_gap_px']}px;
   --brand-corner-radius: {shape['corner_radius_px']}px;
   --brand-stroke-width: {shape['stroke_width_px']}px;
 }}
@@ -251,7 +267,7 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   left: 0;
   top: 0;
   width: 750px;
-  height: 1320px;
+  height: var(--active-slide-height, var(--brand-kv-height));
   transform-origin: 0 0;
   overflow: hidden;
   background: var(--brand-background);
@@ -261,7 +277,7 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   position: absolute;
   inset: 0;
   width: 750px;
-  height: 1320px;
+  height: var(--slide-height, var(--brand-kv-height));
   overflow: hidden;
   visibility: hidden;
   opacity: 0;
@@ -349,11 +365,11 @@ body.is-editing [data-editable="text"][data-edit-id] {
 }
 
 @media print {
-  @page { size: 750px 1320px; margin: 0; }
+  @page { margin: 0; }
   html, body { width: 750px; height: auto; overflow: visible; background: white; }
   .deck-viewport { position: static; display: block; overflow: visible; }
   .deck-stage { position: static; width: 750px; height: auto; transform: none !important; overflow: visible; }
-  .slide { position: relative; width: 750px; height: 1320px; visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
+  .slide { position: relative; width: 750px; height: var(--slide-height, var(--brand-kv-height)); visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
   .slide:last-child { break-after: auto; }
   .deck-controls { display: none !important; }
 }
@@ -389,7 +405,7 @@ def render_rules(data: dict) -> str:
         "",
         f"- Brand: **{data['brand']['name']}**",
         f"- Approval status: **{data['approval_status']}**",
-        "- Canvas: **750 × 1320 CSS pixels only**",
+        "- Canvas: **750 CSS pixels wide; KV slides are 1320px high; non-KV slides use explicit content-driven heights**",
         f"- Display font: **{typography['display']['family']}**",
         f"- Body font: **{typography['body']['family']}**",
         f"- Minimum body text: **{typography['minimum_body_px']}px**",
@@ -404,6 +420,7 @@ def render_rules(data: dict) -> str:
         "",
         f"- Speaker-led: at most {density['speaker_led']['max_bullets']} bullets or {density['speaker_led']['max_cards']} cards per slide.",
         f"- Reading-first: at most {density['reading_first']['max_bullets']} bullets or {density['reading_first']['max_cards']} cards per slide.",
+        "- Every slide carries exactly one main title, represented by one `h1` or one `data-type-level=\"headline\"` node.",
         "- Split content instead of reducing type below the minimum sizes.",
         "",
         "## Locale typography",
@@ -414,10 +431,13 @@ def render_rules(data: dict) -> str:
             f"| {locale} | {rule['family']} | {rule['sizes_px']['headline']} | {rule['sizes_px']['subheadline']} | {rule['sizes_px']['label']} | {rule['sizes_px']['description']} | {rule['sizes_px']['disclaimer']} | {rule['letter_spacing_percent']}% |"
             for locale, rule in locale_rules.items()
         ),
-        f"- All locale levels use **{typography['line_height_percent']}%** line height.",
-        "- Every authored text run maps to one of the five locale levels; large proof numerals map directly to the headline level and do not create a sixth level.",
-        "- A text leaf is an element that directly carries visible text and has no descendant that carries another text role. Locale letter spacing and line height apply to every text leaf, including metrics, superscripts, utility labels, and dense answers.",
+        f"- All ordinary authored text leaves use **{typography['line_height_percent']}%** line height. Annotation rows use **{data['spacing']['annotation_gap_px']}px** inter-row gap, while annotation prose leaves retain **{typography['annotation_line_height_percent']}%** line height so glyphs do not overlap.",
+        f"- Every authored text run maps to one of the five locale levels; large evidence numerals use headline or the approved secondary evidence size and remain one unified size on the same slide: 2 groups use 75px, 3 or more groups use **{typography['large_evidence_secondary_px']}px**.",
+        "- A text leaf is an element that directly carries visible text and has no descendant that carries another text role. Locale letter spacing and the ordinary 100% line height apply to every text leaf, including metrics, superscripts, utility labels, and dense answers.",
+        "- Citation marker digits keep disclaimer size and ordinary 100% line height; brackets are removed for display, and each marker must follow its corresponding copy at the upper-right rather than form a line by itself.",
+        f"- Content blocks use **{data['spacing']['content_gap_px']}px** flow gaps. Cards use **{data['spacing']['card_padding_px']}px** inner padding and **{data['spacing']['card_content_gap_px']}px** between content groups. Q&A groups use **{data['spacing']['qa_group_gap_px']}px** from the end of one answer to the next question. Do not use `margin-top: auto`, `justify-content: space-between`, or equivalent empty-space distribution for authored content.",
         "- Pure non-Chinese runs declare `lang`; mixed Chinese/Latin copy follows the Chinese contract unless explicitly separated by the source.",
+        "- A visible Chinese line may not contain only one Han character or one Han character plus punctuation; fix the semantic break, text width, or layout without shrinking type.",
         "- Chinese output embeds the approved local MAKE SENSE 70S font asset.",
         "",
         "## Shape",
@@ -432,7 +452,7 @@ def render_rules(data: dict) -> str:
         "- Read `templates/index.json` when preparing the three real branded previews.",
         "- Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.",
         "- Use baseline composition, component grammar, and the palette declared by that baseline without overriding non-color brand rules.",
-        "- Keep typography, shape tokens, static visual states, and the 750 × 1320 canvas fixed across all previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.",
+        "- Keep typography, shape tokens, static visual states, the 750px width, the 1320px KV height, and content-driven non-KV heights consistent across previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.",
         "",
         f"> Source note: {data['source_note']}",
         "",
@@ -499,6 +519,12 @@ def check_generated_static_contract(outputs: dict[Path, str], errors: list[str])
                 "static/motion contract violation in generated CSS "
                 f"{path.relative_to(ROOT)}: {', '.join(violations)}"
             )
+        auto_spacing = css_auto_spacing_violations(expected)
+        if auto_spacing:
+            errors.append(
+                "auto-spacing contract violation in generated CSS "
+                f"{path.relative_to(ROOT)}: {', '.join(auto_spacing)}"
+            )
 
 
 def check_invariants(errors: list[str]) -> None:
@@ -509,7 +535,7 @@ def check_invariants(errors: list[str]) -> None:
             continue
         text = path.read_text(encoding="utf-8")
         if "750" not in text or "1320" not in text:
-            errors.append(f"missing fixed canvas literals: {relative}")
+            errors.append(f"missing width/KV-height literals: {relative}")
         if relative != "scripts/validate-html.py":
             for forbidden in FORBIDDEN_ACTIVE_TEXT:
                 if forbidden.lower() in text.lower():
@@ -564,8 +590,9 @@ def check_templates(errors: list[str]) -> None:
             if not path.exists():
                 errors.append(f"missing template file: {path.relative_to(ROOT)}")
                 continue
-            if "750×1320" not in path.read_text(encoding="utf-8"):
-                errors.append(f"missing fixed template canvas literal: {path.relative_to(ROOT)}")
+            template_text = path.read_text(encoding="utf-8")
+            if "750px width" not in template_text or "KV slides use 1320px height" not in template_text:
+                errors.append(f"missing variable-height template canvas contract: {path.relative_to(ROOT)}")
         preview_path = index_path.parent / template_id / "preview.md"
         if preview_path.exists():
             preview = preview_path.read_text(encoding="utf-8")
@@ -578,7 +605,7 @@ def check_templates(errors: list[str]) -> None:
                 errors.append(f"missing fixed-brand preview override: {preview_path.relative_to(ROOT)}")
             for required in (
                 "The palette declared in this preview is the color authority",
-                "x=60–690 and y=120–1260",
+                "x=60–690, top 120px, and bottom 60px",
                 "75/45/45/30/15px",
                 "100% line height",
                 "-5% letter spacing",
@@ -608,6 +635,7 @@ def check_templates(errors: list[str]) -> None:
             )
         for required in (
             "The palette declared in this design is the color authority",
+            "750px width; KV slides use 1320px height",
             "top 120px / right 60px / bottom 60px / left 60px",
             "75 / 45 / 45 / 30 / 15px",
             "100% line height",
