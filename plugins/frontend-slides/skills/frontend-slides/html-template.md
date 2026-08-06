@@ -47,6 +47,22 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
     .slide [data-citation-marker] {
       line-height: var(--brand-line-height);
     }
+
+    /* Placeholder state is structural, not a brand palette value. */
+    .slide [data-image-placeholder] {
+      background: #909090 !important;
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .slide [data-image-placeholder-label] {
+      font-family: var(--brand-font-body);
+      font-size: var(--brand-type-description);
+      line-height: var(--brand-line-height);
+      letter-spacing: var(--brand-letter-spacing-zh);
+    }
   </style>
 </head>
 <body data-tone-mode="light" data-export-filename="presentation-slug.html">
@@ -86,6 +102,7 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
 - Set `frontend-slides-brand-status` to the exact value in `brand/source.json`.
 - Set `data-tone-mode` to the user-approved `light` or `dark` value and keep it unchanged across all previews and slides.
 - Do not add a separately authored brand logo to product-detail pages.
+- In placeholder mode, mark every image slot with `data-image-placeholder`, fill it with `#909090`, and include a visible `data-image-placeholder-label` whose exact text is `图片占位`. This is a structural image-slot marker and is not source copy.
 - Map every authored text leaf to a locale type level and keep the final normalization block after component CSS. Ordinary text leaves and annotation prose use 100% line height; annotation rows may use only the approved `data-annotation-text` 0px extra-gap exception, while citation markers keep disclaimer size and 100% line height and must follow their corresponding copy at the upper-right. Do not introduce display-number exceptions, browser-default line height, or local tracking overrides.
 - Add `lang="en"`, `lang="vi"`, or `lang="th"` to pure non-Chinese runs. Mixed Chinese/Latin copy remains `zh-CN` unless the source explicitly separates the run.
 

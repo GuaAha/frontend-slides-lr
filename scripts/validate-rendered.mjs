@@ -124,6 +124,23 @@ try {
         issues.push({ kind: 'canvas', message: `Slide is ${slideRect.width} × ${slideRect.height}` });
       }
 
+      for (const placeholder of slide.querySelectorAll('[data-image-placeholder]')) {
+        const style = getComputedStyle(placeholder);
+        const label = placeholder.querySelector('[data-image-placeholder-label]');
+        if (style.backgroundColor !== 'rgb(144, 144, 144)') {
+          issues.push({
+            kind: 'image-placeholder-color',
+            message: `image placeholder must compute to rgb(144, 144, 144); found ${style.backgroundColor}`,
+          });
+        }
+        if (!label || label.textContent.trim() !== '图片占位') {
+          issues.push({
+            kind: 'image-placeholder-label',
+            message: 'image placeholder must visibly contain the exact label 图片占位',
+          });
+        }
+      }
+
       const elements = Array.from(slide.querySelectorAll('*')).filter((element) => {
         const style = getComputedStyle(element);
         return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) !== 0;

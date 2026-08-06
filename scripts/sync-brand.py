@@ -292,6 +292,21 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   pointer-events: auto;
 }
 
+[data-image-placeholder] {
+  background: #909090 !important;
+  color: #FFFFFF;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+[data-image-placeholder-label] {
+  font-family: var(--brand-font-body);
+  font-size: var(--brand-type-description);
+  line-height: var(--brand-line-height);
+  letter-spacing: var(--brand-letter-spacing-zh);
+}
+
 .deck-controls {
   position: fixed;
   left: 50%;
