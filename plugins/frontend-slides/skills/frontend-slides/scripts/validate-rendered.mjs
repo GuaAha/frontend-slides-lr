@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Rendered geometry validation for 750px-wide decks with per-slide heights. */
+/** Rendered geometry validation for fixed 750 × 1320 decks. */
 
 import { mkdirSync, readFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
@@ -80,15 +80,10 @@ try {
     if (!['kv', 'content'].includes(contract.kind)) {
       errors.push({ slide: index + 1, kind: 'canvas', message: 'data-slide-kind must be kv or content' });
     }
-    if (!Number.isInteger(contract.height) || contract.height <= 0) {
-      errors.push({ slide: index + 1, kind: 'canvas', message: 'data-slide-height must be a positive integer' });
+    if (contract.height !== brandSource.canvas.height) {
+      errors.push({ slide: index + 1, kind: 'canvas', message: 'every slide height must be 1320px' });
     }
-    if (contract.kind === 'kv' && contract.height !== brandSource.canvas.kv_height) {
-      errors.push({ slide: index + 1, kind: 'canvas', message: 'KV slide height must be 1320px' });
-    }
-    const expectedHeight = Number.isInteger(contract.height) && contract.height > 0
-      ? contract.height
-      : brandSource.canvas.kv_height;
+    const expectedHeight = brandSource.canvas.height;
     await page.setViewportSize({ width: brandSource.canvas.width, height: expectedHeight });
     await page.evaluate(({ activeIndex, expectedHeight }) => {
       if (window.presentation?.show) {
@@ -97,15 +92,10 @@ try {
       }
       const stage = document.querySelector('.deck-stage');
       if (stage) {
-        stage.style.setProperty('--active-slide-height', `${expectedHeight}px`);
         stage.style.height = `${expectedHeight}px`;
       }
       document.querySelectorAll('.slide').forEach((slide, slideIndex) => {
-        const declaredHeight = Number.parseInt(slide.getAttribute('data-slide-height') || '', 10);
-        if (Number.isInteger(declaredHeight) && declaredHeight > 0) {
-          slide.style.setProperty('--slide-height', `${declaredHeight}px`);
-          slide.style.height = `${declaredHeight}px`;
-        }
+        slide.style.height = `${expectedHeight}px`;
         slide.classList.toggle('active', slideIndex === activeIndex);
         slide.classList.toggle('visible', slideIndex === activeIndex);
         slide.style.visibility = slideIndex === activeIndex ? 'visible' : 'hidden';
@@ -355,6 +345,6 @@ if (errors.length) {
 }
 console.log(JSON.stringify({
   pass: true,
-  canvas: { width: 750, kvHeight: 1320, nonKvHeight: 'content' },
+  canvas: { width: 750, height: 1320 },
   slides: validatedSlides,
 }, null, 2));

@@ -107,6 +107,7 @@ def load_source() -> dict:
         "approval_status",
         "brand",
         "canvas",
+        "palette",
         "typography",
         "logo",
         "shape",
@@ -120,10 +121,13 @@ def load_source() -> dict:
         raise ValueError("brand/source.json must not define motion for static presentations")
     if data["approval_status"] not in {"draft", "approved"}:
         raise ValueError("approval_status must be 'draft' or 'approved'")
-    if data["canvas"] != {"width": 750, "kv_height": 1320, "non_kv_height": "content"}:
-        raise ValueError(
-            "the internal edition requires width 750, KV height 1320, and content-driven non-KV height"
-        )
+    if data["canvas"] != {"width": 750, "height": 1320}:
+        raise ValueError("the internal edition requires one fixed 750 by 1320 canvas")
+    required_palette = {
+        "paper", "surface", "ink", "muted", "accent", "accent_dark", "line", "inverse", "inverse_text"
+    }
+    if set(data["palette"]) != required_palette:
+        raise ValueError("palette must define the complete fixed internal-brand color set")
     if data["shape"].get("corner_radius_px") != 0:
         raise ValueError("the fixed brand requires corner_radius_px = 0")
     spacing = data["spacing"]
@@ -206,6 +210,7 @@ def render_brand_tokens(data: dict) -> str:
     typography = data["typography"]
     shape = data["shape"]
     spacing = data["spacing"]
+    palette = data["palette"]
     locale_rules = typography["locale_rules"]
     zh = locale_rules["zh"]
     return f"""/* GENERATED from brand/source.json. Do not edit. */
@@ -213,7 +218,16 @@ def render_brand_tokens(data: dict) -> str:
 
 :root {{
   --brand-canvas-width: 750px;
-  --brand-kv-height: 1320px;
+  --brand-canvas-height: 1320px;
+  --brand-paper: {palette['paper']};
+  --brand-surface: {palette['surface']};
+  --brand-ink: {palette['ink']};
+  --brand-muted: {palette['muted']};
+  --brand-accent: {palette['accent']};
+  --brand-accent-dark: {palette['accent_dark']};
+  --brand-line: {palette['line']};
+  --brand-inverse: {palette['inverse']};
+  --brand-inverse-text: {palette['inverse_text']};
   --brand-font-display: {css_font(typography['display'])};
   --brand-font-body: {css_font(typography['body'])};
   --brand-type-headline: {zh['sizes_px']['headline']}px;
@@ -247,11 +261,11 @@ def render_brand_tokens(data: dict) -> str:
 """
 
 
-def render_viewport_css(_: dict) -> str:
+def render_viewport_css(data: dict) -> str:
     return """/* GENERATED from brand/source.json. Do not edit. */
 * { box-sizing: border-box; }
 html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-font-body); }
+body { background: var(--brand-inverse); color: var(--brand-ink); font-family: var(--brand-font-body); }
 
 .deck-viewport {
   position: fixed;
@@ -267,22 +281,22 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   left: 0;
   top: 0;
   width: 750px;
-  height: var(--active-slide-height, var(--brand-kv-height));
+  height: var(--brand-canvas-height);
   transform-origin: 0 0;
   overflow: hidden;
-  background: var(--brand-background);
+  background: var(--brand-paper);
 }
 
 .slide {
   position: absolute;
   inset: 0;
   width: 750px;
-  height: var(--slide-height, var(--brand-kv-height));
+  height: var(--brand-canvas-height);
   overflow: hidden;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  background: var(--brand-background);
+  background: var(--brand-paper);
 }
 
 .slide.active,
@@ -381,10 +395,11 @@ body.is-editing [data-editable="text"][data-edit-id] {
 
 @media print {
   @page { margin: 0; }
+  @page { size: 750px 1320px; margin: 0; }
   html, body { width: 750px; height: auto; overflow: visible; background: white; }
   .deck-viewport { position: static; display: block; overflow: visible; }
   .deck-stage { position: static; width: 750px; height: auto; transform: none !important; overflow: visible; }
-  .slide { position: relative; width: 750px; height: var(--slide-height, var(--brand-kv-height)); visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
+  .slide { position: relative; width: 750px; height: 1320px; visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
   .slide:last-child { break-after: auto; }
   .deck-controls { display: none !important; }
 }
@@ -420,7 +435,7 @@ def render_rules(data: dict) -> str:
         "",
         f"- Brand: **{data['brand']['name']}**",
         f"- Approval status: **{data['approval_status']}**",
-        "- Canvas: **750 CSS pixels wide; KV slides are 1320px high; non-KV slides use explicit content-driven heights**",
+        "- Canvas: **750 × 1320 CSS pixels for every slide**",
         f"- Display font: **{typography['display']['family']}**",
         f"- Body font: **{typography['body']['family']}**",
         f"- Minimum body text: **{typography['minimum_body_px']}px**",
@@ -429,7 +444,7 @@ def render_rules(data: dict) -> str:
         f"- Text safe area: **top {data['spacing']['safe_top_px']}px / right {data['spacing']['slide_padding_px']}px / bottom {data['spacing']['safe_bottom_px']}px / left {data['spacing']['slide_padding_px']}px**",
         "- Product-detail pages: **no separately authored brand logo**",
         "- Tone mode: default to **light** when the user does not choose; keep light unless the user explicitly selects **dark** or requests an adjustment.",
-        "- Palette authority: `brand/source.json` does not define colors. Each shortlisted option uses the palette in its own `preview.md`; after selection, the chosen template's `design.md` is authoritative.",
+        "- Palette authority: **`brand/source.json`**. Template colors are historical references and cannot override fixed brand tokens.",
         "",
         "## Density",
         "",
@@ -466,8 +481,8 @@ def render_rules(data: dict) -> str:
         "",
         "- Read `templates/index.json` when preparing the three real branded previews.",
         "- Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.",
-        "- Use baseline composition, component grammar, and the palette declared by that baseline without overriding non-color brand rules.",
-        "- Keep typography, shape tokens, static visual states, the 750px width, the 1320px KV height, and content-driven non-KV heights consistent across previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.",
+        "- Use baseline composition and component grammar without copying its historical palette.",
+        "- Keep palette, typography, shape tokens, static visual states, and the fixed 750 × 1320 canvas consistent across all previews.",
         "",
         f"> Source note: {data['source_note']}",
         "",
@@ -583,13 +598,13 @@ def check_templates(errors: list[str]) -> None:
         )
     if template_motion_violations(brand_authority):
         errors.append("template index brand authority must be static and contain no motion guidance")
-    if "preview.md and design.md" not in contract.get("palette_authority", ""):
-        errors.append("template index must make preview.md and design.md authoritative for palette")
+    if "brand/source.json" not in contract.get("palette_authority", ""):
+        errors.append("template index must make brand/source.json authoritative for palette")
     workflow = index.get("selection_workflow", {})
     if "Default tone_mode to light" not in workflow.get("tone_choice", ""):
         errors.append("template index must default tone_mode to light")
-    if "selected template's preview.md and design.md" not in workflow.get("category_color_limit", ""):
-        errors.append("template index must source colors from each selected template")
+    if "brand/source.json" not in workflow.get("category_color_limit", ""):
+        errors.append("template index must source colors from brand/source.json")
 
     tones = [item.get("tone_mode") for item in index.get("templates", [])]
     if any(tone not in {"light", "dark"} for tone in tones):
@@ -606,8 +621,8 @@ def check_templates(errors: list[str]) -> None:
                 errors.append(f"missing template file: {path.relative_to(ROOT)}")
                 continue
             template_text = path.read_text(encoding="utf-8")
-            if "750px width" not in template_text or "KV slides use 1320px height" not in template_text:
-                errors.append(f"missing variable-height template canvas contract: {path.relative_to(ROOT)}")
+            if "750 × 1320" not in template_text:
+                errors.append(f"missing fixed template canvas contract: {path.relative_to(ROOT)}")
         preview_path = index_path.parent / template_id / "preview.md"
         if preview_path.exists():
             preview = preview_path.read_text(encoding="utf-8")
@@ -619,7 +634,7 @@ def check_templates(errors: list[str]) -> None:
             if PREVIEW_CONTRACT_MARKER not in preview:
                 errors.append(f"missing fixed-brand preview override: {preview_path.relative_to(ROOT)}")
             for required in (
-                "The palette declared in this preview is the color authority",
+                "brand/source.json",
                 "x=60–690, top 120px, and bottom 60px",
                 "75/45/45/30/15px",
                 "100% line height",
@@ -649,8 +664,8 @@ def check_templates(errors: list[str]) -> None:
                 f"{design_path.relative_to(ROOT)}"
             )
         for required in (
-            "The palette declared in this design is the color authority",
-            "750px width; KV slides use 1320px height",
+            "brand/source.json",
+            "750 × 1320",
             "top 120px / right 60px / bottom 60px / left 60px",
             "75 / 45 / 45 / 30 / 15px",
             "100% line height",
@@ -661,8 +676,6 @@ def check_templates(errors: list[str]) -> None:
                 errors.append(f"missing design contract text {required!r}: {design_path.relative_to(ROOT)}")
         if not re.search(r"#[0-9A-Fa-f]{6}", design):
             errors.append(f"design must declare a concrete palette: {design_path.relative_to(ROOT)}")
-        if "colors declared by the brand source" in design:
-            errors.append(f"stale brand-source palette override in design: {design_path.relative_to(ROOT)}")
         for forbidden in FORBIDDEN_DESIGN_GUIDANCE:
             if forbidden in lowered:
                 errors.append(f"forbidden rounded-corner guidance {forbidden!r}: {design_path.relative_to(ROOT)}")

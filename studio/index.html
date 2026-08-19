@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101512">
+  <title>LR Brand Studio</title>
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+  <div class="app-shell" id="app">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <span class="brand-mark">LR</span>
+        <div>
+          <strong>Brand Studio</strong>
+          <span id="saveState">所有更改已保存</span>
+        </div>
+      </div>
+      <nav class="top-actions" aria-label="文稿操作">
+        <button class="button button-quiet" id="newDeckButton">新建文稿</button>
+        <button class="button button-quiet" id="importButton">DeckSpec</button>
+        <button class="button button-quiet" id="validateButton">检测</button>
+        <button class="button button-quiet" id="repairButton">自动修复</button>
+        <button class="button button-quiet" id="presentButton">演讲</button>
+        <button class="button button-quiet" id="pdfButton">PDF</button>
+        <button class="button button-primary" id="pptxButton">PPTX</button>
+      </nav>
+    </header>
+
+    <main class="workspace">
+      <aside class="rail rail-left">
+        <div class="rail-heading">
+          <div>
+            <span class="eyebrow-ui">页面</span>
+            <strong id="slideCount">0 页</strong>
+          </div>
+          <button class="icon-button" id="addSlideButton" aria-label="添加页面">＋</button>
+        </div>
+        <ol class="slide-list" id="slideList"></ol>
+        <section class="version-section">
+          <button class="section-toggle" id="versionToggle" aria-expanded="false">
+            <span>版本历史</span><span id="versionCount">0</span>
+          </button>
+          <ol class="version-list" id="versionList" hidden></ol>
+        </section>
+      </aside>
+
+      <section class="canvas-workspace" aria-label="画布">
+        <div class="canvas-toolbar">
+          <div class="proposal-pill" id="proposalLabel">方案 A · 留白叙事</div>
+          <div class="canvas-tools">
+            <button class="icon-button" id="previousButton" aria-label="上一页">←</button>
+            <output id="pageCounter">1 / 1</output>
+            <button class="icon-button" id="nextButton" aria-label="下一页">→</button>
+          </div>
+        </div>
+        <div class="stage-viewport" id="stageViewport">
+          <div class="stage-scaler" id="stageScaler">
+            <div id="stage"></div>
+          </div>
+        </div>
+        <div class="validation-summary" id="validationSummary" hidden></div>
+      </section>
+
+      <aside class="rail rail-right">
+        <div class="rail-heading">
+          <div>
+            <span class="eyebrow-ui">属性</span>
+            <strong>当前页面</strong>
+          </div>
+        </div>
+        <form id="inspector" class="inspector"></form>
+      </aside>
+    </main>
+  </div>
+
+  <dialog id="proposalDialog" class="proposal-dialog">
+    <div class="dialog-heading">
+      <span class="eyebrow-ui">真实视觉方案</span>
+      <h1>同一品牌，三种叙事节奏</h1>
+      <p>字体、颜色和画布保持一致；差异只来自信息层级、图片策略与页面节奏。</p>
+    </div>
+    <div class="proposal-grid" id="proposalGrid"></div>
+  </dialog>
+
+  <dialog id="onboardingDialog" class="onboarding-dialog">
+    <form method="dialog" class="dialog-form onboarding-form">
+      <div class="dialog-heading compact">
+        <span class="eyebrow-ui">新建文稿</span>
+        <h2>先确认内容与大纲，再看视觉方案</h2>
+        <p>上传内容 → 选择用途与信息密度 → 自动应用固定品牌 → 确认大纲。</p>
+      </div>
+      <div class="intake-grid">
+        <section>
+          <label class="upload-control">上传 Markdown / TXT
+            <input id="intakePicker" type="file" accept=".md,.txt,text/markdown,text/plain">
+          </label>
+          <label>内容
+            <textarea id="intakeText" rows="16" spellcheck="false"></textarea>
+          </label>
+          <div class="field-row intake-options">
+            <label>用途
+              <select id="intakePurpose">
+                <option value="proposal">内部提案</option>
+                <option value="internal-update">内部更新</option>
+                <option value="decision-review">决策评审</option>
+                <option value="teaching">教学</option>
+                <option value="other">其他</option>
+              </select>
+            </label>
+            <label>信息密度
+              <select id="intakeDensity">
+                <option value="speaker-led">演讲者主导</option>
+                <option value="reading-first">阅读优先</option>
+              </select>
+            </label>
+          </div>
+          <p class="brand-auto-note">品牌规范已锁定：750 × 1320、固定字体、固定配色、固定间距与直角形状。</p>
+        </section>
+        <section class="outline-preview" id="outlinePreview">
+          <span class="eyebrow-ui">自动大纲</span>
+          <p class="outline-empty" id="outlineEmpty">点击“生成大纲”后，这里会展示页面顺序。确认后才会生成三个使用真实内容的视觉方案。</p>
+          <ol id="outlineList"></ol>
+        </section>
+      </div>
+      <div class="dialog-actions onboarding-actions">
+        <button class="button button-quiet" value="cancel">取消</button>
+        <button class="button button-quiet" type="button" id="generateOutlineButton">生成大纲</button>
+        <button class="button button-primary" type="button" id="confirmOutlineButton" disabled>确认大纲并查看方案</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="importDialog" class="import-dialog">
+    <form method="dialog" class="dialog-form">
+      <div class="dialog-heading compact">
+        <span class="eyebrow-ui">DeckSpec</span>
+        <h2>导入结构化文稿</h2>
+        <p>粘贴符合当前 JSON Schema 的 DeckSpec；图片必须是内嵌 PNG、JPEG 或 WebP。</p>
+      </div>
+      <label>内容 JSON
+        <textarea id="importText" rows="14" spellcheck="false"></textarea>
+      </label>
+      <div class="dialog-actions">
+        <button class="button button-quiet" value="cancel">取消</button>
+        <button class="button button-primary" value="default" id="confirmImportButton">导入 DeckSpec</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="presenter" id="presenter" hidden>
+    <div class="presenter-main">
+      <div class="presenter-stage" id="presenterStage"></div>
+      <div class="presenter-controls">
+        <button class="button button-quiet" id="presenterPrevious">上一页</button>
+        <button class="button button-primary" id="timerButton">开始计时</button>
+        <button class="button button-quiet" id="presenterNext">下一页</button>
+        <button class="button button-quiet" id="exitPresenter">退出</button>
+      </div>
+    </div>
+    <aside class="presenter-notes">
+      <span class="eyebrow-ui">演讲者备注</span>
+      <div class="presenter-time" id="presenterTime">00:00</div>
+      <p id="presenterNote"></p>
+      <span class="eyebrow-ui">下一页</span>
+      <div class="presenter-next" id="presenterNextPreview"></div>
+    </aside>
+  </div>
+
+  <div id="measureRoot" aria-hidden="true"></div>
+  <div id="printDeck" aria-hidden="true"></div>
+  <input id="imagePicker" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+  <input id="deckPicker" type="file" accept="application/json" hidden>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

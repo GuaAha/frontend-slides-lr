@@ -131,8 +131,7 @@ spacing:
 
 canvas:
   width: 750
-  kv_height: 1320
-  non_kv_height: "content"
+  height: 1320
   aspectRatio: "25 / 44"
   overflow: hidden
   scaling: "uniform-stage-only"
@@ -248,13 +247,13 @@ This block overrides every conflicting reference value later in this file.
 
 The generated presentation is static. All visible states are fully composed and appear immediately.
 
-- Canvas: 750px width; KV slides use 1320px height; non-KV slides use explicit content-driven heights and preserve the top 120px / bottom 60px safe margins. Scale the active stage uniformly without internal reflow.
+- Canvas: use the fixed 750 × 1320 canvas for every slide and preserve the top 120px / bottom 60px safe margins. Scale the stage uniformly without internal reflow.
 - Slide mapping: every slide carries exactly one main title.
 - Precedence: later references to a universally fixed `750×1320` stage are historical source guidance and are superseded by this override.
 - Safe area: top 120px / right 60px / bottom 60px / left 60px; every authored headline begins at y=120px.
 - Chinese type: 75 / 45 / 45 / 30 / 15px for headline / subheadline / label / description / disclaimer, with 100% line height and -5% letter spacing. Large metrics and proof numerals use the headline or subheadline level, with Chinese maxima of 75px / 45px.
 - Corners: every authored webpage layer uses `border-radius: 0`; cards, tags, controls, CSS/SVG fields, and image masks have square corners.
-- The palette declared in this design is the color authority for the selected template. Use its declared `light` or `dark` tone and do not introduce colors outside this palette unless the user explicitly approves a palette change.
+- `brand/source.json` is the color authority. Historical colors in this design describe contrast roles only and cannot override fixed brand tokens.
 - Product-detail logo: do not add a separately authored brand-logo layer.
 - Images: CSS visuals are allowed when selected; supplied or authorized images may be processed and rectangularly cropped while originals are preserved. Never use a rounded crop or mask.
 

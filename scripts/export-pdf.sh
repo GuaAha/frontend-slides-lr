@@ -10,7 +10,7 @@
 #
 # What this does:
 #   1. Starts a local server to serve the HTML (fonts and assets need HTTP)
-#   2. Uses Playwright to screenshot each slide at 750px width and its declared height
+#   2. Uses Playwright to capture each slide at the fixed 750 × 1320 canvas
 #   3. Combines all screenshots into a single PDF
 #   4. Cleans up the server and temp files
 #
@@ -31,7 +31,7 @@ ok()    { echo -e "${GREEN}✓${NC} $*"; }
 warn()  { echo -e "${YELLOW}⚠${NC} $*"; }
 err()   { echo -e "${RED}✗${NC} $*" >&2; }
 
-# ─── Fixed export width and KV fallback ───────────────────
+# ─── Fixed export canvas ───────────────────────────────────
 
 VIEWPORT_W=750
 VIEWPORT_H=1320
@@ -101,7 +101,7 @@ ok "Node.js found"
 # We use a temporary Node.js script with Playwright to:
 # 1. Start a local server (so fonts load correctly)
 # 2. Navigate to each slide
-# 3. Screenshot each slide at 750px width and its declared per-slide height
+# 3. Screenshot each slide on the fixed 750 × 1320 canvas
 # 4. Combine into a single PDF
 
 TEMP_DIR=$(mktemp -d)
@@ -217,10 +217,10 @@ const screenshotPaths = [];
 for (let i = 0; i < slideCount; i++) {
   const slideHeight = await page.locator('.slide').nth(i).evaluate((slide, index) => {
     const value = Number.parseInt(slide.getAttribute('data-slide-height') || '', 10);
-    if (!Number.isInteger(value) || value <= 0) {
-      throw new Error(`Slide ${i + 1} requires a positive integer data-slide-height`);
+    if (value !== 1320) {
+      throw new Error(`Slide ${i + 1} requires data-slide-height=1320`);
     }
-    return value;
+    return 1320;
   }, i);
   await page.setViewportSize({ width: VP_WIDTH, height: slideHeight });
   // Navigate to slide by simulating the presentation's navigation

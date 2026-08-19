@@ -4,7 +4,7 @@ Use this small file for title-slide previews only. For final deck generation, re
 
 ## Fixed-Brand Preview Override
 
-The palette declared in this preview is the color authority for this option. Use its declared `light` or `dark` tone. Use 750px width; KV slides use 1320px height; non-KV slides use explicit content-driven heights. Keep authored copy inside x=60–690, top 120px, and bottom 60px for the declared slide height. Every slide carries exactly one main title. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing; large metrics and proof numerals use 75px or 45px according to hierarchy. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved. Later references to a universally fixed 750×1320 stage are historical source guidance and are superseded by this override.
+`brand/source.json` is the color authority for every option; historical colors below describe contrast and composition only. Use the fixed 750 × 1320 canvas for every slide. Keep authored copy inside x=60–690, top 120px, and bottom 60px. Every slide carries exactly one main title. Chinese text uses only 75/45/45/30/15px, 100% line height, and -5% letter spacing; large metrics and proof numerals use 75px or 45px according to hierarchy. Every authored webpage layer and image mask uses `border-radius: 0`. Product-detail pages have no separately authored brand-logo layer. CSS visuals are allowed when selected; authorized images may be processed and rectangularly cropped while originals are preserved.
 
 ## Files
 

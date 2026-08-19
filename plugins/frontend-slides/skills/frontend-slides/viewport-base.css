@@ -1,7 +1,7 @@
 /* GENERATED from brand/source.json. Do not edit. */
 * { box-sizing: border-box; }
 html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-font-body); }
+body { background: var(--brand-inverse); color: var(--brand-ink); font-family: var(--brand-font-body); }
 
 .deck-viewport {
   position: fixed;
@@ -17,22 +17,22 @@ body { background: #0B0D12; color: var(--brand-text); font-family: var(--brand-f
   left: 0;
   top: 0;
   width: 750px;
-  height: var(--active-slide-height, var(--brand-kv-height));
+  height: var(--brand-canvas-height);
   transform-origin: 0 0;
   overflow: hidden;
-  background: var(--brand-background);
+  background: var(--brand-paper);
 }
 
 .slide {
   position: absolute;
   inset: 0;
   width: 750px;
-  height: var(--slide-height, var(--brand-kv-height));
+  height: var(--brand-canvas-height);
   overflow: hidden;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  background: var(--brand-background);
+  background: var(--brand-paper);
 }
 
 .slide.active,
@@ -131,10 +131,11 @@ body.is-editing [data-editable="text"][data-edit-id] {
 
 @media print {
   @page { margin: 0; }
+  @page { size: 750px 1320px; margin: 0; }
   html, body { width: 750px; height: auto; overflow: visible; background: white; }
   .deck-viewport { position: static; display: block; overflow: visible; }
   .deck-stage { position: static; width: 750px; height: auto; transform: none !important; overflow: visible; }
-  .slide { position: relative; width: 750px; height: var(--slide-height, var(--brand-kv-height)); visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
+  .slide { position: relative; width: 750px; height: 1320px; visibility: visible; opacity: 1; pointer-events: auto; break-after: page; }
   .slide:last-child { break-after: auto; }
   .deck-controls { display: none !important; }
 }

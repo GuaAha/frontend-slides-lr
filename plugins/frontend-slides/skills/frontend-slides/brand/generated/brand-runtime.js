@@ -3,7 +3,7 @@
   'use strict';
 
   const CANVAS_WIDTH = 750;
-  const KV_HEIGHT = 1320;
+  const CANVAS_HEIGHT = 1320;
   const BRAND_STATUS = "draft";
   const BRAND_NAME = "LR Internal";
   const CONTROL_IDLE_MS = 1800;
@@ -12,8 +12,8 @@
   window.FRONTEND_SLIDES_BRAND = Object.freeze({
     name: BRAND_NAME,
     approvalStatus: BRAND_STATUS,
-    canvas: Object.freeze({ width: CANVAS_WIDTH, kvHeight: KV_HEIGHT, nonKvHeight: 'content' }),
-    runtime: 'brand-runtime-v2'
+    canvas: Object.freeze({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }),
+    runtime: 'brand-runtime-v3'
   });
 
   class BrandSlidePresentation {
@@ -205,9 +205,7 @@
     }
 
     slideHeight(slide) {
-      if (!slide) return KV_HEIGHT;
-      const declared = Number.parseInt(slide.dataset.slideHeight || '', 10);
-      return Number.isInteger(declared) && declared > 0 ? declared : KV_HEIGHT;
+      return CANVAS_HEIGHT;
     }
 
     activeSlideHeight() {
@@ -216,17 +214,13 @@
 
     syncSlideHeights() {
       this.slides.forEach((slide) => {
-        const height = this.slideHeight(slide);
-        slide.style.setProperty('--slide-height', `${height}px`);
-        slide.style.height = `${height}px`;
+        slide.style.height = `${CANVAS_HEIGHT}px`;
       });
     }
 
     syncStageHeight() {
       if (!this.stage) return;
-      const height = this.activeSlideHeight();
-      this.stage.style.setProperty('--active-slide-height', `${height}px`);
-      this.stage.style.height = `${height}px`;
+      this.stage.style.height = `${CANVAS_HEIGHT}px`;
     }
 
     syncPrintPageSizes() {
@@ -238,9 +232,8 @@
       }
       style.textContent = this.slides.map((slide, index) => {
         const pageName = `brand-slide-${index + 1}`;
-        const height = this.slideHeight(slide);
         slide.dataset.printPage = pageName;
-        return `@page ${pageName} { size: ${CANVAS_WIDTH}px ${height}px; margin: 0; }\n`
+        return `@page ${pageName} { size: ${CANVAS_WIDTH}px ${CANVAS_HEIGHT}px; margin: 0; }\n`
           + `.slide[data-print-page="${pageName}"] { page: ${pageName}; }`;
       }).join('\n');
     }

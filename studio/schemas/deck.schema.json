@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lr.internal/schemas/deck.schema.json",
+  "title": "LR Brand Studio DeckSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "title", "brandVersion", "canvas", "purpose", "density", "proposalId", "createdAt", "updatedAt", "slides"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "brandVersion": { "type": "string", "minLength": 1 },
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "width": { "const": 750 },
+        "height": { "const": 1320 }
+      }
+    },
+    "purpose": { "enum": ["internal-update", "decision-review", "teaching", "proposal", "other"] },
+    "density": { "enum": ["speaker-led", "reading-first"] },
+    "proposalId": { "enum": ["editorial-air", "evidence-grid", "image-rhythm"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "layoutId", "slots"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "layoutId": {
+            "enum": ["cover", "statement", "image-hero", "image-left", "image-right", "three-points", "comparison", "metric", "timeline", "closing"]
+          },
+          "slots": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                { "$ref": "#/$defs/textSlot" },
+                { "$ref": "#/$defs/imageSlot" }
+              ]
+            }
+          },
+          "speakerNotes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "textSlot": {
+      "type": "object",
+      "required": ["kind", "text"],
+      "properties": {
+        "kind": { "const": "text" },
+        "text": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "imageSlot": {
+      "type": "object",
+      "required": ["kind", "src", "alt", "fit", "role", "focalPoint"],
+      "properties": {
+        "kind": { "const": "image" },
+        "src": {
+          "type": "string",
+          "pattern": "^(?:$|data:image/(?:png|jpeg|webp);base64,)"
+        },
+        "alt": { "type": "string" },
+        "fit": { "enum": ["cover", "contain"] },
+        "role": { "enum": ["photo", "screenshot", "illustration", "logo"] },
+        "focalPoint": {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": {
+            "x": { "type": "number", "minimum": 0, "maximum": 1 },
+            "y": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -70,10 +70,24 @@ class BrandSyncTests(unittest.TestCase):
         result = self.run_command("scripts/sync-brand.py", "--check")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_brand_source_has_confirmed_type_and_square_corners(self) -> None:
+    def test_brand_source_has_confirmed_palette_type_canvas_and_square_corners(self) -> None:
         source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
         self.assertEqual(source["schema_version"], 3)
-        self.assertNotIn("colors", source)
+        self.assertEqual(source["canvas"], {"width": 750, "height": 1320})
+        self.assertEqual(
+            source["palette"],
+            {
+                "paper": "#F6F7F2",
+                "surface": "#FFFFFF",
+                "ink": "#101512",
+                "muted": "#626B66",
+                "accent": "#42B265",
+                "accent_dark": "#215E38",
+                "line": "#CFD8D1",
+                "inverse": "#0B0D12",
+                "inverse_text": "#FFFFFF",
+            },
+        )
         self.assertEqual(source["shape"]["corner_radius_px"], 0)
         self.assertEqual(source["spacing"]["safe_top_px"], 120)
         self.assertEqual(source["spacing"]["safe_bottom_px"], 60)
@@ -95,25 +109,25 @@ class BrandSyncTests(unittest.TestCase):
         self.assertTrue((ROOT / source["typography"]["display"]["asset"]).is_file())
 
         css = (ROOT / "brand/generated/brand-tokens.css").read_text(encoding="utf-8")
-        self.assertIn("--brand-kv-height: 1320px;", css)
-        self.assertNotIn("--brand-canvas-height:", css)
+        self.assertIn("--brand-canvas-height: 1320px;", css)
+        self.assertNotIn("--brand-kv-height:", css)
         self.assertIn("--brand-letter-spacing: -0.05em;", css)
         self.assertIn("--brand-letter-spacing-en: -0.03em;", css)
         self.assertIn("--brand-line-height: 100%;", css)
         self.assertIn("--brand-item-gap: 10px;", css)
         self.assertIn("--brand-disclaimer-gap: 40px;", css)
         for color_token in (
-            "--brand-background:",
-            "--brand-surface:",
-            "--brand-surface-strong:",
-            "--brand-text:",
-            "--brand-text-muted:",
-            "--brand-primary:",
-            "--brand-accent:",
-            "--brand-success:",
-            "--brand-danger:",
+            "--brand-paper: #F6F7F2;",
+            "--brand-surface: #FFFFFF;",
+            "--brand-ink: #101512;",
+            "--brand-muted: #626B66;",
+            "--brand-accent: #42B265;",
+            "--brand-accent-dark: #215E38;",
+            "--brand-line: #CFD8D1;",
+            "--brand-inverse: #0B0D12;",
+            "--brand-inverse-text: #FFFFFF;",
         ):
-            self.assertNotIn(color_token, css)
+            self.assertIn(color_token, css)
 
     def test_brand_source_defines_annotation_and_qa_spacing_tokens(self) -> None:
         source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
@@ -234,26 +248,26 @@ class BrandSyncTests(unittest.TestCase):
                 self.assertTrue(canonical.is_file(), canonical)
                 self.assertEqual(canonical.read_bytes(), mirror.read_bytes(), mirror)
                 template_text = canonical.read_text(encoding="utf-8")
-                self.assertIn("750px width", template_text)
-                self.assertIn("KV slides use 1320px height", template_text)
+                self.assertIn("750 × 1320", template_text)
+                self.assertIn("brand/source.json", template_text)
 
             design = (ROOT / "templates" / template_id / "design.md").read_text(encoding="utf-8")
             preview = (ROOT / "templates" / template_id / "preview.md").read_text(encoding="utf-8")
             self.assertIn("## Mandatory Fixed-Brand Override", design)
-            self.assertIn("The palette declared in this design is the color authority", design)
+            self.assertIn("`brand/source.json` is the color authority", design)
             self.assertIn("top 120px / right 60px / bottom 60px / left 60px", design)
             self.assertIn("75 / 45 / 45 / 30 / 15px", design)
             self.assertIn("border-radius: 0", design)
             self.assertIn("## Fixed-Brand Preview Override", preview)
-            self.assertIn("The palette declared in this preview is the color authority", preview)
+            self.assertIn("`brand/source.json` is the color authority", preview)
             self.assertIn("75/45/45/30/15px", preview)
             self.assertIn("border-radius: 0", preview)
             self.assertRegex(design, r"#[0-9A-Fa-f]{6}")
             self.assertRegex(preview, r"#[0-9A-Fa-f]{6}")
-            self.assertNotIn("colors declared by the brand source", design)
-            self.assertNotIn("reference palette below describes contrast roles only", preview)
+            self.assertIn("Historical colors in this design describe contrast roles only", design)
+            self.assertIn("historical colors below describe contrast and composition only", preview)
 
-    def test_skill_uses_separate_images_light_default_and_template_palette_authority(self) -> None:
+    def test_skill_uses_separate_images_light_default_and_brand_palette_authority(self) -> None:
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
         validation = (ROOT / "references/validation.md").read_text(encoding="utf-8")
         index = json.loads((ROOT / "templates/index.json").read_text(encoding="utf-8"))
@@ -268,8 +282,8 @@ class BrandSyncTests(unittest.TestCase):
         self.assertIn("大型证据数字归入主标题层级/副标题层级", skill)
         self.assertIn("文字叶节点是直接承载可见文字", skill)
         self.assertIn("默认使用 `light` 色调并设置语义主题 `clean`", skill)
-        self.assertIn("不生成颜色令牌", skill)
-        self.assertIn("配色只从入选模板的 `preview.md`", skill)
+        self.assertIn("颜色、字体、间距、形状和画布都由该文件统一控制", skill)
+        self.assertIn("模板中的历史色值只能说明对比关系", skill)
         self.assertIn("`image_mode: placeholder`", skill)
         self.assertIn("`image_mode: css-visual`", skill)
         self.assertIn("## Image-source gate", validation)
@@ -278,8 +292,8 @@ class BrandSyncTests(unittest.TestCase):
         self.assertIn("rectangular cropping", validation)
         self.assertIn("clean semantic theme", index["selection_workflow"]["category_semantics"])
         self.assertIn("Default tone_mode to light", index["selection_workflow"]["tone_choice"])
-        self.assertIn("preview.md and design.md", index["contract"]["palette_authority"])
-        self.assertIn("selected template's preview.md and design.md", index["selection_workflow"]["category_color_limit"])
+        self.assertIn("brand/source.json", index["contract"]["palette_authority"])
+        self.assertIn("brand/source.json", index["selection_workflow"]["category_color_limit"])
         self.assertNotIn("logos and font files were not present", readme.lower())
         self.assertNotIn("palette and logo approval remain draft", readme.lower())
 
@@ -297,7 +311,7 @@ class BrandSyncTests(unittest.TestCase):
         self.assertIn("single-image slide geometry", validation)
         self.assertIn("one computed highlight color", validation)
 
-    def test_variable_height_slice_contract_is_defined_end_to_end(self) -> None:
+    def test_fixed_canvas_contract_is_defined_end_to_end(self) -> None:
         source = json.loads((ROOT / "brand/source.json").read_text(encoding="utf-8"))
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
         validation = (ROOT / "references/validation.md").read_text(encoding="utf-8")
@@ -305,27 +319,26 @@ class BrandSyncTests(unittest.TestCase):
         runtime = (ROOT / "runtime/brand-runtime.template.js").read_text(encoding="utf-8")
         rendered_validator = (ROOT / "scripts/validate-rendered.mjs").read_text(encoding="utf-8")
 
-        self.assertEqual(
-            source["canvas"],
-            {"width": 750, "kv_height": 1320, "non_kv_height": "content"},
-        )
+        self.assertEqual(source["canvas"], {"width": 750, "height": 1320})
         self.assertIn("每张幻灯片只承载一个主标题。", skill)
-        self.assertIn("KV 页固定为 `1320px` 高", skill)
-        self.assertIn("非 KV 切片根据内容高度灵活设定", skill)
+        self.assertIn("每张切片都使用精确的 `750 × 1320` CSS 像素画布", skill)
+        self.assertIn("内容超出安全区时必须精简、换用注册布局或拆页", skill)
         self.assertIn("大型证据数字归入主标题层级/副标题层级，中文最大 `75px`/`60px`", skill)
         self.assertIn("一个汉字或一个汉字加一个标点符号", skill)
         self.assertIn("最小单位的修改", skill)
         self.assertIn("单独对对应切片进行校验", skill)
-        self.assertIn("per-slide height", validation)
+        self.assertIn("fixed `750 × 1320` canvas", validation)
         self.assertIn("--slide", validation)
         self.assertIn('data-slide-kind="kv"', html_template)
         self.assertIn('data-slide-height="1320"', html_template)
-        self.assertIn("activeSlideHeight", runtime)
+        self.assertIn("CANVAS_HEIGHT", runtime)
+        self.assertIn("{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }", runtime)
         self.assertIn("--slide", rendered_validator)
 
         for stale in (
             "每张幻灯片只分配一个主要信息",
-            "每个 `.slide` 固定为 `750px × 1320px`",
+            "非 KV 切片根据内容高度灵活设定",
+            "每张幻灯片的声明高度",
             "大型证据数字直接归入主标题层级",
             "任何可见行不得只剩一个汉字",
         ):
@@ -375,11 +388,11 @@ class BrandSyncTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("non-zero CSS border-radius", result.stderr)
 
-    def test_static_validator_accepts_content_driven_non_kv_height(self) -> None:
+    def test_static_validator_rejects_non_1320_content_height(self) -> None:
         html = """<!doctype html><html><head>
         <meta name="frontend-slides-brand-status" content="draft">
-        <meta name="frontend-slides-deck-id" content="variable-height-deck">
-        <style>.deck-stage{width:750px;height:var(--active-slide-height,1320px)}</style>
+        <meta name="frontend-slides-deck-id" content="invalid-content-height">
+        <style>.deck-stage{width:750px;height:1320px}</style>
         </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
         <section class="slide" data-slide-kind="content" data-slide-height="1680"><h1>内容页标题</h1></section>
         </main></div></body></html>"""
@@ -387,13 +400,14 @@ class BrandSyncTests(unittest.TestCase):
             path = Path(directory) / "deck.html"
             path.write_text(html, encoding="utf-8")
             result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("must have data-slide-height=1320", result.stderr)
 
     def test_static_validator_rejects_non_1320_kv_height(self) -> None:
         html = """<!doctype html><html><head>
         <meta name="frontend-slides-brand-status" content="draft">
         <meta name="frontend-slides-deck-id" content="invalid-kv-height">
-        <style>.deck-stage{width:750px;height:var(--active-slide-height,1320px)}</style>
+        <style>.deck-stage{width:750px;height:1320px}</style>
         </head><body data-tone-mode="light"><div class="deck-viewport"><main class="deck-stage">
         <section class="slide" data-slide-kind="kv" data-slide-height="1680"><h1>KV 标题</h1></section>
         </main></div></body></html>"""
@@ -402,7 +416,7 @@ class BrandSyncTests(unittest.TestCase):
             path.write_text(html, encoding="utf-8")
             result = self.run_command("scripts/validate-html.py", str(path), "--allow-draft-brand")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("KV and must have data-slide-height=1320", result.stderr)
+        self.assertIn("must have data-slide-height=1320", result.stderr)
 
     def test_packaged_runtime_controls_are_square(self) -> None:
         runtime_css = (ROOT / "viewport-base.css").read_text(encoding="utf-8")
@@ -413,7 +427,7 @@ class BrandSyncTests(unittest.TestCase):
     def test_canonical_runtime_has_no_deck_stage_dual_track(self) -> None:
         self.assertFalse((ROOT / "runtime/deck-stage.js").exists())
         generated = (ROOT / "brand/generated/brand-runtime.js").read_text(encoding="utf-8")
-        self.assertIn("runtime: 'brand-runtime-v2'", generated)
+        self.assertIn("runtime: 'brand-runtime-v3'", generated)
         self.assertIn("toggleEdit", generated)
         self.assertIn("saveFile", generated)
 

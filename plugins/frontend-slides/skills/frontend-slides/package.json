@@ -1,13 +1,24 @@
 {
-  "name": "frontend-slides-lr-validation",
-  "version": "3.0.0",
+  "name": "frontend-slides-brand-studio",
+  "version": "4.0.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "vite --config studio/vite.config.js",
+    "build": "vite build --config studio/vite.config.js",
+    "preview": "vite preview --config studio/vite.config.js",
+    "test:studio": "node --test studio/tests/*.test.js",
+    "test:e2e": "node studio/tests/studio.e2e.mjs",
+    "export:pdf": "node scripts/export-studio-pdf.mjs",
     "validate:rendered": "node scripts/validate-rendered.mjs tests/fixtures/minimal-deck.html",
     "validate:runtime": "node scripts/validate-runtime.mjs tests/fixtures/minimal-deck.html"
   },
+  "dependencies": {
+    "jszip": "3.10.1",
+    "pptxgenjs": "4.0.1"
+  },
   "devDependencies": {
-    "playwright": "1.61.1"
+    "playwright": "1.61.1",
+    "vite": "^7.3.6"
   }
 }

@@ -4,12 +4,11 @@
   "template_count": 7,
   "contract": {
     "role": "Each entry is a peer design-style and narrative-structure baseline.",
-    "brand_authority": "brand/source.json and brand/generated files remain authoritative for typography, logo, assets, spacing, shape, and canvas. They do not define palette colors or motion behavior. All presentation output is static.",
-    "palette_authority": "Palette authority belongs to each template's preview.md and design.md. Use preview.md while comparing shortlisted options, then use only the selected template's design.md for the full deck.",
+    "brand_authority": "brand/source.json and brand/generated files remain authoritative for canvas, palette, typography, logo, assets, spacing, shape, and static behavior. All presentation output is static.",
+    "palette_authority": "The palette in brand/source.json is authoritative. Template colors are historical references only; templates contribute composition, pacing, evidence structure, and component grammar.",
     "canvas": {
       "width": 750,
-      "kv_height": 1320,
-      "non_kv_height": "content",
+      "height": 1320,
       "scaling": "uniform-stage-only"
     },
     "safe_area": {
@@ -30,8 +29,8 @@
     "tone_choice": "Default tone_mode to light when the user does not choose. Generate light previews first and continue with light when the user raises no objection; switch only when the user explicitly selects dark or requests an adjustment.",
     "shortlist": "Choose three baselines compatible with the active tone_mode, then rank them by content, evidence type, pacing, and image material.",
     "category_semantics": "For facial cleansers, body cleansers, and other cleansing products, default to light and require a clean semantic theme: clear, hygienic, low-noise, evidence-legible, and restrained in product staging. Switch tone only when the user explicitly requests it.",
-    "category_color_limit": "Use colors only from each selected template's preview.md and design.md. The active light/dark tone controls which compatible templates are shortlisted; it does not create extra colors.",
-    "preview": "Read only preview_md for the three shortlisted baselines and generate three real branded previews using the deck's actual content.",
+    "category_color_limit": "Use colors only from brand/source.json. Template palettes are historical references and cannot introduce extra colors.",
+    "preview": "Read only preview_md for the three shortlisted baselines and generate three real branded previews using the deck's actual content and the fixed brand palette.",
     "selection": "After the user chooses, read exactly the selected design_md before generating the complete deck.",
     "mixing": "Keep one primary baseline. Borrow a component from one secondary baseline only when the user explicitly requests a mix and the component remains compatible with the primary narrative structure and primary palette.",
     "never": "Do not bulk-read all design.md files or use a baseline to override the fixed non-color brand contract."
@@ -45,7 +44,7 @@
         "source": "GuaAha/frontend-slides-lr"
       },
       "tone_mode": "dark",
-      "canvas": "750px wide; KV 1320px; non-KV content-driven",
+      "canvas": "750 by 1320 fixed canvas",
       "strengths": [
         "high-energy title and section rhythm",
         "pixel-grid hierarchy",
@@ -66,7 +65,7 @@
         "node_id": "1:5803"
       },
       "tone_mode": "light",
-      "canvas": "750px wide; KV 1320px; non-KV content-driven",
+      "canvas": "750 by 1320 fixed canvas",
       "strengths": [
         "white editorial proof pages",
         "restrained green evidence accents",
@@ -87,7 +86,7 @@
         "node_id": "1:5461"
       },
       "tone_mode": "dark",
-      "canvas": "750px wide; KV 1320px; non-KV content-driven",
+      "canvas": "750 by 1320 fixed canvas",
       "strengths": [
         "black evidence field with controlled amber emphasis",
         "measurable progression and specialist proof",
@@ -108,7 +107,7 @@
         "node_id": "1:3010"
       },
       "tone_mode": "light",
-      "canvas": "750px wide; KV 1320px; non-KV content-driven",
+      "canvas": "750 by 1320 fixed canvas",
       "strengths": [
         "icy white space and aquatic mint accents",
         "fresh sensation separated from measured proof",
@@ -129,7 +128,7 @@
         "node_id": "1:2263"
       },
       "tone_mode": "dark",
-      "canvas": "750px wide; KV 1320px; non-KV content-driven",
+      "canvas": "750 by 1320 fixed canvas",
       "strengths": [
         "black glass and controlled gold product theater",
         "white exploded-package engineering",
@@ -150,7 +149,7 @@
         "node_id": "1:1920"
       },
       "tone_mode": "dark",
-      "canvas": "750px wide; KV 1320px; non-KV content-driven",
+      "canvas": "750 by 1320 fixed canvas",
       "strengths": [
         "black and white editorial planes",
         "paired cool and warm scent worlds",
@@ -171,7 +170,7 @@
         "node_id": "1:1238"
       },
       "tone_mode": "light",
-      "canvas": "750px wide; KV 1320px; non-KV content-driven",
+      "canvas": "750 by 1320 fixed canvas",
       "strengths": [
         "mineral-blue cleansing narrative",
         "white editorial explanation and benefit bands",

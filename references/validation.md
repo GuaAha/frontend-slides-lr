@@ -39,7 +39,7 @@ Require:
 - at least one `.slide`;
 - literal `750px` width in the inlined stage rules;
 - exactly one main title per slide, expressed as an `h1` or `data-type-level="headline"` text role;
-- `data-slide-kind="kv|content"` and a positive integer `data-slide-height` on every slide; KV height is exactly `1320`, while non-KV height is content-driven and must leave the 120px top and 60px bottom safe margins;
+- `data-slide-kind="kv|content"` and `data-slide-height="1320"` on every slide, with the 120px top and 60px bottom safe margins preserved;
 - embedded brand status matching `brand/source.json`;
 - one stable ASCII `frontend-slides-deck-id` meta value for deck-scoped autosave;
 - no stale landscape-canvas, aspect-ratio, or alternative-stage language;
@@ -70,7 +70,7 @@ Install Playwright and Chromium once if they are unavailable, then run:
 node scripts/validate-rendered.mjs path/to/deck.html --screenshots .frontend-slides/validation
 ```
 
-The rendered validator checks every slide at a fixed `750px` width and its declared per-slide height. KV slides are `1320px` high; non-KV slides use content-driven heights. To rerun only the slide changed by a minimal fix, use:
+The rendered validator checks every slide on the fixed `750 × 1320` canvas. To rerun only the slide changed by a minimal fix, use:
 
 ```bash
 node scripts/validate-rendered.mjs path/to/deck.html --slide <one-based-number> --screenshots .frontend-slides/validation
@@ -78,7 +78,7 @@ node scripts/validate-rendered.mjs path/to/deck.html --slide <one-based-number> 
 
 Review failures and screenshots:
 
-1. Every slide bounding box is exactly its authored width and declared height. KV means a cover, key visual, or source-declared KV slide and is exactly 1320px high. A non-KV height ends 60px below its lowest non-bleed content and does not add unexplained empty height.
+1. Every slide bounding box is exactly the fixed `750 × 1320` canvas. KV and content slides use the same dimensions; overflow is resolved by editing, switching to a registered layout, or splitting the page.
 2. Every authored text leaf stays inside x=60–690, below y=120, and above `slide height - 60px`; media stays inside the slide or carries an intentional bleed marker.
 3. Text blocks do not overlap unless the composition explicitly marks the overlap decorative.
 4. No content is hidden only because an ancestor uses `overflow: hidden`.

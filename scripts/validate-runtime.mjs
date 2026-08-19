@@ -24,7 +24,7 @@ page.on('console', (message) => {
 
 try {
   await page.goto(pathToFileURL(input).href, { waitUntil: 'load' });
-  if (!await page.evaluate(() => window.FRONTEND_SLIDES_BRAND?.runtime === 'brand-runtime-v2')) {
+  if (!await page.evaluate(() => window.FRONTEND_SLIDES_BRAND?.runtime === 'brand-runtime-v3')) {
     await page.addScriptTag({ path: runtime });
   }
   await page.waitForFunction(() => window.presentation?.slides?.length > 0);
@@ -48,16 +48,15 @@ try {
   check(initial.index === 0, 'runtime must start on the first slide');
   check(initial.total === initial.slideCount, 'runtime must discover every slide');
   check(initial.counter === `1 / ${initial.slideCount}`, 'page counter must start at 1 / total');
-  check(initial.transform?.includes('scale(1)'), '750 × 1320 KV stage must fit at scale(1)');
-  check(initial.activeHeight === initial.firstDeclaredHeight, 'stage height must match the active slide height');
-  check(initial.firstKind !== 'kv' || initial.firstDeclaredHeight === 1320, 'KV slide height must be 1320');
+  check(initial.transform?.includes('scale(1)'), '750 × 1320 stage must fit at scale(1)');
+  check(initial.activeHeight === 1320, 'stage height must remain 1320');
+  check(initial.firstDeclaredHeight === 1320, 'every declared slide height must be 1320');
   check(
     initial.canvas?.width === 750
-      && initial.canvas?.kvHeight === 1320
-      && initial.canvas?.nonKvHeight === 'content',
-    'runtime canvas contract must use fixed width, fixed KV height, and content-driven non-KV height',
+      && initial.canvas?.height === 1320,
+    'runtime canvas contract must use the fixed 750 × 1320 canvas',
   );
-  check(initial.runtime === 'brand-runtime-v2', 'canonical runtime version marker is missing');
+  check(initial.runtime === 'brand-runtime-v3', 'canonical runtime version marker is missing');
 
   await page.keyboard.press('ArrowRight');
   const expectedNextIndex = initial.slideCount > 1 ? 1 : 0;
@@ -71,7 +70,7 @@ try {
         transform: document.getElementById('deckStage')?.style.transform,
       };
     });
-    check(second.stageHeight === second.declaredHeight, 'navigation must resize the stage to the active slide');
+    check(second.stageHeight === 1320 && second.declaredHeight === 1320, 'navigation must preserve the fixed stage');
     check(Boolean(second.transform?.includes('scale(')), 'navigation must refit the active slide');
   }
   await page.keyboard.press('Home');
@@ -144,11 +143,7 @@ try {
     };
   });
   check(printResult.called, 'print API must call window.print');
-  check(printResult.pageSizes.includes('750px 1320px'), 'print CSS must preserve the KV page height');
-  if (initial.slideCount > 1) {
-    const secondHeight = await page.locator('.slide').nth(1).getAttribute('data-slide-height');
-    check(printResult.pageSizes.includes(`750px ${secondHeight}px`), 'print CSS must preserve non-KV page heights');
-  }
+  check(printResult.pageSizes.includes('750px 1320px'), 'print CSS must preserve the fixed page size');
 } finally {
   await browser.close();
 }
@@ -160,6 +155,6 @@ if (errors.length) {
 
 console.log(JSON.stringify({
   pass: true,
-  runtime: 'brand-runtime-v2',
+  runtime: 'brand-runtime-v3',
   capabilities: ['navigation', 'touch', 'counter', 'editing', 'autosave', 'save-html', 'print'],
 }, null, 2));

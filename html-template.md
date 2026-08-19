@@ -86,11 +86,11 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
 
 ## Required behavior
 
-- Author every `.slide` at exactly `750px` width. Set `data-slide-kind="kv"` and `data-slide-height="1320"` on covers, key visuals, or source-declared KV slides. Set `data-slide-kind="content"` on all other slides and derive its integer `data-slide-height` from the bottom edge of the lowest non-bleed content plus the 60px bottom safe margin; do not add unexplained empty height.
+- Author every `.slide` at exactly `750px` width and `1320px` height. Keep `data-slide-kind="kv|content"` for semantic routing and set `data-slide-height="1320"` on every slide. When content does not fit, shorten it, switch to a registered layout, or split the slide.
 - Use a 40px gap between authored content blocks; do not use `margin-top: auto`, `margin-bottom: auto`, `justify-content: space-between`, or equivalent leftover-space distribution. Cards use 20px inner padding and 10px between content groups. Q&A groups use a 60px gap from the end of one answer to the next question.
 - Give every slide exactly one main-title node: use one `h1`, or one `data-type-level="headline"` node when an `h1` cannot be used.
-- Keep authored text inside x=60–690, below the 120px top safe margin, and above the 60px bottom safe margin for that slide's declared height.
-- Scale only `.deck-stage`; fit it against the active slide's declared height without reflowing internal content.
+- Keep authored text inside x=60–690, below the 120px top safe margin, and above y=1260 on the fixed canvas.
+- Scale only `.deck-stage`; fit the fixed 750 × 1320 stage without reflowing internal content.
 - Use the inlined generated `brand-runtime.js` as the sole runtime. Do not add another stage component, router, editor, autosave layer, or print controller.
 - Toggle `.active` and `.visible` for navigation. Do not use `display: none` for slide switching.
 - Support Arrow keys, Page Up/Down, Space, Home/End, swipe/tap, and a page count outside the stage.
@@ -113,5 +113,5 @@ Generate one self-contained HTML file. Inline the complete contents of `brand/ge
 - Do not make scripts, styles, brand tokens, canvas dimensions, or validation metadata editable.
 - Use a stable deck-specific localStorage key.
 - Escape edited text when serializing the saved HTML.
-- Preserve the fixed 750px width, each slide's declared height, and brand metadata in exported files.
+- Preserve the fixed 750 × 1320 canvas and brand metadata in exported files.
 - When supplied or authorized images need processing, keep the original, save a derived asset, and use only uncropped or rectangularly cropped output. CSS/SVG wrappers and masks remain zero-radius.

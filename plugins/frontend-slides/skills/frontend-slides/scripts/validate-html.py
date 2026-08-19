@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static validation for 750px-wide fixed-brand HTML decks with per-slide heights."""
+"""Static validation for fixed 750 × 1320 brand HTML decks."""
 
 from __future__ import annotations
 
@@ -129,12 +129,8 @@ def validate(path: Path, allow_draft: bool) -> tuple[list[str], list[str]]:
             errors.append(f"slide {index} requires a positive integer data-slide-height")
             continue
         height = int(raw_height)
-        if kind == "kv" and height != source["canvas"]["kv_height"]:
-            errors.append(f"slide {index} is KV and must have data-slide-height=1320")
-        if kind == "content" and height <= safe_vertical:
-            errors.append(
-                f"slide {index} content height must exceed the {safe_vertical}px vertical safe margins"
-            )
+        if height != source["canvas"]["height"]:
+            errors.append(f"slide {index} must have data-slide-height=1320")
         if parser.slide_headline_counts[index - 1] != 1:
             errors.append(
                 f"slide {index} must contain exactly one main title (h1 or data-type-level='headline')"

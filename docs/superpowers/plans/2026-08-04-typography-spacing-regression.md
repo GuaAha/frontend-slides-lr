@@ -2,19 +2,19 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task with checkpoints. Steps use checkbox syntax for tracking.
 
-**Goal:** 将已确认的注释、组合型证据、大型证据数字、Q&A 间距和内容驱动高度规则同步到根规范、生成令牌、验证器、插件镜像和当前产品企划示例。
+**Goal:** 将已确认的注释、组合型证据、大型证据数字、Q&A 间距和固定 `750 × 1320` 画布规则同步到根规范、生成令牌、验证器、插件镜像和当前产品企划示例。
 
-**Architecture:** `brand/source.json` 继续作为新增非颜色令牌的唯一源，`scripts/sync-brand.py` 负责生成根文件和插件镜像。根 `SKILL.md`、`html-template.md` 与 `references/validation.md` 定义生成行为；静态和渲染验证器负责拒绝冲突布局。当前示例运行目录中的 `generate-deck.py` 作为本次回归生成器，重新生成同一 14 页内容。
+**Architecture:** `brand/source.json` 作为画布、配色和其他品牌令牌的唯一源，`scripts/sync-brand.py` 负责生成根文件和插件镜像。根 `SKILL.md`、`html-template.md` 与 `references/validation.md` 定义生成行为；静态和渲染验证器负责拒绝冲突布局。当前示例运行目录中的 `generate-deck.py` 作为本次回归生成器，重新生成同一 14 页内容。
 
 **Tech Stack:** Python 3、标准库 `unittest`、Node.js、Playwright/Chromium、PowerShell 文件备份。
 
 ## Global Constraints
 
-- 固定画布宽度为 `750px`，KV 高度为 `1320px`，非 KV 高度由内容底部加 `60px` 安全边距确定。
-- 普通文字叶节点使用对应语言区域的 `100%` 行高；注释说明文本使用 `0px` 行高；注释指引数字使用免责声明字号和 `100%` 行高。
+- 所有页面使用固定 `750 × 1320` 画布，无法容纳时精简、换用注册布局或拆页。
+- 普通文字叶节点、注释说明文本和注释指引数字都使用对应语言区域的 `100%` 行高；注释条目之间使用 `0px` 额外间距。
 - 内容区块间距为 `40px`；Q&A 组间距为 `60px`。
 - 禁止 `margin-top:auto`、`justify-content:space-between` 或其他剩余空间分配方式制造内容间距。
-- 大型证据数字同页统一字号：2 组优先 `75px`，3 组优先 `45px`，4 组及以上强制 `45px`。
+- 大型证据数字同页统一字号：2 组使用 `75px`，3 组及以上使用 `60px`。
 - 不生成动画；保留导航、编辑、保存和打印交互。
 
 ## 文件边界
@@ -37,7 +37,7 @@
 - Modify: `tests/test_static_contract.py`
 - Modify: `scripts/static_contract.py` only if test helper needs a named violation function.
 
-- [ ] Add tests asserting `brand/source.json` has `typography.annotation_line_height_px == 0` and `spacing.qa_group_gap_px == 60`.
+- [ ] Add tests asserting `brand/source.json` has `typography.annotation_line_height_percent == 100`, `spacing.annotation_gap_px == 0`, and `spacing.qa_group_gap_px == 60`.
 - [ ] Add tests asserting generated tokens/rules and `SKILL.md` contain the explicit annotation-text exception, citation-marker `100%` rule, atomic combination rule, evidence count rule, Q&A `60px`, and no-auto-spacing rule.
 - [ ] Add a static-contract fixture containing `margin-top: auto` and `justify-content: space-between`; assert `validate-html.py` rejects it with the layout-contract violation.
 - [ ] Add a rendered-contract fixture or helper assertion for a citation marker that is the only visible line; assert it fails.
@@ -51,10 +51,10 @@
 - Modify: `html-template.md`
 - Modify: `references/validation.md`
 
-- [ ] Replace the ambiguous global annotation wording with: ordinary text leaves use `100%`; annotation explanatory text alone uses `0px`; citation numbers retain disclaimer size and `100%` line height and cannot form a standalone line.
+- [ ] Replace the ambiguous annotation wording with: ordinary text leaves, annotation explanatory text, and citation numbers use `100%`; annotation rows use `0px` extra gap; citation numbers retain disclaimer size and cannot form a standalone line.
 - [ ] Add the indivisible `xx%用户认可` combination rule and require a single atomic wrapper/leaf for these units.
 - [ ] Add the large-evidence count mapping and same-page font-size consistency rule.
-- [ ] Add `qa_group_gap_px: 60` under `spacing` and `annotation_line_height_px: 0` under `typography` without changing the global `line_height_percent: 100`.
+- [ ] Add `qa_group_gap_px: 60` and `annotation_gap_px: 0` under `spacing`, plus `annotation_line_height_percent: 100` under `typography` without changing the global `line_height_percent: 100`.
 - [ ] Document that content flow uses `40px` gaps and must not use auto margins or space distribution to create spacing.
 
 ## Task 3: Update generation and validation contracts
@@ -65,10 +65,10 @@
 - Modify: `scripts/validate-html.py`
 - Modify: `scripts/validate-rendered.mjs`
 
-- [ ] Validate the two new source tokens and render `--brand-annotation-line-height: 0px` and `--brand-qa-group-gap: 60px`.
-- [ ] Generate the annotation-specific rule while keeping the normal text-leaf rule at `100%`.
+- [ ] Validate the source tokens and render `--brand-annotation-text-line-height: 100%`, `--brand-annotation-gap: 0px`, and `--brand-qa-group-gap: 60px`.
+- [ ] Generate the annotation-specific container-gap rule while keeping every text-leaf rule at `100%`.
 - [ ] Add a static CSS violation for `margin-top:auto` and `justify-content:space-between` in authored slide content; leave runtime controls unaffected.
-- [ ] Extend rendered validation to exempt only annotation explanatory text from the global line-height check; require citation markers to retain `100%`, 15px, and a non-standalone line.
+- [ ] Extend rendered validation to require annotation explanatory text and citation markers to retain `100%`, with citation markers also using 15px and a non-standalone line.
 - [ ] Add checks for atomic combination wrappers, large-evidence page-count mapping and same-page font-size uniformity, and the declared 40/60 spacing values.
 
 ## Task 4: Sync mirrors and update the generated regression run
@@ -80,9 +80,9 @@
 - Generated: current run HTML, `generation-audit.json`, `copy-ledger.json`, final screenshots.
 
 - [ ] Run `python scripts/sync-brand.py` to update every managed mirror.
-- [ ] Remove `push-bottom` from authored content containers in the run generator, use ordinary 40px flow gaps, set note explanatory text to 0px line height, preserve citation marker 15px/100% and non-standalone placement, and set the Q&A list gap to `60px`.
+- [ ] Remove `push-bottom` from authored content containers in the run generator, use ordinary 40px flow gaps, set annotation-row gap to 0px while preserving note and citation text at 100% line height, preserve citation marker 15px/non-standalone placement, and set the Q&A list gap to `60px`.
 - [ ] Mark evidence combinations such as `96.67% 用户认可` as atomic wrappers and choose a single large-metric size per page using the approved count rule.
-- [ ] Recalculate each non-KV height from the lowest non-bleed content plus 60px and regenerate the 14-page deck.
+- [ ] Normalize every page to 750 × 1320; resolve overflow by editing, switching layout, or splitting the page, then regenerate the deck.
 
 ## Task 5: GREEN verification and visual review
 
@@ -91,12 +91,12 @@
 - [ ] Run `python scripts/validate-html.py .frontend-slides/runs/20260804-liran-acne-body-wash-variable-height-regression-v2/liran-acne-body-wash-clearproof-green-variable-height-regression-v2.html --allow-draft-brand`.
 - [ ] Run `node scripts/validate-runtime.mjs .frontend-slides/runs/20260804-liran-acne-body-wash-variable-height-regression-v2/liran-acne-body-wash-clearproof-green-variable-height-regression-v2.html`.
 - [ ] Run `node scripts/validate-rendered.mjs .frontend-slides/runs/20260804-liran-acne-body-wash-variable-height-regression-v2/liran-acne-body-wash-clearproof-green-variable-height-regression-v2.html --screenshots .frontend-slides/runs/20260804-liran-acne-body-wash-variable-height-regression-v2/screenshots-final-rule-update` for all 14 slides; use `--slide 1` through `--slide 14` for focused repairs.
-- [ ] Inspect final screenshots for 40px content gaps, 60px Q&A group gaps, non-standalone citations, intact evidence combinations, consistent metric sizes, and no unexplained empty height.
+- [ ] Inspect final screenshots for 40px content gaps, 60px Q&A group gaps, non-standalone citations, intact evidence combinations, consistent metric sizes, and no overflow on the fixed canvas.
 - [ ] Run `npm run validate:runtime` and `npm run validate:rendered` against the repository fixture gates after the deck-specific commands pass.
 
 ## Self-review checklist
 
 - No unfinished markers or unresolved implementation slots remain.
 - Every rule in the approved design has a canonical source, implementation task, and validation task.
-- The annotation exception is scoped to explanatory text and cannot override citation marker behavior.
+- The annotation-row gap is scoped to its container and cannot override the 100% text line-height or citation marker behavior.
 - The backup path is inside the workspace and contains only the pre-change canonical files.

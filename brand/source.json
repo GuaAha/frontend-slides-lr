@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "approval_status": "draft",
-  "source_note": "Confirmed non-color brand rules include multilingual typography, fixed safe area, square corners, and the product-detail no-logo policy. Palette information is defined by each template's preview.md and design.md. Tone defaults to light unless the user explicitly selects dark.",
+  "source_note": "Confirmed internal-brand rules include a fixed 750 by 1320 canvas, multilingual typography, fixed safe area, square corners, the product-detail no-logo policy, and the draft product palette. Template documents contribute composition only and cannot override these tokens.",
   "brand": {
     "name": "LR Internal",
     "short_name": "LR",
@@ -9,8 +9,18 @@
   },
   "canvas": {
     "width": 750,
-    "kv_height": 1320,
-    "non_kv_height": "content"
+    "height": 1320
+  },
+  "palette": {
+    "paper": "#F6F7F2",
+    "surface": "#FFFFFF",
+    "ink": "#101512",
+    "muted": "#626B66",
+    "accent": "#42B265",
+    "accent_dark": "#215E38",
+    "line": "#CFD8D1",
+    "inverse": "#0B0D12",
+    "inverse_text": "#FFFFFF"
   },
   "typography": {
     "display": {

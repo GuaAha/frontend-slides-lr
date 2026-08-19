@@ -4,7 +4,7 @@
 
 - Brand: **LR Internal**
 - Approval status: **draft**
-- Canvas: **750 CSS pixels wide; KV slides are 1320px high; non-KV slides use explicit content-driven heights**
+- Canvas: **750 × 1320 CSS pixels for every slide**
 - Display font: **MAKE SENSE**
 - Body font: **MAKE SENSE**
 - Minimum body text: **30px**
@@ -13,7 +13,7 @@
 - Text safe area: **top 120px / right 60px / bottom 60px / left 60px**
 - Product-detail pages: **no separately authored brand logo**
 - Tone mode: default to **light** when the user does not choose; keep light unless the user explicitly selects **dark** or requests an adjustment.
-- Palette authority: `brand/source.json` does not define colors. Each shortlisted option uses the palette in its own `preview.md`; after selection, the chosen template's `design.md` is authoritative.
+- Palette authority: **`brand/source.json`**. Template colors are historical references and cannot override fixed brand tokens.
 
 ## Density
 
@@ -50,7 +50,7 @@
 
 - Read `templates/index.json` when preparing the three real branded previews.
 - Treat all seven baselines as peers and select by content, evidence type, pacing, and available imagery.
-- Use baseline composition, component grammar, and the palette declared by that baseline without overriding non-color brand rules.
-- Keep typography, shape tokens, static visual states, the 750px width, the 1320px KV height, and content-driven non-KV heights consistent across previews. Each preview uses its own declared palette while remaining compatible with the active light/dark tone.
+- Use baseline composition and component grammar without copying its historical palette.
+- Keep palette, typography, shape tokens, static visual states, and the fixed 750 × 1320 canvas consistent across all previews.
 
-> Source note: Confirmed non-color brand rules include multilingual typography, fixed safe area, square corners, and the product-detail no-logo policy. Palette information is defined by each template's preview.md and design.md. Tone defaults to light unless the user explicitly selects dark.
+> Source note: Confirmed internal-brand rules include a fixed 750 by 1320 canvas, multilingual typography, fixed safe area, square corners, the product-detail no-logo policy, and the draft product palette. Template documents contribute composition only and cannot override these tokens.
